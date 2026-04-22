@@ -1,0 +1,68 @@
+---
+title: "Welcome to The Open Inference Lab"
+listing:
+  id: recent-posts
+  contents: posts
+  feed: true
+  sort: "date desc"
+  type: grid           
+  max-items: 3
+  categories: true
+  sort-ui: false
+  filter-ui: false
+  grid-columns: 3 
+page-layout: full
+title-block-banner: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+A place for exploring statistical models, with a focus on making complex methods more transparent and easier to understand. Here you’ll find notes, examples, and code on Bayesian modeling, multivariate analysis, statistical decision-making, and anything else I have on my (academic) mind.
+
+The goal is to open up the “black box” of some modern, complex statistical methods. How do these models actually work? And what do their results really tell us?
+
+Most posts are grounded in practical examples using R. Along the way, there’s room for reflections.
+
+Whether it’s unpacking a model, comparing approaches, or walking through an analysis step by step—this is a space to think carefully about inference. While starting with the models I know most about (obviously the models I worked on myself), in the future, I will start to discuss other models and techniques as well.
+
+Do you have some topic in mind that you would like me to discuss? Let me know!
+
+```{r contact, echo = FALSE, results = 'asis'}
+library(fontawesome)
+
+cat(paste0(
+  '<div style="display:flex; gap:20px;">',
+  
+  '<a href="https://github.com/XynthiaKavelaars/bmco" target="_blank">',
+  fa("github"), ' Github</a>',
+
+  '<a href="https://bsky.app/profile/xynthia-kavelaars.bsky.social" target="_blank">',
+  fa("bluesky"), ' BlueSky</a>',
+  
+  '<a href="https://mastodon.social/@xynthiakavelaars" target="_blank">',
+  fa("mastodon"), ' Mastodon</a>',
+#  
+#  '<a href="https://mastodon.social/@xynthiakavelaars" target="_blank">',
+#  fa("blog"), ' Blog</a>',
+  
+  '<a href="www.linkedin.com/in/xynthia-kavelaars-7a0377129" target="_blank">',
+  fa("linkedin"), ' LinkedIn</a>', 
+
+  '<a href="https://orcid.org/0000-0003-1600-3153" target="_blank">',
+  fa("orcid"), ' ORCID</a>', 
+
+  '</div>'
+))
+```
+
+```{=html}
+<br>
+<br>
+```
+
+## Recent posts
+
+::: {#recent-posts}
+:::

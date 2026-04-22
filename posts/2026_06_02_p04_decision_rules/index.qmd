@@ -1,0 +1,222 @@
+---
+title: "Multiple outcomes, multiple choices: Understanding superiority in the multivariate context"
+author: "Xynthia Kavelaars"
+date: "2026-06-02"
+output: html_document
+csl: apa.csl
+categories: [Bayesian analysis, multivariate analysis, decision rules, bmco]
+image: images/preview.png
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+source("../../functions_references.R")
+
+library(fontawesome)
+
+```
+
+## The Challenge: How Do We Decide?
+
+Imagine you're evaluating a new cancer treatment. It reduces tumor size in most patients, but some experience severe side effects. How do you decide if the treatment is "better" than the standard?
+
+This is the fundamental challenge of clinical trials with **multiple outcomes**. We rarely care about just one thing. We want efficacy *and* safety, symptom relief *and* quality of life. But how do we combine these into a single decision?
+
+The traditional approach—test each outcome separately—has problems. It ignores that outcomes are often correlated, and it forces an artificial choice: demand improvement on all outcomes (too strict) or on any outcome (too lenient).
+
+The Kavelaars et al. (2020) framework offers a principled alternative: **flexible decision rules** that let us define what "success" actually means in our clinical context.
+
+## Four Decision Rules Visualized
+
+Let me show you the core insight using a simple two-outcome example. Imagine we're testing a treatment on: - **Cognitive function** (outcome 1) - **Fatigue** (outcome 2)
+
+Each outcome has a treatment effect: the difference in success probability between the new treatment and control, $\delta_1$ and $\delta_2$.
+
+```{r, eval = FALSE}
+library(tidyverse)
+library(mvtnorm)
+
+# Simulate bivariate posterior distributions of treatment differences
+set.seed(2024)
+
+# Parameters
+n_samples <- 10000
+mean_delta <- c(0.15, 0.12)  # positive effects on both outcomes
+cov_matrix <- matrix(c(0.01, 0.005, 0.005, 0.01), nrow = 2)
+
+# Sample from bivariate normal (posterior approximation)
+delta_samples <- rmvnorm(n_samples, mean = mean_delta, sigma = cov_matrix)
+
+# Create data frame for ggplot
+df_posterior <- data.frame(
+  delta1 = delta_samples[, 1],
+  delta2 = delta_samples[, 2]
+)
+
+# Define superiority regions for different rules
+df_plot <- df_posterior %>%
+  sample_n(2000) %>%  # Plot subset for clarity
+  mutate(
+    Single = delta1 > 0,
+    Any = delta1 > 0 | delta2 > 0,
+    All = delta1 > 0 & delta2 > 0,
+    Compensatory = 0.5 * delta1 + 0.5 * delta2 > 0
+  )
+
+# Visualize all four rules
+rules_list <- list(
+  Single = list(label = "Single Rule\n(Cognitive > 0)", color = "#E69F00"),
+  Any = list(label = "Any Rule\n(At least one > 0)", color = "#56B4E9"),
+  All = list(label = "All Rule\n(Both > 0)", color = "#009E73"),
+  Compensatory = list(label = "Compensatory Rule\n(Weighted sum > 0)", color = "#D55E00")
+)
+
+plots <- lapply(names(rules_list), function(rule_name) {
+  ggplot(df_plot, aes(x = delta1, y = delta2)) +
+    geom_point(aes(color = .data[[rule_name]]), size = 1, alpha = 0.6) +
+    scale_color_manual(
+      values = c("FALSE" = "#CCCCCC", "TRUE" = rules_list[[rule_name]]$color),
+      guide = "none"
+    ) +
+    geom_abline(slope = -1, linetype = "dashed", color = "gray50", alpha = 0.5) +
+    geom_vline(xintercept = 0, linetype = "solid", color = "black", alpha = 0.3) +
+    geom_hline(yintercept = 0, linetype = "solid", color = "black", alpha = 0.3) +
+    coord_fixed(ratio = 1) +
+    labs(
+      title = rules_list[[rule_name]]$label,
+      x = "Treatment effect on Cognitive Function (δ₁)",
+      y = "Treatment effect on Fatigue (δ₂)"
+    ) +
+    theme_minimal() +
+    theme(
+      plot.title = element_text(size = 12, face = "bold"),
+      axis.text = element_text(size = 9)
+    )
+})
+
+# Combine plots
+gridExtra::grid.arrange(
+  plots[[1]], plots[[2]], plots[[3]], plots[[4]], 
+  nrow = 2, ncol = 2
+)
+```
+
+### What the Rules Mean
+
+**1. Single Rule** - Tests if cognitive function improves: $\delta_1 > 0$ - Ignores fatigue completely - Most lenient on first outcome, ignores second - **When to use**: When you have one clearly primary outcome
+
+**2. Any Rule** - Tests if *at least one* outcome improves: $\delta_1 > 0$ OR $\delta_2 > 0$ - Light gray regions = rejected by this rule - Most liberal: accepts many marginal improvements - **When to use**: Rare, unless any improvement is clinically meaningful
+
+**3. All Rule** - Tests if *both* improve: $\delta_1 > 0$ AND $\delta_2 > 0$ - Darkest region in the figure - Most conservative: requires improvement everywhere - **When to use**: When all outcomes are truly necessary (safety + efficacy)
+
+**4. Compensatory Rule** - Tests if weighted sum exceeds zero: $0.5 \cdot \delta_1 + 0.5 \cdot \delta_2 > 0$ - The diagonal dashed line shows the decision boundary - **Allows tradeoffs**: A strong gain in one outcome can compensate for a small loss in another - **When to use**: Most clinical scenarios (flexibility + clinical sense)
+
+## The Key Insight from Visualization
+
+Notice the dark blue points (correct decisions) in each plot. The **diagonal orientation** of the superiority region in the Compensatory rule is crucial:
+
+The posterior distribution is tilted relative to the axes. If both outcomes are correlated positively, a diagonal boundary efficiently captures this relationship. This is why **multivariate analysis is more efficient than univariate**: it respects the actual geometry of your data.
+
+## Setting Weights
+
+The Compensatory rule gets even more flexible:
+
+```{r, eval = TRUE}
+# Equal weights: both outcomes equally important
+weights_equal <- c(0.50, 0.50)
+
+# Unequal weights: cognitive function more important
+weights_unequal <- c(0.75, 0.25)
+
+# Decision boundary: w1*delta1 + w2*delta2 > 0
+# With unequal weights, the slope changes:
+# y = -(w1/w2) * x = -(0.75/0.25) * x = -3x
+
+# This steeper line means:
+# - Harder to compensate a negative effect on cognitive (weight 0.75)
+# - Easier to accept a negative effect on fatigue (weight 0.25)
+```
+
+## Sample Size Consequences
+
+Here's why this matters practically. In the paper's simulation:
+
+| Rule | Sample size (equal effects) | Notes |
+|------------------------|------------------------|------------------------|
+| Single | 75–307 | Varies wildly by which outcome |
+| Any | 47–247 | Liberal, smallest n |
+| All | 101–424 | Conservative, largest n |
+| Compensatory (equal) | 26–199 | **Most efficient** when both effects present |
+
+The Compensatory rule wins because it leverages the correlation structure your data actually exhibits.
+
+## Practical Example: The CAR-B Study
+
+From the paper: Should local brain radiation (SRS) replace whole-brain radiation (WBRT) for cancer patients?
+
+Two outcomes matter: - **Cognitive function** (higher = better) - **Fatigue** (lower = better, but we flip it to "improvement" = less fatigue)
+
+Traditional analysis might demand improvement on both (All rule). But what if SRS slightly hurts cognition while dramatically reducing fatigue? With equal-weight Compensatory, you'd properly recognize this as overall superior.
+
+## R Implementation
+
+The `bmco` package implements this exactly:
+
+```{r, eval = FALSE}
+library(bmco)
+
+result <- bmvb(
+  data = trial_data,
+  grp = "treatment",
+  grp_a = "control",
+  grp_b = "new_treatment",
+  y_vars = c("cognitive_function", "fatigue_reduction"),
+  rule = "Comp",           # Use Compensatory
+  w = c(0.60, 0.40),       # Cognitive 60%, fatigue 40%
+  n_it = 5000
+)
+
+result$delta$pop  # P(treatment superior under our rule)
+```
+
+## Takeaway
+
+The decision rule you choose shapes your entire trial:
+
+-   **Single**: Use only for truly secondary outcomes
+-   **Any**: Too liberal for most clinical contexts\
+-   **All**: Only if all outcomes are absolutely necessary
+-   **Compensatory**: Default choice; lets you encode clinical judgment about tradeoffs
+
+The beauty of the multivariate Bernoulli framework is that you don't have to pick between statistical power and clinical relevance. You can have both—by making your decision rule match your actual clinical question.
+
+------------------------------------------------------------------------
+
+**Reference**: `r format_apa(bib[["Kavelaars2020"]])`
+
+**Package**: Install with `install.packages("bmco")`
+
+**Questions? Found this useful? I'm on social media and happy to discuss!**
+
+```{r contact, echo = FALSE, results = 'asis'}
+library(fontawesome)
+
+cat(paste0(
+  '<div style="display:flex; gap:20px;">',
+  
+  '<a href="https://github.com/XynthiaKavelaars/bmco" target="_blank">',
+  fa("github"), ' Github</a>',
+
+  '<a href="https://bsky.app/profile/xynthia-kavelaars.bsky.social" target="_blank">',
+  fa("bluesky"), ' BlueSky</a>',
+  
+  '<a href="https://mastodon.social/@xynthiakavelaars" target="_blank">',
+  fa("mastodon"), ' Mastodon</a>',
+  
+   '<a href="https://mastodon.social/@xynthiakavelaars" target="_blank">',
+  fa("blog"), ' Blog</a>',
+  
+  '</div>'
+))
+```

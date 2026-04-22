@@ -1,0 +1,546 @@
+---
+title: "When binary outcomes move together: A Bayesian approach to multivariate analysis"
+author: "Xynthia Kavelaars"
+date: "2026-04-21"
+pinned: true
+output: html_document
+csl: apa.csl
+categories: [Bayesian analysis, multivariate analysis, decision rules, subgroup analysis, multilevel analysis, bmco]
+image: images/preview.png
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+source("../../functions_references.R")
+
+library(fontawesome)
+
+```
+
+Imagine you're designing a study to test the effectiveness of a new treatment. Success isn't just about symptom relief—you also care about quality of life (QoL). Or side effects. Or both.
+
+So you measure **two outcomes**: symptom relief (yes/no) and quality of life improvement (yes/no). Now the question arises: *What does "success" mean?*
+
+-   Must the treatment improve **both** outcomes? (All rule)
+-   Or is improvement in **just one** enough? (Any rule)\
+-   Or can you **weight** them differently — maybe symptom relief matters 70%, QoL only 30%? Maybe a small negative effect on QoL is acceptable if symptom relief is large enough? (Compensatory rule)
+
+When you measure two outcomes together, you want your analysis to reflect that relationship in the decision regarding superiority.
+
+### The challenge with standard approaches
+
+Testing outcomes separately (symptom relief indpendently from QoL) invites complications:
+
+-   Often outcomes are given a primary or secondary role in analysis and decision-making. But that is at least problematic when safety and effectivity are measured together. Safety is almost never of secondary concern, and neither is effectivity.
+-   Decisions are often based on an ad hoc basis: Two decisions are combined into a single decision, without providing a probability statement on the combined decision, leaving the accuracy of the final decision less transparent.
+-   Your two outcomes may be *correlated*: if the treatment relieves symptoms, it might as well improve quality of life too. Standard separate testing doesn't easily account for this structure.
+
+These methods do not always answer the most relevant question. **The real question** people care about:
+
+*"What is the probability that this treatment improves BOTH outcomes?"*
+
+Or: *"At least one of the outcomes?"* Or: *"This weighted combination of outcomes?"*
+
+These are natural, practical questions, but they are not straightforward to answer with standard approaches - especially when outcomes differ in their relative contributions to success.
+
+------------------------------------------------------------------------
+
+## A direct approach: Joint modeling of binary outcomes
+
+Here's an elegant solution: **Model both outcomes together in a single framework**, account for their natural correlation, and use the posterior distribution to answer your specific question.
+
+The `bmco` package in R implements this. It's built on the principle that when you have multiple binary outcomes, analyzing them jointly — rather than piecing together separate tests - gives you more coherence.
+
+Let's simulate trial data:
+
+```{r generate-data, eval = TRUE}
+library(bmco)
+set.seed(2026)
+
+# Simulate a trial: 100 patients, 50 per arm
+
+outcome_data_placebo <- t(rmultinom(50, 1, c(0.30, 0.10, 0.20, 0.20)))  
+# Placebo: 40% pain relief, 50% mobility improvement, correlation 0.33
+
+outcome_data_drug <- t(rmultinom(50, 1, c(0.55, 0.10, 0.20, 0.15)))   
+# Drug: 65% pain relief, 70% mobility improvement, correlation 0.30
+
+trial_data <- data.frame(
+  treatment = rep(c("placebo", "drug"), each = 50),
+  pain_relief = c(
+  rowSums(outcome_data_placebo[,c(1,2)]), 
+  rowSums(outcome_data_drug[,c(1,2)])
+  ),
+  mobility_improved = c(
+     rowSums(outcome_data_placebo[,c(1,3)]), 
+     rowSums(outcome_data_drug[,c(1,3)])
+  )
+)
+
+head(trial_data)
+```
+
+Now, here's the key question for this trial: *What is the probability that the drug is better on a relevant combination of pain relief and mobility improvement?*
+
+With `bmco`, you get a direct answer:
+
+```{r bmvb, eval = TRUE}
+result <- bmvb(
+  data = trial_data,
+  grp = "treatment",
+  grp_a = "placebo",
+  grp_b = "drug",
+  y_vars = c("pain_relief", "mobility_improved"),
+  rule = "All",  # Drug must improve BOTH outcomes
+  test = "right_sided",
+  n_it = 5000
+)
+
+print(result)
+```
+
+Output for decision-making:
+
+```         
+Posterior probability P(drug > placebo on BOTH outcomes): `r result$delta$pop`
+```
+
+If the standard superiority criterion of posterior probability \> 0.95 (one-sided testing) is used, you would conclude that the treatment is better on both outcomes.
+
+Why is this nice? The analysis relies upon a multivariate distribution and naturally respects the correlation between your outcomes. If pain relief and mobility are related, the model captures that. And you get a probability statement that can be used for superiority and inferiority decision with control of false positives (i.e., Type I error). The latter is convenient: When an uninformative prior is used, the posterior probability has a direct relationship to the p-value.
+
+### What makes this approach useful?
+
+Behind the scenes, `bmco` fits a **Bayesian multivariate model** that:
+
+1.  **Captures outcome correlations naturally**: If pain relief and mobility improvement tend to go together (as they often do), the model learns this and uses that structure to give you more precise estimates.
+
+2.  **Returns the posterior distribution directly**: You get samples from the posterior, so you can ask *any* follow-up question - either on a single outcome or on multiple outcomes: P(drug better on both)? P(drug better on at least one)? P(weighted improvement \> 0.10)? P(effect on pain \> 0.20)?
+
+3.  **Gives you the probability you actually care about**: A direct posterior probability with a cutoff that corresponds to a prespecified Type I error rate available: "Given the data, what's the probability of this scenario?"
+
+The whole framework respects the basic structure of the problem: multiple related outcomes, a coherent treatment comparison, and flexible success criteria.
+
+------------------------------------------------------------------------
+
+## Three decision rules compared
+
+Same data, different success criteria:
+
+### 1. All Rule (Both outcomes must improve)
+
+```{r all-rule, eval = TRUE}
+result_all <- bmvb(
+  data = trial_data,
+  grp = "treatment",
+  grp_a = "placebo",
+  grp_b = "drug",
+  y_vars = c("pain_relief", "mobility_improved"),
+  rule = "All",
+  n_it = 5000,
+  return_samples = TRUE # For plot of sample
+)
+
+cat("P(drug > placebo on BOTH):", result_all$delta$pop)
+```
+
+The plot below visualizes this posterior probability relative to the All rule. `r if(1 - result_all$delta$pop > 1e-6){paste0("A large part of the posterior draws (", result_all$delta$pop * 100, ")% falls ")}else if(1 - result_all$delta$pop < 1e-6){paste0("All of the posterior draws (", result_all$delta$pop * 100, "%) fall ")}` in the superiority region (marked area) of the All rule, which is characterized by a treatment difference above zero on both outcomes.
+
+```{r plot-all, echo = FALSE, fig.width = 5, fig.length = 5}
+par(mgp=c(2.5,0.8,0), mar=c(5,5,2,1))
+
+# Kleuren
+col_quad  <- adjustcolor("grey70", alpha.f = 0.4)
+col_cont  <- "steelblue4"
+col_axis  <- "grey20"
+col_grid  <- "grey90"
+
+par(mgp=c(2.5,0.8,0), mar=c(5,5,2,1))
+
+plot(NULL,
+     xlim=c(-1,1), ylim=c(-1,1),
+     xaxs="i", yaxs="i",
+     xlab="p(pain relief | drug) - p(pain relief | placebo)",
+     ylab="p(mobility | drug) - p(mobility | placebo)",
+     #xlab=expression(P[1]^A - P[1]^B),
+     #ylab=expression(P[2]^A - P[2]^B),
+     cex.lab=1, cex.axis=0.9, las=1, axes=FALSE)
+
+# Subtiele grid
+abline(h=seq(-1,1,0.5), v=seq(-1,1,0.5), col=col_grid, lwd=1)
+
+# Assen
+axis(1, col=col_axis, col.axis=col_axis)
+axis(2, col=col_axis, col.axis=col_axis)
+box(col=col_axis)
+
+# Referentielijnen
+abline(h=0, col="grey40", lwd=1.5)
+abline(v=0, col="grey40", lwd=1.5)
+
+# Gearceerd kwadrant (rechtsboven)
+usr <- par("usr")
+#rect(0, 0, usr[2], usr[4],
+#     col = col_quad, border = NA)
+rect(xleft=0,ybottom=0,xright=par("usr")[2],ytop=par("usr")[4],,
+     density=10, col = col_quad, lwd=1, border=NA)
+
+# Data voorbereiden
+x_seq <- seq(-0.995,1,0.005)
+y_seq <- seq(-0.995,1,0.005)
+
+z_mat <- table(
+  cut(result_all$samples$delta[,1], breaks=x_seq),
+  cut(result_all$samples$delta[,2], breaks=y_seq)
+)
+
+# Contourlijnen
+contour(x=x_seq[-1], y=y_seq[-1],
+        z=matrix(z_mat, nrow=length(x_seq)-1),
+        add=TRUE,
+        drawlabels=FALSE,
+        col=col_cont,
+        lwd=2,
+        nlevels=6)
+
+```
+
+**When to use**: You need the treatment to be an all-rounder; no concessions permitted.
+
+### 2. Any Rule (At least one outcome improves)
+
+```{r any-rule, eval = TRUE}
+result_any <- bmvb(
+  data = trial_data,
+  grp = "treatment",
+  grp_a = "placebo",
+  grp_b = "drug",
+  y_vars = c("pain_relief", "mobility_improved"),
+  rule = "Any",
+  n_it = 5000,
+  return_samples = TRUE
+)
+
+cat("P(drug > placebo on AT LEAST ONE):", result_any$delta$pop)
+```
+
+Below is another plot, this time to visualize the posterior probability relative to the Any rule. As indicated by the different directions of density lines, the rule is a combination of two superiority regions. Here `r if(1 - result_all$delta$pop > 1e-6 & 1 - result_any$delta$pop > 1e-6){paste0("as well, a large part all of the posterior draws (", result_any$delta$pop * 100, "%) falls ")}else if(1 - result_all$delta$pop > 1e-6 & 1 - result_any$delta$pop < 1e-6){paste0("all of the posterior draws (", result_any$delta$pop * 100, "%) fall ")}else if(1 - result_all$delta$pop < 1e-6 & 1 - result_any$delta$pop < 1e-6){paste0("as well, all of the posterior draws (", result_any$delta$pop * 100, "%) fall ")}` in the superiority region.
+
+```{r plot-any, echo = FALSE, fig.width = 5, fig.length = 5}
+par(mgp=c(2.5,0.8,0), mar=c(5,5,2,1))
+
+# Kleuren
+col_quad  <- adjustcolor("grey70", alpha.f = 0.4)
+col_cont  <- "steelblue4"
+col_axis  <- "grey20"
+col_grid  <- "grey90"
+
+par(mgp=c(2.5,0.8,0), mar=c(5,5,2,1))
+
+plot(NULL,
+     xlim=c(-1,1), ylim=c(-1,1),
+     xaxs="i", yaxs="i",
+     xlab="p(pain relief | drug) - p(pain relief | placebo)",
+     ylab="p(mobility | drug) - p(mobility | placebo)",
+#xlab=expression(P[1]^A - P[1]^B),
+#     ylab=expression(P[2]^A - P[2]^B),
+     cex.lab=1, cex.axis=0.9, las=1, axes=FALSE)
+
+# Subtiele grid
+abline(h=seq(-1,1,0.5), v=seq(-1,1,0.5), col=col_grid, lwd=1)
+
+# Assen
+axis(1, col=col_axis, col.axis=col_axis)
+axis(2, col=col_axis, col.axis=col_axis)
+box(col=col_axis)
+
+# Referentielijnen
+abline(h=0, col="grey40", lwd=1.5)
+abline(v=0, col="grey40", lwd=1.5)
+
+# Gearceerd kwadrant (rechtsboven)
+usr <- par("usr")
+rect(xleft=par("usr")[1], ybottom=0,xright=par("usr")[2],ytop=par("usr")[4],
+     density=10, angle = 45, col = col_quad, lwd=1, border=NA)
+rect(xleft=0,ybottom=par("usr")[3],xright=par("usr")[2],ytop=par("usr")[4],
+     density=10, angle = -45, col = col_quad, lwd=1, border=NA)
+
+# Data voorbereiden
+x_seq <- seq(-0.995,1,0.005)
+y_seq <- seq(-0.995,1,0.005)
+
+z_mat <- table(
+  cut(result_all$samples$delta[,1], breaks=x_seq),
+  cut(result_all$samples$delta[,2], breaks=y_seq)
+)
+
+# Contourlijnen
+contour(x=x_seq[-1], y=y_seq[-1],
+        z=matrix(z_mat, nrow=length(x_seq)-1),
+        add=TRUE,
+        drawlabels=FALSE,
+        col=col_cont,
+        lwd=2,
+        nlevels=6)
+
+```
+
+**When to use**: You're okay with a partially effective treatment. Useful when outcomes are substitutable (e.g., different ways to measure quality of life).
+
+### 3. Compensatory Rule (Weighted outcomes)
+
+```{r compensatory-rule, eval = TRUE}
+result_comp <- bmvb(
+  data = trial_data,
+  grp = "treatment",
+  grp_a = "placebo",
+  grp_b = "drug",
+  y_vars = c("pain_relief", "mobility_improved"),
+  rule = "Comp",
+  w = c(0.70, 0.30),  # Pain relief is 70% of the story, mobility 30%
+  n_it = 5000,
+  return_samples = TRUE
+)
+
+cat("P(weighted improvement):", result_comp$delta$pop)
+```
+
+In the next plot, the posterior probability relative to the Compensatory rule is shown. The marked area visualizes the superiority region for a Compensatory rule where the first outcome (pain relief) accounts for 70% of the decision and the other 30% is determined by the improvement in mobility. `r if(1 - result_comp$delta$pop > 1e-6 && (1 - result_all$delta$pop > 1e-6 | 1 - result_any$delta$pop > 1e-6)){paste0("For this rule too, a large part of the posterior draws (", result_comp$delta$pop * 100, "%) falls " )}else if(1 - result_comp$delta$pop < 1e-6 & 1 - result_all$delta$pop < 1e-6 & 1 - result_any$delta$pop < 1e-6){paste0("For this rule too, all of the posterior draws (", result_comp$delta$pop * 100, "%) fall ")}else if(1 - result_comp$delta$pop < 1e-6 & 1 - result_all$delta$pop > 1e-6 & 1 - result_any$delta$pop > 1e-6){paste0("For this rule, all of the posterior draws (", result_comp$delta$pop * 100, "%) fall ")}else if(1 - result_comp$delta$pop > 1e-6 & 1 - result_all$delta$pop < 1e-6 & 1 - result_any$delta$pop < 1e-6){paste0("For this rule too, a large part of the posterior draws (", result_comp$delta$pop * 100, "%) falls ")}` in the superiority region.
+
+```{r plot-comp, echo = FALSE, fig.width = 5, fig.length = 5}
+weights <- function(a1, delta1){
+  (-1 * a1 * delta1) / (1 - a1)
+}
+
+a1 <- 0.6
+x <- seq(-1, 1, length.out = 500)
+y <- weights(a1, x)
+
+# curve
+x <- seq(-1, 1, length.out = 500)
+y <- weights(a1, x)
+
+# polygon boven de curve
+poly_x <- c(x, rev(x))
+poly_y <- c(y, rep(1, length(x)))
+
+
+par(mgp=c(2.5,0.8,0), mar=c(5,5,2,1))
+
+# Kleuren
+col_quad  <- adjustcolor("grey70", alpha.f = 0.4)
+col_cont  <- "steelblue4"
+col_axis  <- "grey20"
+col_grid  <- "grey90"
+
+par(mgp=c(2.5,0.8,0), mar=c(5,5,2,1))
+
+plot(NULL,
+     xlim=c(-1,1), ylim=c(-1,1),
+     xaxs="i", yaxs="i",
+     xlab="p(pain relief | drug) - p(pain relief | placebo)",
+     ylab="p(mobility | drug) - p(mobility | placebo)",
+     #xlab=expression(P[1]^A - P[1]^B),
+     #ylab=expression(P[2]^A - P[2]^B),
+     cex.lab=1, cex.axis=0.9, las=1, axes=FALSE)
+
+# Subtiele grid
+abline(h=seq(-1,1,0.5), v=seq(-1,1,0.5), col=col_grid, lwd=1)
+
+# Assen
+axis(1, col=col_axis, col.axis=col_axis)
+axis(2, col=col_axis, col.axis=col_axis)
+box(col=col_axis)
+
+# Referentielijnen
+abline(h=0, col="grey40", lwd=1.5)
+abline(v=0, col="grey40", lwd=1.5)
+
+# Gearceerd kwadrant (rechtsboven)
+usr <- par("usr")
+polygon(poly_x, poly_y,
+        col=adjustcolor("grey60", 0.4), density = 10, angle = 45, lwd = 1,
+        border=NA)
+
+# curve zelf (belangrijk voor interpretatie)
+lines(x, y, lwd=1, col="black")
+
+
+# Data voorbereiden
+x_seq <- seq(-0.995,1,0.005)
+y_seq <- seq(-0.995,1,0.005)
+
+z_mat <- table(
+  cut(result_all$samples$delta[,1], breaks=x_seq),
+  cut(result_all$samples$delta[,2], breaks=y_seq)
+)
+
+# Contourlijnen
+contour(x=x_seq[-1], y=y_seq[-1],
+        z=matrix(z_mat, nrow=length(x_seq)-1),
+        add=TRUE,
+        drawlabels=FALSE,
+        col=col_cont,
+        lwd=2,
+        nlevels=6)
+
+```
+
+**When to use**: You have heterogeneous priorities. Pain relief matters most, but mobility counts too.
+
+**The key insight**: With these three function calls, you've answered three different questions. Each one respects the data and the correlation structure.
+
+------------------------------------------------------------------------
+
+## Beyond the simple case: subgroups and clustering
+
+Additional advantage comes when your data are more complex:
+
+### When treatments vary by patient type
+
+Maybe your treatment works brilliantly in younger patients but poorly in elderly patients. The `bglm()` function extends the analysis to handle **subgroup effects**:
+
+```{r bglm, eval = TRUE}
+# Add age data 
+trial_data_with_age <- trial_data
+trial_data_with_age$age <- round(rnorm(100, 60, 8))
+
+# Does the drug improve BOTH outcomes in elderly patients (age 65+)?
+result_elderly <- bglm(
+  data = trial_data_with_age,
+  grp = "treatment",
+  grp_a = "placebo",
+  grp_b = "drug",
+  x_var = "age",
+  y_vars = c("pain_relief", "mobility_improved"),
+  x_method = "Empirical",
+  x_def = c(65, Inf),  # Elderly patients
+  rule = "All",
+  n_it = 5000
+)
+
+cat("P(drug > placebo on BOTH | age 65+):", result_elderly$delta$pop)
+```
+
+While `bmvb()` relies on a **multivariate Bernoulli distribution**, subgroup analysis uses **multivariate logistic regression** under the hood to answer your multivariate question directly: What's the posterior probability of superiority in the elderly subgroup?
+
+### When data are clustered
+
+If you ran this trial across 20 hospitals (cluster-randomized), observations within hospitals aren't independent. The `bglmm()` function handles random intercepts and slopes:
+
+```{r bglmm, eval = FALSE}
+# Use in-built multilevel data 
+trial_data_with_hospitals <- bglmm_data
+colnames(trial_data_with_hospitals) <- c("hospital", "treatment", "age", "pain_relief", "mobility_improved")
+head(trial_data_with_hospitals)
+
+result_clustered <- bglmm(
+  data = trial_data_with_hospitals,
+  grp = "treatment", 
+  grp_a = "placebo",
+  grp_b = "drug",
+  id_var = "hospital",  # Hospital as a random effect
+  x_var = "age",
+  y_vars = c("pain_relief", "mobility_improved"),
+  rule = "All",
+  n_burn = 10000,
+  n_it = 20000 # Takes some time; large number of iterations needed
+)
+
+cat("P(drug > placebo on BOTH | accounting for hospitals):", result_clustered$delta$pop)
+```
+
+Same multivariate logic; now it's robust to the clustered structure.
+
+------------------------------------------------------------------------
+
+## When this approach is useful
+
+In applied research, several things are typically true:
+
+1.  **You care about multiple outcomes.** The treatment affects different aspects of patient well-being, educational progress, quality of life — or any outcome your domain measures.
+
+2.  **Those outcomes are often correlated.** A good treatment usually helps on multiple fronts; a poor one hurts on multiple fronts.
+
+3.  **You want a clear decision rule.** Does this treatment meet our success criteria? And how confident are we?
+
+The joint modeling approach handles all three naturally:
+
+-   **Flexible decision rules**: All (conjunctive), Any (disjunctive), or Compensatory (weighted): Three different ways to capture relative importance of outcomes and to define "success" according to your contextual needs.
+-   **Efficient use of data**: The correlation structure gets learned and used. You don't lose information to assuming independence and may sometimes even end up with a lower sample size.
+-   **Interpretable results**: Posterior probabilities statements produce coherent decisions with Type I error control.
+
+------------------------------------------------------------------------
+
+## Getting Started
+
+Install from CRAN:
+
+```{r install-bmco}
+install.packages("bmco")
+```
+
+Then load the package and explore the vignettes. Here, more details on MCMC settings, prior choices, and other options are given.
+
+```{r vignettes}
+library(bmco)
+vignette("Introduction to bmco")
+vignette("Subgroup Analysis with Multivariate Binary Outcomes")
+vignette("Subgroup Analysis with Multivariate Binary Outcomes in Multilevel Data")
+```
+
+Each vignette walks through realistic examples with full reproducible code.
+
+Power analysis is available in the [bmco-pwr Shiny app](https://xynthia-kavelaars.shinyapps.io/bmco-pwr/) for basic multivariate Bernoulli analysis using `bmvb()` and subgroup analysis via `bglm()`.
+
+------------------------------------------------------------------------
+
+## Quick Reference
+
+| Analysis | Scenario | Function | When to Use |
+|------------------|------------------|------------------|------------------|
+| Basic multivariate Bernoulli | Simple comparison, no covariates | `bmvb()` | Randomized trial, full sample analysis |
+| Subgroup analysis | Treatment varies by patient type | `bglm()` | Age-stratified, severity-based, or other subgroup effects |
+| Multilevel models | Clustered data (hospitals, schools) | `bglmm()` | Cluster-randomized trials or observational data with nesting |
+
+------------------------------------------------------------------------
+
+## References
+
+The methods are published in peer-reviewed journals:
+
+-   **Basic multivariate Bernoulli**: `r format_apa(bib[["Kavelaars2020"]])`
+-   **Subgroup analysis**: `r format_apa(bib[["Kavelaars2024"]])`
+-   **Multilevel models**: `r format_apa(bib[["Kavelaars2023"]])`
+
+------------------------------------------------------------------------
+
+**Questions? Found this useful? I'm on social media and happy to discuss!**
+
+```{r contact, echo = FALSE, results = 'asis'}
+library(fontawesome)
+
+cat(paste0(
+  '<div style="display:flex; gap:20px;">',
+  
+  '<a href="https://github.com/XynthiaKavelaars/bmco" target="_blank">',
+  fa("github"), ' Github</a>',
+
+  '<a href="https://bsky.app/profile/xynthia-kavelaars.bsky.social" target="_blank">',
+  fa("bluesky"), ' BlueSky</a>',
+  
+  '<a href="https://mastodon.social/@xynthiakavelaars" target="_blank">',
+  fa("mastodon"), ' Mastodon</a>',
+#  
+#  '<a href="https://mastodon.social/@xynthiakavelaars" target="_blank">',
+#  fa("blog"), ' Blog</a>',
+  
+  '<a href="www.linkedin.com/in/xynthia-kavelaars-7a0377129" target="_blank">',
+  fa("linkedin"), ' LinkedIn</a>', 
+
+  '<a href="https://orcid.org/0000-0003-1600-3153" target="_blank">',
+  fa("orcid"), ' ORCID</a>', 
+
+  '</div>'
+))
+```

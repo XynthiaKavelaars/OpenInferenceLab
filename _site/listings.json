@@ -1,0 +1,49 @@
+[
+  {
+    "listing": "/index.html",
+    "items": [
+      "/posts/2026_09_08_p11_lca_tutorial/index.html",
+      "/posts/2026_08_25_p10_lpa_tutorial/index.html",
+      "/posts/2026_08_11_p09_multiple_binary_outcomes_app/index.html",
+      "/posts/2026_07_28_p08_power_analysis/index.html",
+      "/posts/2026_07_14_p07_priors/index.html",
+      "/posts/2026_06_30_p06_sequential_designs/index.html",
+      "/posts/2026_06_16_p05_correlated_outcomes/index.html",
+      "/posts/2026_06_02_p04_decision_rules/index.html",
+      "/posts/2026_05_19_p03_multilevel_analsis/index.html",
+      "/posts/2026_05_05_p02_subgroup_analysis/index.html",
+      "/posts/2026_04_21_p01_multivariate_analysis/index.html"
+    ]
+  },
+  {
+    "listing": "/posts/posts.html",
+    "items": []
+  },
+  {
+    "listing": "/software.html",
+    "items": [
+      "/posts/2026_05_05_p02_subgroup_analysis/index.html",
+      "/posts/posts.html",
+      "/posts/2026_04_21_p01_multivariate_analysis/index.html",
+      "/posts/2026_06_02_p04_decision_rules/index.html",
+      "/posts/2026_06_16_p05_correlated_outcomes/index.html"
+    ]
+  },
+  {
+    "listing": "/posts.html",
+    "items": [
+      "/featured/2026_04_21_p01_multivariate_analysis/index.html",
+      "/posts/2026_09_08_p11_lca_tutorial/index.html",
+      "/posts/2026_08_25_p10_lpa_tutorial/index.html",
+      "/posts/2026_08_11_p09_multiple_binary_outcomes_app/index.html",
+      "/posts/2026_07_28_p08_power_analysis/index.html",
+      "/posts/2026_07_14_p07_priors/index.html",
+      "/posts/2026_06_30_p06_sequential_designs/index.html",
+      "/posts/2026_06_16_p05_correlated_outcomes/index.html",
+      "/posts/2026_06_02_p04_decision_rules/index.html",
+      "/posts/2026_05_19_p03_multilevel_analsis/index.html",
+      "/posts/2026_05_05_p02_subgroup_analysis/index.html",
+      "/posts/2026_04_21_p01_multivariate_analysis/index.html"
+    ]
+  }
+]
