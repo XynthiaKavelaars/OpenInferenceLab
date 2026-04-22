@@ -1,9 +1,14 @@
 .Rproj.user
+.Rproj
 .Rhistory
 .RData
 .Ruserdata
+^drafts/
+^posts_files/
+Publications.bib
+*.qmd
+_quarto.yml
 _drafts/
-_posts_files/
 
 /.quarto/
 **/*.quarto_ipynb
