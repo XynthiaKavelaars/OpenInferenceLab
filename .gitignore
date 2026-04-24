@@ -9,7 +9,6 @@ drafts/
 posts_files/
 Publications.bib
 *.qmd
-_quarto.yml
 _drafts/
 
 /.quarto/

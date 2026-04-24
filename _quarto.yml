@@ -1,0 +1,48 @@
+project:
+  type: website
+  title: "The Open Inference Lab"
+  output-dir: docs
+
+website:
+  description: "Opening up (Bayesian) models, multivariate inference, statistical decision-making, and more"
+  site-url: https://xynthiakavelaars.github.io/openinferencelab  # you must change this appropriately for RSS feeds to work properly
+  title: "The Open Inference Lab"
+  navbar:
+    left:
+      - href: index.qmd
+        text: "Home"
+      - href: posts.qmd
+        text: "Blog posts"
+      - text: "About"
+        menu:  
+        - href: about.qmd
+          text: "About me"
+        - href: about/software.qmd
+          text: "Software"
+        - href: about/publications.qmd
+          text: "Publications"
+      
+    right:
+      - icon: github
+        href: https://github.com/XynthiaKavelaars  #
+      - icon: bluesky  #
+        href: https://xynthia-kavelaars.bsky.social  #
+      - icon: mastodon  #
+        href: https://mastodon.social/@xynthiakavelaars  #
+      - icon: linkedin  #
+        href: www.linkedin.com/in/xynthia-kavelaars-7a0377129  #
+      - icon: envelope  #
+        href: mailto:xynthia.kavelaars@ou.nl  #
+
+execute:
+  freeze: true
+  
+format:
+  html:
+    theme: minty
+    css: styles.css
+    toc: true
+    highlight-style: github
+
+editor: visual
+
