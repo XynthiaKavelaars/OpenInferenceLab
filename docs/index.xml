@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>The Open Inference Lab</title>
+<link>https://xynthiakavelaars.github.io/openinferencelab/</link>
+<atom:link href="https://xynthiakavelaars.github.io/openinferencelab/index.xml" rel="self" type="application/rss+xml"/>
+<description>Opening up (Bayesian) models, multivariate inference, statistical decision-making, and more</description>
+<generator>quarto-1.9.37</generator>
+<lastBuildDate>Mon, 20 Apr 2026 22:00:00 GMT</lastBuildDate>
+<item>
+  <title>When binary outcomes move together: A Bayesian approach to multivariate analysis</title>
+  <dc:creator>Xynthia Kavelaars</dc:creator>
+  <link>https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>Imagine you’re designing a study to test the effectiveness of a new treatment. Success isn’t just about symptom relief—you also care about quality of life (QoL). Or side effects. Or both.</p>
+<p>So you measure <strong>two outcomes</strong>: symptom relief (yes/no) and quality of life improvement (yes/no). Now the question arises: <em>What does “success” mean?</em></p>
+<ul>
+<li>Must the treatment improve <strong>both</strong> outcomes? (All rule)</li>
+<li>Or is improvement in <strong>just one</strong> enough? (Any rule)<br>
+</li>
+<li>Or can you <strong>weight</strong> them differently — maybe symptom relief matters 70%, QoL only 30%? Maybe a small negative effect on QoL is acceptable if symptom relief is large enough? (Compensatory rule)</li>
+</ul>
+<p>When you measure two outcomes together, you want your analysis to reflect that relationship in the decision regarding superiority.</p>
+<section id="the-challenge-with-standard-approaches" class="level3">
+<h3 class="anchored" data-anchor-id="the-challenge-with-standard-approaches">The challenge with standard approaches</h3>
+<p>Testing outcomes separately (symptom relief indpendently from QoL) invites complications:</p>
+<ul>
+<li>Often outcomes are given a primary or secondary role in analysis and decision-making. But that is at least problematic when safety and effectivity are measured together. Safety is almost never of secondary concern, and neither is effectivity.</li>
+<li>Decisions are often based on an ad hoc basis: Two decisions are combined into a single decision, without providing a probability statement on the combined decision, leaving the accuracy of the final decision less transparent.</li>
+<li>Your two outcomes may be <em>correlated</em>: if the treatment relieves symptoms, it might as well improve quality of life too. Standard separate testing doesn’t easily account for this structure.</li>
+</ul>
+<p>These methods do not always answer the most relevant question. <strong>The real question</strong> people care about:</p>
+<p><em>“What is the probability that this treatment improves BOTH outcomes?”</em></p>
+<p>Or: <em>“At least one of the outcomes?”</em> Or: <em>“This weighted combination of outcomes?”</em></p>
+<p>These are natural, practical questions, but they are not straightforward to answer with standard approaches - especially when outcomes differ in their relative contributions to success.</p>
+<hr>
+</section>
+<section id="a-direct-approach-joint-modeling-of-binary-outcomes" class="level2">
+<h2 class="anchored" data-anchor-id="a-direct-approach-joint-modeling-of-binary-outcomes">A direct approach: Joint modeling of binary outcomes</h2>
+<p>Here’s an elegant solution: <strong>Model both outcomes together in a single framework</strong>, account for their natural correlation, and use the posterior distribution to answer your specific question.</p>
+<p>The <code>bmco</code> package in R implements this. It’s built on the principle that when you have multiple binary outcomes, analyzing them jointly — rather than piecing together separate tests - gives you more coherence.</p>
+<p>Let’s simulate trial data:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(bmco)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set.seed</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2026</span>)</span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Simulate a trial: 100 patients, 50 per arm</span></span>
+<span id="cb1-5"></span>
+<span id="cb1-6">outcome_data_placebo <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">t</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rmultinom</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.30</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.10</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.20</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.20</span>)))  </span>
+<span id="cb1-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Placebo: 40% pain relief, 50% mobility improvement, correlation 0.33</span></span>
+<span id="cb1-8"></span>
+<span id="cb1-9">outcome_data_drug <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">t</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rmultinom</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.55</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.10</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.20</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.15</span>)))   </span>
+<span id="cb1-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Drug: 65% pain relief, 70% mobility improvement, correlation 0.30</span></span>
+<span id="cb1-11"></span>
+<span id="cb1-12">trial_data <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">data.frame</span>(</span>
+<span id="cb1-13">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">treatment =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rep</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"placebo"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"drug"</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">each =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span>),</span>
+<span id="cb1-14">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">pain_relief =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(</span>
+<span id="cb1-15">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rowSums</span>(outcome_data_placebo[,<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)]), </span>
+<span id="cb1-16">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rowSums</span>(outcome_data_drug[,<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)])</span>
+<span id="cb1-17">  ),</span>
+<span id="cb1-18">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mobility_improved =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(</span>
+<span id="cb1-19">     <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rowSums</span>(outcome_data_placebo[,<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)]), </span>
+<span id="cb1-20">     <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rowSums</span>(outcome_data_drug[,<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)])</span>
+<span id="cb1-21">  )</span>
+<span id="cb1-22">)</span>
+<span id="cb1-23"></span>
+<span id="cb1-24"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(trial_data)</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  treatment pain_relief mobility_improved
+1   placebo           1                 1
+2   placebo           0                 0
+3   placebo           0                 0
+4   placebo           1                 1
+5   placebo           0                 0
+6   placebo           1                 1</code></pre>
+</div>
+</div>
+<p>Now, here’s the key question for this trial: <em>What is the probability that the drug is better on a relevant combination of pain relief and mobility improvement?</em></p>
+<p>With <code>bmco</code>, you get a direct answer:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">result <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bmvb</span>(</span>
+<span id="cb3-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> trial_data,</span>
+<span id="cb3-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"treatment"</span>,</span>
+<span id="cb3-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_a =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"placebo"</span>,</span>
+<span id="cb3-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_b =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"drug"</span>,</span>
+<span id="cb3-6">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_vars =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pain_relief"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mobility_improved"</span>),</span>
+<span id="cb3-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rule =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"All"</span>,  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Drug must improve BOTH outcomes</span></span>
+<span id="cb3-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">test =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"right_sided"</span>,</span>
+<span id="cb3-9">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_it =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5000</span></span>
+<span id="cb3-10">)</span>
+<span id="cb3-11"></span>
+<span id="cb3-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(result)</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Multivariate Bernoulli Analysis
+=================================
+
+   Group mean y1 mean y2
+ placebo   0.442   0.443
+    drug   0.596   0.865
+  n(placebo) = 50    n(drug) = 50
+
+Posterior probability P(drug &gt; placebo) [All rule]: 0.940
+
+Use summary() for credible intervals and ESS.</code></pre>
+</div>
+</div>
+<p>Output for decision-making:</p>
+<pre><code>Posterior probability P(drug &gt; placebo on BOTH outcomes): 0.94</code></pre>
+<p>If the standard superiority criterion of posterior probability &gt; 0.95 (one-sided testing) is used, you would conclude that the treatment is better on both outcomes.</p>
+<p>Why is this nice? The analysis relies upon a multivariate distribution and naturally respects the correlation between your outcomes. If pain relief and mobility are related, the model captures that. And you get a probability statement that can be used for superiority and inferiority decision with control of false positives (i.e., Type I error). The latter is convenient: When an uninformative prior is used, the posterior probability has a direct relationship to the p-value.</p>
+<section id="what-makes-this-approach-useful" class="level3">
+<h3 class="anchored" data-anchor-id="what-makes-this-approach-useful">What makes this approach useful?</h3>
+<p>Behind the scenes, <code>bmco</code> fits a <strong>Bayesian multivariate model</strong> that:</p>
+<ol type="1">
+<li><p><strong>Captures outcome correlations naturally</strong>: If pain relief and mobility improvement tend to go together (as they often do), the model learns this and uses that structure to give you more precise estimates.</p></li>
+<li><p><strong>Returns the posterior distribution directly</strong>: You get samples from the posterior, so you can ask <em>any</em> follow-up question - either on a single outcome or on multiple outcomes: P(drug better on both)? P(drug better on at least one)? P(weighted improvement &gt; 0.10)? P(effect on pain &gt; 0.20)?</p></li>
+<li><p><strong>Gives you the probability you actually care about</strong>: A direct posterior probability with a cutoff that corresponds to a prespecified Type I error rate available: “Given the data, what’s the probability of this scenario?”</p></li>
+</ol>
+<p>The whole framework respects the basic structure of the problem: multiple related outcomes, a coherent treatment comparison, and flexible success criteria.</p>
+<hr>
+</section>
+</section>
+<section id="three-decision-rules-compared" class="level2">
+<h2 class="anchored" data-anchor-id="three-decision-rules-compared">Three decision rules compared</h2>
+<p>Same data, different success criteria:</p>
+<section id="all-rule-both-outcomes-must-improve" class="level3">
+<h3 class="anchored" data-anchor-id="all-rule-both-outcomes-must-improve">1. All Rule (Both outcomes must improve)</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">result_all <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bmvb</span>(</span>
+<span id="cb6-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> trial_data,</span>
+<span id="cb6-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"treatment"</span>,</span>
+<span id="cb6-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_a =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"placebo"</span>,</span>
+<span id="cb6-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_b =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"drug"</span>,</span>
+<span id="cb6-6">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_vars =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pain_relief"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mobility_improved"</span>),</span>
+<span id="cb6-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rule =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"All"</span>,</span>
+<span id="cb6-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_it =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5000</span>,</span>
+<span id="cb6-9">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">return_samples =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># For plot of sample</span></span>
+<span id="cb6-10">)</span>
+<span id="cb6-11"></span>
+<span id="cb6-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"P(drug &gt; placebo on BOTH):"</span>, result_all<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>delta<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>pop)</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>P(drug &gt; placebo on BOTH): 0.946</code></pre>
+</div>
+</div>
+<p>The plot below visualizes this posterior probability relative to the All rule. A large part of the posterior draws (94.6)% falls in the superiority region (marked area) of the All rule, which is characterized by a treatment difference above zero on both outcomes.</p>
+<div class="cell" data-fig.length="5">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/index_files/figure-html/plot-all-1.png" class="img-fluid figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>When to use</strong>: You need the treatment to be an all-rounder; no concessions permitted.</p>
+</section>
+<section id="any-rule-at-least-one-outcome-improves" class="level3">
+<h3 class="anchored" data-anchor-id="any-rule-at-least-one-outcome-improves">2. Any Rule (At least one outcome improves)</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">result_any <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bmvb</span>(</span>
+<span id="cb8-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> trial_data,</span>
+<span id="cb8-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"treatment"</span>,</span>
+<span id="cb8-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_a =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"placebo"</span>,</span>
+<span id="cb8-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_b =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"drug"</span>,</span>
+<span id="cb8-6">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_vars =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pain_relief"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mobility_improved"</span>),</span>
+<span id="cb8-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rule =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Any"</span>,</span>
+<span id="cb8-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_it =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5000</span>,</span>
+<span id="cb8-9">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">return_samples =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span></span>
+<span id="cb8-10">)</span>
+<span id="cb8-11"></span>
+<span id="cb8-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"P(drug &gt; placebo on AT LEAST ONE):"</span>, result_any<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>delta<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>pop)</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>P(drug &gt; placebo on AT LEAST ONE): 1</code></pre>
+</div>
+</div>
+<p>Below is another plot, this time to visualize the posterior probability relative to the Any rule. As indicated by the different directions of density lines, the rule is a combination of two superiority regions. Here all of the posterior draws (100%) fall in the superiority region.</p>
+<div class="cell" data-fig.length="5">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/index_files/figure-html/plot-any-1.png" class="img-fluid figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>When to use</strong>: You’re okay with a partially effective treatment. Useful when outcomes are substitutable (e.g., different ways to measure quality of life).</p>
+</section>
+<section id="compensatory-rule-weighted-outcomes" class="level3">
+<h3 class="anchored" data-anchor-id="compensatory-rule-weighted-outcomes">3. Compensatory Rule (Weighted outcomes)</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">result_comp <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bmvb</span>(</span>
+<span id="cb10-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> trial_data,</span>
+<span id="cb10-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"treatment"</span>,</span>
+<span id="cb10-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_a =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"placebo"</span>,</span>
+<span id="cb10-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_b =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"drug"</span>,</span>
+<span id="cb10-6">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_vars =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pain_relief"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mobility_improved"</span>),</span>
+<span id="cb10-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rule =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Comp"</span>,</span>
+<span id="cb10-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">w =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.70</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.30</span>),  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Pain relief is 70% of the story, mobility 30%</span></span>
+<span id="cb10-9">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_it =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5000</span>,</span>
+<span id="cb10-10">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">return_samples =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span></span>
+<span id="cb10-11">)</span>
+<span id="cb10-12"></span>
+<span id="cb10-13"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"P(weighted improvement):"</span>, result_comp<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>delta<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>pop)</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>P(weighted improvement): 0.999</code></pre>
+</div>
+</div>
+<p>In the next plot, the posterior probability relative to the Compensatory rule is shown. The marked area visualizes the superiority region for a Compensatory rule where the first outcome (pain relief) accounts for 70% of the decision and the other 30% is determined by the improvement in mobility. For this rule too, a large part of the posterior draws (99.9%) falls in the superiority region.</p>
+<div class="cell" data-fig.length="5">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/index_files/figure-html/plot-comp-1.png" class="img-fluid figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>When to use</strong>: You have heterogeneous priorities. Pain relief matters most, but mobility counts too.</p>
+<p><strong>The key insight</strong>: With these three function calls, you’ve answered three different questions. Each one respects the data and the correlation structure.</p>
+<hr>
+</section>
+</section>
+<section id="beyond-the-simple-case-subgroups-and-clustering" class="level2">
+<h2 class="anchored" data-anchor-id="beyond-the-simple-case-subgroups-and-clustering">Beyond the simple case: subgroups and clustering</h2>
+<p>Additional advantage comes when your data are more complex:</p>
+<section id="when-treatments-vary-by-patient-type" class="level3">
+<h3 class="anchored" data-anchor-id="when-treatments-vary-by-patient-type">When treatments vary by patient type</h3>
+<p>Maybe your treatment works brilliantly in younger patients but poorly in elderly patients. The <code>bglm()</code> function extends the analysis to handle <strong>subgroup effects</strong>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Add age data </span></span>
+<span id="cb12-2">trial_data_with_age <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> trial_data</span>
+<span id="cb12-3">trial_data_with_age<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>age <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">60</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span>))</span>
+<span id="cb12-4"></span>
+<span id="cb12-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Does the drug improve BOTH outcomes in elderly patients (age 65+)?</span></span>
+<span id="cb12-6">result_elderly <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bglm</span>(</span>
+<span id="cb12-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> trial_data_with_age,</span>
+<span id="cb12-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"treatment"</span>,</span>
+<span id="cb12-9">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_a =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"placebo"</span>,</span>
+<span id="cb12-10">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_b =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"drug"</span>,</span>
+<span id="cb12-11">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x_var =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"age"</span>,</span>
+<span id="cb12-12">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_vars =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pain_relief"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mobility_improved"</span>),</span>
+<span id="cb12-13">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x_method =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Empirical"</span>,</span>
+<span id="cb12-14">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x_def =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">65</span>, <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">Inf</span>),  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Elderly patients</span></span>
+<span id="cb12-15">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rule =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"All"</span>,</span>
+<span id="cb12-16">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_it =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5000</span></span>
+<span id="cb12-17">)</span>
+<span id="cb12-18"></span>
+<span id="cb12-19"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"P(drug &gt; placebo on BOTH | age 65+):"</span>, result_elderly<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>delta<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>pop)</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>P(drug &gt; placebo on BOTH | age 65+): 0.635</code></pre>
+</div>
+</div>
+<p>While <code>bmvb()</code> relies on a <strong>multivariate Bernoulli distribution</strong>, subgroup analysis uses <strong>multivariate logistic regression</strong> under the hood to answer your multivariate question directly: What’s the posterior probability of superiority in the elderly subgroup?</p>
+</section>
+<section id="when-data-are-clustered" class="level3">
+<h3 class="anchored" data-anchor-id="when-data-are-clustered">When data are clustered</h3>
+<p>If you ran this trial across 20 hospitals (cluster-randomized), observations within hospitals aren’t independent. The <code>bglmm()</code> function handles random intercepts and slopes:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Use in-built multilevel data </span></span>
+<span id="cb14-2">trial_data_with_hospitals <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> bglmm_data</span>
+<span id="cb14-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">colnames</span>(trial_data_with_hospitals) <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"hospital"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"treatment"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"age"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pain_relief"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mobility_improved"</span>)</span>
+<span id="cb14-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(trial_data_with_hospitals)</span>
+<span id="cb14-5"></span>
+<span id="cb14-6">result_clustered <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bglmm</span>(</span>
+<span id="cb14-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> trial_data_with_hospitals,</span>
+<span id="cb14-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"treatment"</span>, </span>
+<span id="cb14-9">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_a =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"placebo"</span>,</span>
+<span id="cb14-10">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_b =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"drug"</span>,</span>
+<span id="cb14-11">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">id_var =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"hospital"</span>,  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Hospital as a random effect</span></span>
+<span id="cb14-12">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x_var =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"age"</span>,</span>
+<span id="cb14-13">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_vars =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pain_relief"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mobility_improved"</span>),</span>
+<span id="cb14-14">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rule =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"All"</span>,</span>
+<span id="cb14-15">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_burn =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10000</span>,</span>
+<span id="cb14-16">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_it =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20000</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Takes some time; large number of iterations needed</span></span>
+<span id="cb14-17">)</span>
+<span id="cb14-18"></span>
+<span id="cb14-19"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"P(drug &gt; placebo on BOTH | accounting for hospitals):"</span>, result_clustered<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>delta<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>pop)</span></code></pre></div></div>
+</div>
+<p>Same multivariate logic; now it’s robust to the clustered structure.</p>
+<hr>
+</section>
+</section>
+<section id="when-this-approach-is-useful" class="level2">
+<h2 class="anchored" data-anchor-id="when-this-approach-is-useful">When this approach is useful</h2>
+<p>In applied research, several things are typically true:</p>
+<ol type="1">
+<li><p><strong>You care about multiple outcomes.</strong> The treatment affects different aspects of patient well-being, educational progress, quality of life — or any outcome your domain measures.</p></li>
+<li><p><strong>Those outcomes are often correlated.</strong> A good treatment usually helps on multiple fronts; a poor one hurts on multiple fronts.</p></li>
+<li><p><strong>You want a clear decision rule.</strong> Does this treatment meet our success criteria? And how confident are we?</p></li>
+</ol>
+<p>The joint modeling approach handles all three naturally:</p>
+<ul>
+<li><strong>Flexible decision rules</strong>: All (conjunctive), Any (disjunctive), or Compensatory (weighted): Three different ways to capture relative importance of outcomes and to define “success” according to your contextual needs.</li>
+<li><strong>Efficient use of data</strong>: The correlation structure gets learned and used. You don’t lose information to assuming independence and may sometimes even end up with a lower sample size.</li>
+<li><strong>Interpretable results</strong>: Posterior probabilities statements produce coherent decisions with Type I error control.</li>
+</ul>
+<hr>
+</section>
+<section id="getting-started" class="level2">
+<h2 class="anchored" data-anchor-id="getting-started">Getting Started</h2>
+<p>Install from CRAN:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bmco"</span>)</span></code></pre></div></div>
+</div>
+<p>Then load the package and explore the vignettes. Here, more details on MCMC settings, prior choices, and other options are given.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(bmco)</span>
+<span id="cb16-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">vignette</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Introduction to bmco"</span>)</span>
+<span id="cb16-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">vignette</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Subgroup Analysis with Multivariate Binary Outcomes"</span>)</span>
+<span id="cb16-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">vignette</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Subgroup Analysis with Multivariate Binary Outcomes in Multilevel Data"</span>)</span></code></pre></div></div>
+</div>
+<p>Each vignette walks through realistic examples with full reproducible code.</p>
+<p>Power analysis is available in the <a href="https://xynthia-kavelaars.shinyapps.io/bmco-pwr/">bmco-pwr Shiny app</a> for basic multivariate Bernoulli analysis using <code>bmvb()</code> and subgroup analysis via <code>bglm()</code>.</p>
+<hr>
+</section>
+<section id="quick-reference" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference">Quick Reference</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Analysis</th>
+<th>Scenario</th>
+<th>Function</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Basic multivariate Bernoulli</td>
+<td>Simple comparison, no covariates</td>
+<td><code>bmvb()</code></td>
+<td>Randomized trial, full sample analysis</td>
+</tr>
+<tr class="even">
+<td>Subgroup analysis</td>
+<td>Treatment varies by patient type</td>
+<td><code>bglm()</code></td>
+<td>Age-stratified, severity-based, or other subgroup effects</td>
+</tr>
+<tr class="odd">
+<td>Multilevel models</td>
+<td>Clustered data (hospitals, schools)</td>
+<td><code>bglmm()</code></td>
+<td>Cluster-randomized trials or observational data with nesting</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>The methods are published in peer-reviewed journals:</p>
+<ul>
+<li><strong>Basic multivariate Bernoulli</strong>: Kavelaars, X., Mulder, J. &amp; Kaptein, M. (2020). Decision-making with multiple correlated binary outcomes in clinical trials. <i>Statistical Methods in Medical Research</i>. <a href="https://doi.org/10.1177/0962280220922256" target="_blank">https://doi.org/10.1177/0962280220922256</a></li>
+<li><strong>Subgroup analysis</strong>: Kavelaars, X., Mulder, J. &amp; Kaptein, M. (2024). Bayesian Multivariate Logistic Regression for Superiority and Inferiority Decision-Making under Observable Treatment Heterogeneity. <i>Multivariate Behavioral Research</i>. <a href="https://doi.org/10.1080/00273171.2024.2337340" target="_blank">https://doi.org/10.1080/00273171.2024.2337340</a></li>
+<li><strong>Multilevel models</strong>: Kavelaars, X., Mulder, J. &amp; Kaptein, M. (2023). Bayesian multilevel multivariate logistic regression for superiority decision-making under observable treatment heterogeneity. <i>BMC Medical Research Methodology</i>. <a href="https://doi.org/10.1186/s12874-023-02034-z" target="_blank">https://doi.org/10.1186/s12874-023-02034-z</a></li>
+</ul>
+<hr>
+<p><strong>Questions? Found this useful? I’m on social media and happy to discuss!</strong></p>
+<div style="display:flex; gap:20px;">
+<a href="https://github.com/XynthiaKavelaars/bmco" target="_blank"> Github</a><a href="https://bsky.app/profile/xynthia-kavelaars.bsky.social" target="_blank"> BlueSky</a><a href="https://mastodon.social/@xynthiakavelaars" target="_blank"> Mastodon</a><a href="www.linkedin.com/in/xynthia-kavelaars-7a0377129" target="_blank"> LinkedIn</a><a href="https://orcid.org/0000-0003-1600-3153" target="_blank"> ORCID</a>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>Bayesian analysis</category>
+  <category>multivariate analysis</category>
+  <category>decision rules</category>
+  <category>subgroup analysis</category>
+  <category>multilevel analysis</category>
+  <category>bmco</category>
+  <guid>https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/</guid>
+  <pubDate>Mon, 20 Apr 2026 22:00:00 GMT</pubDate>
+  <media:content url="https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/images/preview.png" medium="image" type="image/png" height="72" width="144"/>
+</item>
+</channel>
+</rss>

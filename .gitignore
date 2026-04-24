@@ -1,10 +1,12 @@
 .Rproj.user
-.Rproj
+*.Rproj
+*.R
+*.bib
 .Rhistory
-.RData
+*.RData
 .Ruserdata
-^drafts/
-^posts_files/
+drafts/
+posts_files/
 Publications.bib
 *.qmd
 _quarto.yml
@@ -12,3 +14,16 @@ _drafts/
 
 /.quarto/
 **/*.quarto_ipynb
+
+# Quarto source files
+*.qmd
+
+# Freeze directory (optioneel, voor performance)
+_freeze/
+
+# Quarto cache
+.quarto/
+_quarto/
+
+# Output die je NIET wilt pushen
+!_site/
