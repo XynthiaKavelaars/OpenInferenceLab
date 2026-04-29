@@ -35,12 +35,12 @@ website:
         href: mailto:xynthia.kavelaars@ou.nl  #
 
 execute:
-  freeze: true
+  freeze: false
   
 format:
   html:
     theme: minty
-    css: styles.css
+    css: styles.scss
     toc: true
     highlight-style: github
 

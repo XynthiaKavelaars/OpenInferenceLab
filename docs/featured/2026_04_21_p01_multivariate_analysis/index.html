@@ -8,6 +8,7 @@
 
 <meta name="author" content="Xynthia Kavelaars">
 <meta name="dcterms.date" content="2026-04-21">
+<meta name="description" content="If you want to improve pain relief and quality of life, how do you know if your treatment really works? Discover how to analyze multiple outcomes together.">
 
 <title>When binary outcomes move together: A Bayesian approach to multivariate analysis – The Open Inference Lab</title>
 <style>
@@ -109,13 +110,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../../styles.scss">
 </head>
 
 <body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
@@ -191,7 +192,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">When binary outcomes move together: A Bayesian approach to multivariate analysis</h1>
+                  <div>
+        <div class="description">
+          If you want to improve pain relief <em>and</em> quality of life, how do you know if your treatment really works? Discover how to analyze multiple outcomes together.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">Bayesian analysis</div>
+                <div class="quarto-category">multivariate analysis</div>
+                <div class="quarto-category">decision rules</div>
+                <div class="quarto-category">subgroup analysis</div>
+                <div class="quarto-category">multilevel analysis</div>
+                <div class="quarto-category">bmco</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Xynthia Kavelaars </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">April 21, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
@@ -223,47 +265,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">When binary outcomes move together: A Bayesian approach to multivariate analysis</h1>
-  <div class="quarto-categories">
-    <div class="quarto-category">Bayesian analysis</div>
-    <div class="quarto-category">multivariate analysis</div>
-    <div class="quarto-category">decision rules</div>
-    <div class="quarto-category">subgroup analysis</div>
-    <div class="quarto-category">multilevel analysis</div>
-    <div class="quarto-category">bmco</div>
-  </div>
-  </div>
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
-
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Xynthia Kavelaars </p>
-          </div>
-  </div>
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">April 21, 2026</p>
-    </div>
-  </div>
-  
-    
-  </div>
-  
 
 
-</header>
-
-
+<style>
+.description { display: none; }
+</style>
+<div class="alert alert-info border-0 rounded-3" style="background: #F5F5F5; color: #1a5d54; padding: 2rem; border-left: 5px solid #2B8A7A;">
+<h3 style="margin-top: 0; color: #2B8A7A;" class="anchored">
+💊 What does “success” actually mean?
+</h3>
+<p>
+If you want to improve pain relief <em>and</em> quality of life, how do you know if your treatment really works? Discover how to analyze multiple outcomes together.
+</p>
+</div>
 <p>Imagine you’re designing a study to test the effectiveness of a new treatment. Success isn’t just about symptom relief—you also care about quality of life (QoL). Or side effects. Or both.</p>
 <p>So you measure <strong>two outcomes</strong>: symptom relief (yes/no) and quality of life improvement (yes/no). Now the question arises: <em>What does “success” mean?</em></p>
 <ul>
@@ -396,11 +414,11 @@ Use summary() for credible intervals and ESS.</code></pre>
 </div>
 </div>
 <p>The plot below visualizes this posterior probability relative to the All rule. A large part of the posterior draws (94.6)% falls in the superiority region (marked area) of the All rule, which is characterized by a treatment difference above zero on both outcomes.</p>
-<div class="cell" data-fig.length="5">
+<div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/plot-all-1.png" class="img-fluid figure-img" width="480"></p>
+<p><img src="index_files/figure-html/plot-all-1.png" class="img-fluid figure-img" width="384"></p>
 </figure>
 </div>
 </div>
@@ -427,11 +445,11 @@ Use summary() for credible intervals and ESS.</code></pre>
 </div>
 </div>
 <p>Below is another plot, this time to visualize the posterior probability relative to the Any rule. As indicated by the different directions of density lines, the rule is a combination of two superiority regions. Here all of the posterior draws (100%) fall in the superiority region.</p>
-<div class="cell" data-fig.length="5">
+<div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/plot-any-1.png" class="img-fluid figure-img" width="480"></p>
+<p><img src="index_files/figure-html/plot-any-1.png" class="img-fluid figure-img" width="384"></p>
 </figure>
 </div>
 </div>
@@ -459,11 +477,11 @@ Use summary() for credible intervals and ESS.</code></pre>
 </div>
 </div>
 <p>In the next plot, the posterior probability relative to the Compensatory rule is shown. The marked area visualizes the superiority region for a Compensatory rule where the first outcome (pain relief) accounts for 70% of the decision and the other 30% is determined by the improvement in mobility. For this rule too, a large part of the posterior draws (99.9%) falls in the superiority region.</p>
-<div class="cell" data-fig.length="5">
+<div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/plot-comp-1.png" class="img-fluid figure-img" width="480"></p>
+<p><img src="index_files/figure-html/plot-comp-1.png" class="img-fluid figure-img" width="384"></p>
 </figure>
 </div>
 </div>
@@ -512,22 +530,33 @@ Use summary() for credible intervals and ESS.</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use in-built multilevel data </span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>trial_data_with_hospitals <span class="ot">&lt;-</span> bglmm_data</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(trial_data_with_hospitals) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"hospital"</span>, <span class="st">"treatment"</span>, <span class="st">"age"</span>, <span class="st">"pain_relief"</span>, <span class="st">"mobility_improved"</span>)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(trial_data_with_hospitals)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>result_clustered <span class="ot">&lt;-</span> <span class="fu">bglmm</span>(</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> trial_data_with_hospitals,</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">grp =</span> <span class="st">"treatment"</span>, </span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">grp_a =</span> <span class="st">"placebo"</span>,</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">grp_b =</span> <span class="st">"drug"</span>,</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">id_var =</span> <span class="st">"hospital"</span>,  <span class="co"># Hospital as a random effect</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_var =</span> <span class="st">"age"</span>,</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">y_vars =</span> <span class="fu">c</span>(<span class="st">"pain_relief"</span>, <span class="st">"mobility_improved"</span>),</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">rule =</span> <span class="st">"All"</span>,</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_burn =</span> <span class="dv">10000</span>,</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_it =</span> <span class="dv">20000</span> <span class="co"># Takes some time; large number of iterations needed</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"P(drug &gt; placebo on BOTH | accounting for hospitals):"</span>, result_clustered<span class="sc">$</span>delta<span class="sc">$</span>pop)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(trial_data_with_hospitals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  hospital treatment      age pain_relief mobility_improved
+1        1   placebo 41.27538           0                 1
+2        1   placebo 49.95309           1                 1
+3        1   placebo 54.95375           1                 1
+4        1   placebo 69.72819           1                 1
+5        1   placebo 38.03138           1                 0
+6        1   placebo 51.30438           1                 0</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>result_clustered <span class="ot">&lt;-</span> <span class="fu">bglmm</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> trial_data_with_hospitals,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">grp =</span> <span class="st">"treatment"</span>, </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">grp_a =</span> <span class="st">"placebo"</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">grp_b =</span> <span class="st">"drug"</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">id_var =</span> <span class="st">"hospital"</span>,  <span class="co"># Hospital as a random effect</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_var =</span> <span class="st">"age"</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">y_vars =</span> <span class="fu">c</span>(<span class="st">"pain_relief"</span>, <span class="st">"mobility_improved"</span>),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">rule =</span> <span class="st">"All"</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_burn =</span> <span class="dv">10000</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_it =</span> <span class="dv">20000</span> <span class="co"># Takes some time; large number of iterations needed</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"P(drug &gt; placebo on BOTH | accounting for hospitals):"</span>, result_clustered<span class="sc">$</span>delta<span class="sc">$</span>pop)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>P(drug &gt; placebo on BOTH | accounting for hospitals): 0.969</code></pre>
+</div>
 </div>
 <p>Same multivariate logic; now it’s robust to the clustered structure.</p>
 <hr>
@@ -553,14 +582,14 @@ Use summary() for credible intervals and ESS.</code></pre>
 <h2 class="anchored" data-anchor-id="getting-started">Getting Started</h2>
 <p>Install from CRAN:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"bmco"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"bmco"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Then load the package and explore the vignettes. Here, more details on MCMC settings, prior choices, and other options are given.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bmco)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vignette</span>(<span class="st">"Introduction to bmco"</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">vignette</span>(<span class="st">"Subgroup Analysis with Multivariate Binary Outcomes"</span>)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">vignette</span>(<span class="st">"Subgroup Analysis with Multivariate Binary Outcomes in Multilevel Data"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bmco)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vignette</span>(<span class="st">"Introduction to bmco"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">vignette</span>(<span class="st">"Subgroup Analysis with Multivariate Binary Outcomes"</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">vignette</span>(<span class="st">"Subgroup Analysis with Multivariate Binary Outcomes in Multilevel Data"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Each vignette walks through realistic examples with full reproducible code.</p>
 <p>Power analysis is available in the <a href="https://xynthia-kavelaars.shinyapps.io/bmco-pwr/">bmco-pwr Shiny app</a> for basic multivariate Bernoulli analysis using <code>bmvb()</code> and subgroup analysis via <code>bglm()</code>.</p>

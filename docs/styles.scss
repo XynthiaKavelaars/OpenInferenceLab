@@ -1,0 +1,60 @@
+/*-- scss:defaults --*/
+$code-bg: #F5F5F5;
+$code-color: #2B8A7A;
+
+/*-- scss:rules --*/
+pre {
+  background-color: #F5F5F5 !important;
+  border-left: 4px solid #2B8A7A !important;
+  padding: 1rem !important;
+}
+
+code {
+  color: #2B8A7A !important;
+  background-color: #F5F5F5 !important;
+}
+
+/* Voor {r, echo=TRUE} blokken */
+.sourceCode.r {
+  background-color: #F5F5F5 !important;
+}
+
+.sourceCode.r pre {
+  background-color: #F5F5F5 !important;
+  color: #2B8A7A !important;
+}
+
+.sourceCode.r code {
+  color: #2B8A7A !important;
+  background-color: #F5F5F5 !important;
+}
+
+/* Syntax highlighting kleuren */
+.sourceCode.r .kn,  /* keywords */
+.sourceCode.r .kc,  /* keyword constants */
+.sourceCode.r .k,   /* keywords */
+.sourceCode.r .nb,  /* built-ins */
+.sourceCode.r .nf,  /* functions */
+.sourceCode.r .st,  /* strings */
+.sourceCode.r .ss,  /* special strings */
+.sourceCode.r .dl   /* delimiters */
+{
+  color: #2B8A7A !important;
+}
+
+.sourceCode.r .cn   /* constants */ {
+  color: #4BA59C !important;
+}
+
+/* Prevent image cropping in listings */
+.card img {
+  object-fit: contain !important;
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: auto !important;
+}
+
+.card-img-top {
+  object-fit: contain !important;
+  height: auto !important;
+}

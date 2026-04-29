@@ -4,21 +4,21 @@
     "href": "posts.html",
     "title": "Blog posts",
     "section": "",
-    "text": "Xynthia Kavelaars\n\n\nApr 21, 2026\n\n\n\n\n\n\nNo matching items"
+    "text": "If you want to improve pain relief and quality of life, how do you know if your treatment really works? Discover how to analyze multiple outcomes together.\n\n\n\nXynthia Kavelaars\n\n\nApr 21, 2026\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts.html#featured-posts",
     "href": "posts.html#featured-posts",
     "title": "Blog posts",
     "section": "",
-    "text": "Xynthia Kavelaars\n\n\nApr 21, 2026\n\n\n\n\n\n\nNo matching items"
+    "text": "If you want to improve pain relief and quality of life, how do you know if your treatment really works? Discover how to analyze multiple outcomes together.\n\n\n\nXynthia Kavelaars\n\n\nApr 21, 2026\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts.html#all-posts",
     "href": "posts.html#all-posts",
     "title": "Blog posts",
     "section": "All posts",
-    "text": "All posts\n\n\n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\nWhen binary outcomes move together: A Bayesian approach to multivariate analysis\n\n\n\n\n\n\nXynthia Kavelaars\n\n\nApr 21, 2026\n\n\n\n\n\n\nNo matching items"
+    "text": "All posts\n\n\n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\nWhen binary outcomes move together: A Bayesian approach to multivariate analysis\n\n\nIf you want to improve pain relief and quality of life, how do you know if your treatment really works? Discover how to analyze multiple outcomes together.\n\n\n\nXynthia Kavelaars\n\n\nApr 21, 2026\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
@@ -32,7 +32,7 @@
     "href": "index.html#recent-posts",
     "title": "Welcome to The Open Inference Lab",
     "section": "Recent posts",
-    "text": "Recent posts\n\n\n\n\n\n\n\n\n\n\nWhen binary outcomes move together: A Bayesian approach to multivariate analysis\n\n\n\nBayesian analysis\n\nmultivariate analysis\n\ndecision rules\n\nsubgroup analysis\n\nmultilevel analysis\n\nbmco\n\n\n\n\n\n\n\nXynthia Kavelaars\n\n\nApr 21, 2026\n\n\n\n\n\n\nNo matching items"
+    "text": "Recent posts\n\n\n\n\n\n\n\n\n\n\nWhen binary outcomes move together: A Bayesian approach to multivariate analysis\n\n\n\nBayesian analysis\n\nmultivariate analysis\n\ndecision rules\n\nsubgroup analysis\n\nmultilevel analysis\n\nbmco\n\n\n\nIf you want to improve pain relief and quality of life, how do you know if your treatment really works? Discover how to analyze multiple outcomes together.\n\n\n\nXynthia Kavelaars\n\n\nApr 21, 2026\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "drafts/2026_09_08_p11_lca_tutorial/index.html",
@@ -550,7 +550,7 @@
     "href": "featured/2026_04_21_p01_multivariate_analysis/index.html",
     "title": "When binary outcomes move together: A Bayesian approach to multivariate analysis",
     "section": "",
-    "text": "Imagine you’re designing a study to test the effectiveness of a new treatment. Success isn’t just about symptom relief—you also care about quality of life (QoL). Or side effects. Or both.\nSo you measure two outcomes: symptom relief (yes/no) and quality of life improvement (yes/no). Now the question arises: What does “success” mean?\nWhen you measure two outcomes together, you want your analysis to reflect that relationship in the decision regarding superiority."
+    "text": "If you want to improve pain relief and quality of life, how do you know if your treatment really works? Discover how to analyze multiple outcomes together.\nImagine you’re designing a study to test the effectiveness of a new treatment. Success isn’t just about symptom relief—you also care about quality of life (QoL). Or side effects. Or both.\nSo you measure two outcomes: symptom relief (yes/no) and quality of life improvement (yes/no). Now the question arises: What does “success” mean?\nWhen you measure two outcomes together, you want your analysis to reflect that relationship in the decision regarding superiority."
   },
   {
     "objectID": "featured/2026_04_21_p01_multivariate_analysis/index.html#a-direct-approach-joint-modeling-of-binary-outcomes",
@@ -571,7 +571,7 @@
     "href": "featured/2026_04_21_p01_multivariate_analysis/index.html#beyond-the-simple-case-subgroups-and-clustering",
     "title": "When binary outcomes move together: A Bayesian approach to multivariate analysis",
     "section": "Beyond the simple case: subgroups and clustering",
-    "text": "Beyond the simple case: subgroups and clustering\nAdditional advantage comes when your data are more complex:\n\nWhen treatments vary by patient type\nMaybe your treatment works brilliantly in younger patients but poorly in elderly patients. The bglm() function extends the analysis to handle subgroup effects:\n\n# Add age data \ntrial_data_with_age &lt;- trial_data\ntrial_data_with_age$age &lt;- round(rnorm(100, 60, 8))\n\n# Does the drug improve BOTH outcomes in elderly patients (age 65+)?\nresult_elderly &lt;- bglm(\n  data = trial_data_with_age,\n  grp = \"treatment\",\n  grp_a = \"placebo\",\n  grp_b = \"drug\",\n  x_var = \"age\",\n  y_vars = c(\"pain_relief\", \"mobility_improved\"),\n  x_method = \"Empirical\",\n  x_def = c(65, Inf),  # Elderly patients\n  rule = \"All\",\n  n_it = 5000\n)\n\ncat(\"P(drug &gt; placebo on BOTH | age 65+):\", result_elderly$delta$pop)\n\nP(drug &gt; placebo on BOTH | age 65+): 0.635\n\n\nWhile bmvb() relies on a multivariate Bernoulli distribution, subgroup analysis uses multivariate logistic regression under the hood to answer your multivariate question directly: What’s the posterior probability of superiority in the elderly subgroup?\n\n\nWhen data are clustered\nIf you ran this trial across 20 hospitals (cluster-randomized), observations within hospitals aren’t independent. The bglmm() function handles random intercepts and slopes:\n\n# Use in-built multilevel data \ntrial_data_with_hospitals &lt;- bglmm_data\ncolnames(trial_data_with_hospitals) &lt;- c(\"hospital\", \"treatment\", \"age\", \"pain_relief\", \"mobility_improved\")\nhead(trial_data_with_hospitals)\n\nresult_clustered &lt;- bglmm(\n  data = trial_data_with_hospitals,\n  grp = \"treatment\", \n  grp_a = \"placebo\",\n  grp_b = \"drug\",\n  id_var = \"hospital\",  # Hospital as a random effect\n  x_var = \"age\",\n  y_vars = c(\"pain_relief\", \"mobility_improved\"),\n  rule = \"All\",\n  n_burn = 10000,\n  n_it = 20000 # Takes some time; large number of iterations needed\n)\n\ncat(\"P(drug &gt; placebo on BOTH | accounting for hospitals):\", result_clustered$delta$pop)\n\nSame multivariate logic; now it’s robust to the clustered structure."
+    "text": "Beyond the simple case: subgroups and clustering\nAdditional advantage comes when your data are more complex:\n\nWhen treatments vary by patient type\nMaybe your treatment works brilliantly in younger patients but poorly in elderly patients. The bglm() function extends the analysis to handle subgroup effects:\n\n# Add age data \ntrial_data_with_age &lt;- trial_data\ntrial_data_with_age$age &lt;- round(rnorm(100, 60, 8))\n\n# Does the drug improve BOTH outcomes in elderly patients (age 65+)?\nresult_elderly &lt;- bglm(\n  data = trial_data_with_age,\n  grp = \"treatment\",\n  grp_a = \"placebo\",\n  grp_b = \"drug\",\n  x_var = \"age\",\n  y_vars = c(\"pain_relief\", \"mobility_improved\"),\n  x_method = \"Empirical\",\n  x_def = c(65, Inf),  # Elderly patients\n  rule = \"All\",\n  n_it = 5000\n)\n\ncat(\"P(drug &gt; placebo on BOTH | age 65+):\", result_elderly$delta$pop)\n\nP(drug &gt; placebo on BOTH | age 65+): 0.635\n\n\nWhile bmvb() relies on a multivariate Bernoulli distribution, subgroup analysis uses multivariate logistic regression under the hood to answer your multivariate question directly: What’s the posterior probability of superiority in the elderly subgroup?\n\n\nWhen data are clustered\nIf you ran this trial across 20 hospitals (cluster-randomized), observations within hospitals aren’t independent. The bglmm() function handles random intercepts and slopes:\n\n# Use in-built multilevel data \ntrial_data_with_hospitals &lt;- bglmm_data\ncolnames(trial_data_with_hospitals) &lt;- c(\"hospital\", \"treatment\", \"age\", \"pain_relief\", \"mobility_improved\")\nhead(trial_data_with_hospitals)\n\n  hospital treatment      age pain_relief mobility_improved\n1        1   placebo 41.27538           0                 1\n2        1   placebo 49.95309           1                 1\n3        1   placebo 54.95375           1                 1\n4        1   placebo 69.72819           1                 1\n5        1   placebo 38.03138           1                 0\n6        1   placebo 51.30438           1                 0\n\nresult_clustered &lt;- bglmm(\n  data = trial_data_with_hospitals,\n  grp = \"treatment\", \n  grp_a = \"placebo\",\n  grp_b = \"drug\",\n  id_var = \"hospital\",  # Hospital as a random effect\n  x_var = \"age\",\n  y_vars = c(\"pain_relief\", \"mobility_improved\"),\n  rule = \"All\",\n  n_burn = 10000,\n  n_it = 20000 # Takes some time; large number of iterations needed\n)\n\ncat(\"P(drug &gt; placebo on BOTH | accounting for hospitals):\", result_clustered$delta$pop)\n\nP(drug &gt; placebo on BOTH | accounting for hospitals): 0.969\n\n\nSame multivariate logic; now it’s robust to the clustered structure."
   },
   {
     "objectID": "featured/2026_04_21_p01_multivariate_analysis/index.html#when-this-approach-is-useful",
@@ -606,7 +606,7 @@
     "href": "posts/2026_04_21_p01_multivariate_analysis/index.html",
     "title": "When binary outcomes move together: A Bayesian approach to multivariate analysis",
     "section": "",
-    "text": "Imagine you’re designing a study to test the effectiveness of a new treatment. Success isn’t just about symptom relief—you also care about quality of life (QoL). Or side effects. Or both.\nSo you measure two outcomes: symptom relief (yes/no) and quality of life improvement (yes/no). Now the question arises: What does “success” mean?\nWhen you measure two outcomes together, you want your analysis to reflect that relationship in the decision regarding superiority."
+    "text": "If you want to improve pain relief and quality of life, how do you know if your treatment really works? Discover how to analyze multiple outcomes together.\nImagine you’re designing a study to test the effectiveness of a new treatment. Success isn’t just about symptom relief—you also care about quality of life (QoL). Or side effects. Or both.\nSo you measure two outcomes: symptom relief (yes/no) and quality of life improvement (yes/no). Now the question arises: What does “success” mean?\nWhen you measure two outcomes together, you want your analysis to reflect that relationship in the decision regarding superiority."
   },
   {
     "objectID": "posts/2026_04_21_p01_multivariate_analysis/index.html#a-direct-approach-joint-modeling-of-binary-outcomes",

@@ -1,28 +1,14 @@
 [
   {
-    "listing": "/index.html",
+    "listing": "/posts.html",
     "items": [
+      "/featured/2026_04_21_p01_multivariate_analysis/index.html",
       "/posts/2026_04_21_p01_multivariate_analysis/index.html"
     ]
   },
   {
-    "listing": "/posts/posts.html",
-    "items": []
-  },
-  {
-    "listing": "/software.html",
+    "listing": "/index.html",
     "items": [
-      "/posts/2026_05_05_p02_subgroup_analysis/index.html",
-      "/posts/posts.html",
-      "/posts/2026_04_21_p01_multivariate_analysis/index.html",
-      "/posts/2026_06_02_p04_decision_rules/index.html",
-      "/posts/2026_06_16_p05_correlated_outcomes/index.html"
-    ]
-  },
-  {
-    "listing": "/posts.html",
-    "items": [
-      "/featured/2026_04_21_p01_multivariate_analysis/index.html",
       "/posts/2026_04_21_p01_multivariate_analysis/index.html"
     ]
   }

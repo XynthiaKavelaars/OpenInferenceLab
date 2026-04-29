@@ -8,6 +8,7 @@
 
 <meta name="author" content="Xynthia Kavelaars">
 <meta name="dcterms.date" content="2026-04-21">
+<meta name="description" content="If you want to improve pain relief and quality of life, how do you know if your treatment really works? Discover how to analyze multiple outcomes together.">
 
 <title>When binary outcomes move together: A Bayesian approach to multivariate analysis – The Open Inference Lab</title>
 <style>
@@ -109,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../../styles.scss">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -193,9 +194,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
+    <div class="quarto-title column-page-left">
       <h1 class="title">When binary outcomes move together: A Bayesian approach to multivariate analysis</h1>
-                                <div class="quarto-categories">
+                  <div>
+        <div class="description">
+          If you want to improve pain relief <em>and</em> quality of life, how do you know if your treatment really works? Discover how to analyze multiple outcomes together.
+        </div>
+      </div>
+                          <div class="quarto-categories">
                 <div class="quarto-category">Bayesian analysis</div>
                 <div class="quarto-category">multivariate analysis</div>
                 <div class="quarto-category">decision rules</div>
@@ -207,7 +213,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
     
   
-  <div class="quarto-title-meta">
+  <div class="quarto-title-meta column-page-left">
 
       <div>
       <div class="quarto-title-meta-heading">Author</div>
@@ -227,7 +233,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
@@ -259,12 +265,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
 
 
 
 
+<style>
+.description { display: none; }
+</style>
+<div class="alert alert-info border-0 rounded-3" style="background: #F5F5F5; color: #1a5d54; padding: 2rem; border-left: 5px solid #2B8A7A;">
+<h3 style="margin-top: 0; color: #2B8A7A;" class="anchored">
+💊 What does “success” actually mean?
+</h3>
+<p>
+If you want to improve pain relief <em>and</em> quality of life, how do you know if your treatment really works? Discover how to analyze multiple outcomes together.
+</p>
+</div>
 <p>Imagine you’re designing a study to test the effectiveness of a new treatment. Success isn’t just about symptom relief—you also care about quality of life (QoL). Or side effects. Or both.</p>
 <p>So you measure <strong>two outcomes</strong>: symptom relief (yes/no) and quality of life improvement (yes/no). Now the question arises: <em>What does “success” mean?</em></p>
 <ul>
@@ -397,11 +414,11 @@ Use summary() for credible intervals and ESS.</code></pre>
 </div>
 </div>
 <p>The plot below visualizes this posterior probability relative to the All rule. A large part of the posterior draws (94.6)% falls in the superiority region (marked area) of the All rule, which is characterized by a treatment difference above zero on both outcomes.</p>
-<div class="cell" data-fig.length="5">
+<div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/plot-all-1.png" class="img-fluid figure-img" width="480"></p>
+<p><img src="index_files/figure-html/plot-all-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -428,11 +445,11 @@ Use summary() for credible intervals and ESS.</code></pre>
 </div>
 </div>
 <p>Below is another plot, this time to visualize the posterior probability relative to the Any rule. As indicated by the different directions of density lines, the rule is a combination of two superiority regions. Here all of the posterior draws (100%) fall in the superiority region.</p>
-<div class="cell" data-fig.length="5">
+<div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/plot-any-1.png" class="img-fluid figure-img" width="480"></p>
+<p><img src="index_files/figure-html/plot-any-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -460,11 +477,11 @@ Use summary() for credible intervals and ESS.</code></pre>
 </div>
 </div>
 <p>In the next plot, the posterior probability relative to the Compensatory rule is shown. The marked area visualizes the superiority region for a Compensatory rule where the first outcome (pain relief) accounts for 70% of the decision and the other 30% is determined by the improvement in mobility. For this rule too, a large part of the posterior draws (99.9%) falls in the superiority region.</p>
-<div class="cell" data-fig.length="5">
+<div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/plot-comp-1.png" class="img-fluid figure-img" width="480"></p>
+<p><img src="index_files/figure-html/plot-comp-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>

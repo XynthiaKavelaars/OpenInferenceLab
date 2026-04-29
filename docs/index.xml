@@ -21,6 +21,17 @@
 
 
 
+<style>
+.description { display: none; }
+</style>
+<div class="alert alert-info border-0 rounded-3" style="background: #F5F5F5; color: #1a5d54; padding: 2rem; border-left: 5px solid #2B8A7A;">
+<h3 style="margin-top: 0; color: #2B8A7A;" class="anchored">
+💊 What does “success” actually mean?
+</h3>
+<p>
+If you want to improve pain relief <em>and</em> quality of life, how do you know if your treatment really works? Discover how to analyze multiple outcomes together.
+</p>
+</div>
 <p>Imagine you’re designing a study to test the effectiveness of a new treatment. Success isn’t just about symptom relief—you also care about quality of life (QoL). Or side effects. Or both.</p>
 <p>So you measure <strong>two outcomes</strong>: symptom relief (yes/no) and quality of life improvement (yes/no). Now the question arises: <em>What does “success” mean?</em></p>
 <ul>
@@ -355,11 +366,11 @@ font-style: inherit;">$</span>pop)</span></code></pre></div></div>
 </div>
 </div>
 <p>The plot below visualizes this posterior probability relative to the All rule. A large part of the posterior draws (94.6)% falls in the superiority region (marked area) of the All rule, which is characterized by a treatment difference above zero on both outcomes.</p>
-<div class="cell" data-fig.length="5">
+<div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/index_files/figure-html/plot-all-1.png" class="img-fluid figure-img" width="480"></p>
+<p><img src="https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/index_files/figure-html/plot-all-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -432,11 +443,11 @@ font-style: inherit;">$</span>pop)</span></code></pre></div></div>
 </div>
 </div>
 <p>Below is another plot, this time to visualize the posterior probability relative to the Any rule. As indicated by the different directions of density lines, the rule is a combination of two superiority regions. Here all of the posterior draws (100%) fall in the superiority region.</p>
-<div class="cell" data-fig.length="5">
+<div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/index_files/figure-html/plot-any-1.png" class="img-fluid figure-img" width="480"></p>
+<p><img src="https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/index_files/figure-html/plot-any-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -520,11 +531,11 @@ font-style: inherit;">$</span>pop)</span></code></pre></div></div>
 </div>
 </div>
 <p>In the next plot, the posterior probability relative to the Compensatory rule is shown. The marked area visualizes the superiority region for a Compensatory rule where the first outcome (pain relief) accounts for 70% of the decision and the other 30% is determined by the improvement in mobility. For this rule too, a large part of the posterior draws (99.9%) falls in the superiority region.</p>
-<div class="cell" data-fig.length="5">
+<div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/index_files/figure-html/plot-comp-1.png" class="img-fluid figure-img" width="480"></p>
+<p><img src="https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/index_files/figure-html/plot-comp-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -871,7 +882,7 @@ font-style: inherit;">"Subgroup Analysis with Multivariate Binary Outcomes in Mu
   <category>bmco</category>
   <guid>https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/</guid>
   <pubDate>Mon, 20 Apr 2026 22:00:00 GMT</pubDate>
-  <media:content url="https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/images/preview.png" medium="image" type="image/png" height="72" width="144"/>
+  <media:content url="https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/images/thumbnail_p1.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 </channel>
 </rss>
