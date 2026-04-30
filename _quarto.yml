@@ -35,8 +35,7 @@ website:
         href: mailto:xynthia.kavelaars@ou.nl  #
       - icon: rss
         href: /posts.xml
-
-
+        
 execute:
   freeze: false
   
