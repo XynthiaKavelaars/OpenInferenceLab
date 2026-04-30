@@ -5,7 +5,7 @@ project:
 
 website:
   description: "Opening up (Bayesian) models, multivariate inference, statistical decision-making, and more"
-  site-url: https://xynthiakavelaars.github.io/openinferencelab  # you must change this appropriately for RSS feeds to work properly
+  site-url: https://xynthiakavelaars.github.io/OpenInferenceLab  # you must change this appropriately for RSS feeds to work properly
   title: "The Open Inference Lab"
   navbar:
     left:
@@ -33,6 +33,9 @@ website:
         href: www.linkedin.com/in/xynthia-kavelaars-7a0377129  #
       - icon: envelope  #
         href: mailto:xynthia.kavelaars@ou.nl  #
+      - icon: rss
+        href: /posts.xml
+
 
 execute:
   freeze: false
@@ -43,6 +46,3 @@ format:
     css: styles.scss
     toc: true
     highlight-style: github
-
-editor: visual
-

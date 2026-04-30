@@ -6,15 +6,15 @@
       version="2.0">
 <channel>
 <title>The Open Inference Lab</title>
-<link>https://xynthiakavelaars.github.io/openinferencelab/</link>
-<atom:link href="https://xynthiakavelaars.github.io/openinferencelab/index.xml" rel="self" type="application/rss+xml"/>
+<link>https://xynthiakavelaars.github.io/OpenInferenceLab/</link>
+<atom:link href="https://xynthiakavelaars.github.io/OpenInferenceLab/index.xml" rel="self" type="application/rss+xml"/>
 <description>Opening up (Bayesian) models, multivariate inference, statistical decision-making, and more</description>
 <generator>quarto-1.9.37</generator>
-<lastBuildDate>Mon, 20 Apr 2026 22:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 28 Apr 2026 22:00:00 GMT</lastBuildDate>
 <item>
   <title>When binary outcomes move together: A Bayesian approach to multivariate analysis</title>
   <dc:creator>Xynthia Kavelaars</dc:creator>
-  <link>https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/</link>
+  <link>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p01/</link>
   <description><![CDATA[ 
 
 
@@ -26,7 +26,7 @@
 </style>
 <div class="alert alert-info border-0 rounded-3" style="background: #F5F5F5; color: #1a5d54; padding: 2rem; border-left: 5px solid #2B8A7A;">
 <h3 style="margin-top: 0; color: #2B8A7A;" class="anchored">
-💊 What does “success” actually mean?
+<p>💊 What does “success” actually mean?</p>
 </h3>
 <p>
 If you want to improve pain relief <em>and</em> quality of life, how do you know if your treatment really works? Discover how to analyze multiple outcomes together.
@@ -370,7 +370,7 @@ font-style: inherit;">$</span>pop)</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/index_files/figure-html/plot-all-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p01/index_files/figure-html/plot-all-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -447,7 +447,7 @@ font-style: inherit;">$</span>pop)</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/index_files/figure-html/plot-any-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p01/index_files/figure-html/plot-any-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -535,7 +535,7 @@ font-style: inherit;">$</span>pop)</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/index_files/figure-html/plot-comp-1.png" class="img-fluid figure-img" width="432"></p>
+<p><img src="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p01/index_files/figure-html/plot-comp-1.png" class="img-fluid figure-img" width="432"></p>
 </figure>
 </div>
 </div>
@@ -880,9 +880,9 @@ font-style: inherit;">"Subgroup Analysis with Multivariate Binary Outcomes in Mu
   <category>subgroup analysis</category>
   <category>multilevel analysis</category>
   <category>bmco</category>
-  <guid>https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/</guid>
-  <pubDate>Mon, 20 Apr 2026 22:00:00 GMT</pubDate>
-  <media:content url="https://xynthiakavelaars.github.io/openinferencelab/posts/2026_04_21_p01_multivariate_analysis/images/thumbnail_p1.png" medium="image" type="image/png" height="144" width="144"/>
+  <guid>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p01/</guid>
+  <pubDate>Tue, 28 Apr 2026 22:00:00 GMT</pubDate>
+  <media:content url="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p01/images/thumbnail_p1.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 </channel>
 </rss>
