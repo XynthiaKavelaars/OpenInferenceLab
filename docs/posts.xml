@@ -10,7 +10,1005 @@
 <atom:link href="https://xynthiakavelaars.github.io/OpenInferenceLab/posts.xml" rel="self" type="application/rss+xml"/>
 <description>Opening up (Bayesian) models, multivariate inference, statistical decision-making, and more</description>
 <generator>quarto-1.9.37</generator>
-<lastBuildDate>Tue, 28 Apr 2026 22:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 26 May 2026 22:00:00 GMT</lastBuildDate>
+<item>
+  <title>Multiple outcomes, multiple choices: Understanding superiority in the multivariate context</title>
+  <dc:creator>Xynthia Kavelaars</dc:creator>
+  <link>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p02/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>Imagine you’re evaluating a new cancer treatment. It reduces tumor size in most patients, but some experience severe side effects. How do you decide if the treatment is “better” than the standard?</p>
+<p>This is the fundamental challenge of clinical trials with multiple outcomes. We rarely care about just one thing. We want efficacy <em>and</em> safety, symptom relief <em>and</em> quality of life. But how do we combine these into a single decision?</p>
+<p>The traditional approaches — select a primary outcome or test each outcome separately — have problems. They ignore other information and they ignore the fact that outcomes are often correlated. If a treatment is more agressive, it might treat the disease better, but might result in more side effects as well. That is information you usually want to weigh in your decision to adopt a new treatment.</p>
+<p>The most commonly used multivariate alternatives force an artificial choice: demand improvement on all outcomes or on any outcome. The former might be too strict for some situations, whereas the latter might be too lenient. We might be happy if the treatment is better in symptom reduction, as long as side effects are comparable or not too bad. Or if side effects are lower with similar effectivity. In those cases, we don’t need symptom reduction AND side effect reduction. Neither do we accept a small symptom reduction if side effects increase dramatically.</p>
+<p>In recent years, attention has been paid to a principled alternative: more <strong>flexible decision rules</strong> that let us define what “success” actually means in our clinical context. Usually, these boil down to weighing outcomes. Several variations of such weighted (usually linear) combinations have been proposed. Under this blog, you can find several references. In the current blog, I will give an intuition of such weighted linear combinations without diving into the detailed differences between such methods. Below is also a Bayesian implementation in R for the situation with two binary outcome variables.</p>
+<section id="four-decision-rules-visualized" class="level2">
+<h2 class="anchored" data-anchor-id="four-decision-rules-visualized">Four decision rules visualized</h2>
+<p>Let me show you the core insight using a simple two-outcome example. Imagine we’re testing a treatment that targets:</p>
+<ul>
+<li><strong>Cognitive function</strong> (outcome 1)</li>
+<li><strong>Fatigue</strong> (outcome 2)</li>
+</ul>
+<p>Each outcome has a treatment effect: the difference in success probability between the new treatment and control, <img src="https://latex.codecogs.com/png.latex?%5Cdelta_1"> and <img src="https://latex.codecogs.com/png.latex?%5Cdelta_2">.</p>
+<p>The four rules discussed here are:</p>
+<p><strong>1. Single Rule: improvement on prespecified (“primary”) outcome</strong></p>
+<ul>
+<li>Tests if cognitive function improves: <img src="https://latex.codecogs.com/png.latex?%5Cdelta_1%20%3E%200"></li>
+<li>Ignores fatigue completely, so fatigue can have any positive or negative effect</li>
+<li><strong>When to use</strong>: When you have one clear primary outcome</li>
+</ul>
+<p><strong>2. Any Rule: improvement on one of the outcomes</strong></p>
+<ul>
+<li>Tests if <em>at least one</em> outcome improves: <img src="https://latex.codecogs.com/png.latex?%5Cdelta_1%20%3E%200"> OR <img src="https://latex.codecogs.com/png.latex?%5Cdelta_2%20%3E%200"></li>
+<li>Consists of two decision regions</li>
+<li>Most liberal: accepts marginal improvements, even when the other outcome has a large decline<br>
+</li>
+<li><strong>When to use</strong>: Rare, unless any improvement is clinically meaningful, regardless of decline on the other outcome</li>
+</ul>
+<p><strong>3. All Rule: improvement on all of the outcomes</strong></p>
+<ul>
+<li>Tests if <em>both</em> improve: <img src="https://latex.codecogs.com/png.latex?%5Cdelta_1%20%3E%200"> AND <img src="https://latex.codecogs.com/png.latex?%5Cdelta_2%20%3E%200"></li>
+<li>Most conservative: requires improvement everywhere</li>
+<li><strong>When to use</strong>: When improvement on all outcomes is truly necessary (safety + efficacy)</li>
+</ul>
+<p><strong>4. Compensatory Rule: improvement on a weighted combination of outcomes</strong></p>
+<ul>
+<li>Tests if weighted sum exceeds zero: <img src="https://latex.codecogs.com/png.latex?w_1%20%5Ccdot%20%5Cdelta_1%20+%20w_2%20%5Ccdot%20%5Cdelta_2%20%3E%200"></li>
+<li>The diagonal dashed line shows the decision boundary and corresponds to weights of <img src="https://latex.codecogs.com/png.latex?0.5"> for each outcome (see below for other weight combinations)</li>
+<li><strong>Allows tradeoffs</strong>: A strong gain in one outcome can compensate for a small loss in another</li>
+<li><strong>Allows different importances</strong>: Outcomes are weighted by their importances</li>
+<li><strong>When to use</strong>: When outcomes are both meaningful but have different importances; when a small decline can be compensated for by a larger improvement</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p02/index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In these plots, bivariate (posterior) distributions of treatment differences are shown. The darker green parts of the distributions show the proportions of draw that fall in the region where superiority is concluded. The light green parts of the distribution falls outside of the superiority region. If a sufficiently large part of the posterior distribution (e.g., 95%) falls in the superiority region, superiority is concluded. Note that for the Any rule a multiple testing correction on the cutoff is needed.</p>
+</section>
+<section id="superiority-decisions-with-different-rules" class="level2">
+<h2 class="anchored" data-anchor-id="superiority-decisions-with-different-rules">Superiority decisions with different rules</h2>
+<p>As can be seen in the plots above as well, each of these rules results in different amounts of evidence of superiority. The posterior probabilities to conclude superiority for the visualized posterior distributions are the following:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Posterior Probabilities of Superiority for Four Decision Rules:</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                              Rule Posterior_Probability
+1                  Single (δ₁ &gt; 0)                 0.843
+2           Any (δ₁ &gt; 0 OR δ₂ &gt; 0)                 0.992
+3          All (δ₁ &gt; 0 AND δ₂ &gt; 0)                 0.666
+4 Compensatory (0.5δ₁ + 0.5δ₂ &gt; 0)                 0.950</code></pre>
+</div>
+</div>
+<p>From these posterior probabilities, it can be seen that the All rule is the most strict rule with the lowest posterior probability, while the Any rule is the most lenient rule. While this is generally the case, it is useful to note that the relation between decision rules and correlation is a bit more complicated. There will be a post on this topic later.</p>
+</section>
+<section id="weight-specifications-in-the-compensatory-decision-rule" class="level1">
+<h1>Weight specifications in the compensatory decision rule</h1>
+<p>As mentioned above, the compensatory rule can can deal with different importances.<br>
+Therefore we must decide how much does each outcome contributes to the decision (i.e., conclusion regarding superiority in this case). This is where weights come in.</p>
+<p>A <strong>weighted compensatory decision rule</strong> uses the formula:</p>
+<p><img src="https://latex.codecogs.com/png.latex?w_1%20%5Ctimes%20%5Cdelta_1%20+%20w_2%20%5Ctimes%20%5Cdelta_2%20%3E%200"></p>
+<p>where:</p>
+<ul>
+<li><img src="https://latex.codecogs.com/png.latex?w_1"> and <img src="https://latex.codecogs.com/png.latex?w_2"> are weights, typically summing to <img src="https://latex.codecogs.com/png.latex?1"></li>
+<li><img src="https://latex.codecogs.com/png.latex?%5Cdelta_1"> is the treatment effect on outcome 1</li>
+<li><img src="https://latex.codecogs.com/png.latex?%5Cdelta_2"> is the treatment effect on outcome 2</li>
+</ul>
+<p>The weights quantify how much each outcome contributes to the overall treatment success decision. A higher weight means that the accomponying outcome is more critical to declaring the treatment a success.</p>
+<p>Below, we showcase five different weight specifications in more detail.</p>
+<hr>
+<section id="weight-specification-1-fatigue-priority-0.25-0.75" class="level2">
+<h2 class="anchored" data-anchor-id="weight-specification-1-fatigue-priority-0.25-0.75">Weight specification 1: Fatigue priority (0.25, 0.75)</h2>
+<p><strong>Meaning:</strong> Fatigue reduction 3× more important than cognition<br>
+<strong>Decision boundary slope:</strong> -0.33 (shallow)</p>
+<section id="interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation">Interpretation</h3>
+<ul>
+<li>Fatigue effects are weighted 3 times more heavily</li>
+<li>A 0.10-unit improvement in <em>fatigue</em> can offset a 0.30-unit decline in <em>cognitive function</em></li>
+<li>This rule strongly favors treatments that reduce fatigue</li>
+<li>Cognitive decline is more easily tolerated if fatigue improves substantially</li>
+</ul>
+</section>
+<section id="real-world-example" class="level3">
+<h3 class="anchored" data-anchor-id="real-world-example">Real-World example</h3>
+<p>A condition where severe fatigue prevents basic activities but cognitive function is largely preserved. A treatment that substantially improves fatigue while causing mild cognitive effects might still be considered successful. The shallow decision boundary accommodates this flexibility.</p>
+<hr>
+</section>
+</section>
+<section id="weight-specification-2-equal-weights-0.50-0.50" class="level2">
+<h2 class="anchored" data-anchor-id="weight-specification-2-equal-weights-0.50-0.50">Weight specification 2: Equal weights (0.50, 0.50)</h2>
+<p><strong>Meaning:</strong> Both outcomes equally important<br>
+<strong>Decision boundary slope:</strong> -1 (diagonal)</p>
+<section id="interpretation-1" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-1">Interpretation</h3>
+<ul>
+<li>A 0.10-unit improvement in <em>cognitive function</em> exactly offsets a 0.10-unit decline in <em>fatigue</em></li>
+<li>50% of the decision weight comes from each outcome</li>
+<li>This is the ‘neutral’ baseline when no clinical evidence supports prioritizing one outcome over another</li>
+</ul>
+</section>
+<section id="real-world-example-1" class="level3">
+<h3 class="anchored" data-anchor-id="real-world-example-1">Real-World example</h3>
+<p>A condition affecting both cognition and energy equally. Without clinical evidence suggesting one symptom causes more suffering than the other, equal weights reflect equipoise.</p>
+<hr>
+</section>
+</section>
+<section id="weight-specification-3-moderate-cognitive-emphasis-0.60-0.40" class="level2">
+<h2 class="anchored" data-anchor-id="weight-specification-3-moderate-cognitive-emphasis-0.60-0.40">Weight specification 3: Moderate cognitive emphasis (0.60, 0.40)</h2>
+<p><strong>Meaning:</strong> <em>Cognitive function</em> moderately more important than <em>fatigue</em> (1.5× weight) <strong>Decision boundary slope:</strong> -1.5 (moderate slope)</p>
+<section id="interpretation-2" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-2">Interpretation</h3>
+<ul>
+<li>Balanced approach with mild emphasis on cognition</li>
+<li>A 0.10-unit decline in <em>cognitive function</em> requires a 0.15-unit improvement in <em>fatigue</em> to compensate</li>
+<li>More flexible than pure cognitive priority, but still favors cognition</li>
+<li>Accommodates situations where both outcomes matter, with cognition slightly prioritized</li>
+</ul>
+</section>
+<section id="real-world-example-2" class="level3">
+<h3 class="anchored" data-anchor-id="real-world-example-2">Real-World example</h3>
+<p>A condition with both cognitive impairment and severe fatigue. Clinically, restoration of cognitive function (memory, attention) might be slightly more important for resuming work, but fatigue reduction is also a critical target. This 60:40 weighting reflects the “cognition matters more, but fatigue really matters too” consensus.</p>
+<hr>
+</section>
+</section>
+<section id="weight-specification-4-cognitive-priority-0.75-0.25" class="level2">
+<h2 class="anchored" data-anchor-id="weight-specification-4-cognitive-priority-0.75-0.25">Weight specification 4: Cognitive priority (0.75, 0.25)</h2>
+<p><strong>Meaning:</strong> <em>cognitive function</em> 3× more important than <em>fatigue</em><br>
+<strong>Decision boundary slope:</strong> -3</p>
+<section id="interpretation-3" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-3">Interpretation</h3>
+<ul>
+<li><em>Cognitive function</em> effects are weighted 3 times more heavily</li>
+<li>A 0.10-unit decline in <em>cognitive function</em> requires a 0.30-unit improvement in <em>fatigue</em> to compensate. Or a 0.30 unit decline in <em>fatigue</em> is compensated by a 0.10-unit improvement in <em>cognitive function</em></li>
+<li>This rule strongly favors treatments that improve cognition</li>
+<li>Fatigue worsening is relatively tolerable if cognition improves substantially</li>
+</ul>
+</section>
+<section id="real-world-example-3" class="level3">
+<h3 class="anchored" data-anchor-id="real-world-example-3">Real-World example</h3>
+<p>A condition where cognitive decline prevents working and living independently. Even if the treatment causes mild fatigue, restoring cognitive function might be worth it. The steep decision boundary reflects this harsh tradeoff.</p>
+<hr>
+</section>
+</section>
+<section id="weight-specification-5-cognitive-dominant-0.90-0.10" class="level2">
+<h2 class="anchored" data-anchor-id="weight-specification-5-cognitive-dominant-0.90-0.10">Weight specification 5: Cognitive dominant (0.90, 0.10)</h2>
+<p><strong>Meaning:</strong> <em>Cognitive function</em> 9× more important than <em>fatigue</em><br>
+<strong>Decision boundary slope:</strong> -9 (very steep)</p>
+<section id="interpretation-4" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-4">Interpretation</h3>
+<ul>
+<li>Extreme weight on cognitive improvement</li>
+<li>The decision is almost entirely driven by cognitive outcomes</li>
+<li>Fatigue changes barely move the needle on overall treatment success</li>
+<li>Without substantial cognitive benefits, the treatment will probably not be declared successful</li>
+</ul>
+</section>
+<section id="real-world-example-4" class="level3">
+<h3 class="anchored" data-anchor-id="real-world-example-4">Real-world example</h3>
+<p>A condition where preserving cognitive function is the only meaningful therapeutic goal. Minimal fatigue improvements are irrelevant if cognition doesn’t improve. This extreme weighting makes sense only in narrowly defined contexts where one outcome truly dominates clinical significance, while excluding the other outcome in its entirety is not desirable.</p>
+<hr>
+</section>
+</section>
+<section id="visualization-of-the-pre-specified-scenarios" class="level2">
+<h2 class="anchored" data-anchor-id="visualization-of-the-pre-specified-scenarios">Visualization of the pre-specified scenarios</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p02/index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The plots above show how different weight specifications change the decision boundary:</p>
+<ul>
+<li><strong>Fatigue priority (0.25, 0.75):</strong> Shallow boundary, hard to compensate fatigue deficits</li>
+<li><strong>Equal (0.50, 0.50):</strong> Diagonal boundary, symmetric tradeoffs</li>
+<li><strong>Moderate cognitive emphasis (0.60, 0.40):</strong> Intermediate, slight asymmetry</li>
+<li><strong>Cognitive priority (0.75, 0.25):</strong> Steep boundary, hard to compensate cognitive deficits</li>
+<li><strong>Cognitive dominant (0.90, 0.10):</strong> Very steep, almost binary on cognitive outcome</li>
+</ul>
+<p>The decision boundary (the line separating success from non-success) has slope <img src="https://latex.codecogs.com/png.latex?-w_1/w_2">. A steeper slope means it’s harder to compensate poor performance on the high-weight outcome with improvements in the low-weight outcome. Notice how the colored region (treatment success) expands or contracts depending on which outcomes are prioritized. The weighting scheme directly shapes what outcomes “count” as success.</p>
+</section>
+</section>
+<section id="posterior-probabilities-for-different-weight-specifications" class="level1">
+<h1>Posterior probabilities for different weight specifications</h1>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                    Specification Posterior_Probability
+1   Fatigue priority (0.25, 0.75)                 0.908
+2              Equal (0.50, 0.50)                 0.950
+3 Moderate cognitive (0.60, 0.40)                 0.947
+4 Cognitive priority (0.75, 0.25)                 0.920
+5 Cognitive dominant (0.90, 0.10)                 0.873</code></pre>
+</div>
+</div>
+<p>From the output above, it can be seen that different weight specifications result in different posterior probabilities of superiority. Hence, weights are not technical details. They formalize what the decision-makers value most. Choosing weights thoughtfully is essential for multi-outcome decision-making.</p>
+<hr>
+<section id="r-implementation-with-bmco-package" class="level2">
+<h2 class="anchored" data-anchor-id="r-implementation-with-bmco-package">R Implementation with bmco Package</h2>
+<p>The <code>bmco</code> package implements the computation of the posterior probability of superiority for binary outcome variables. Below is example code showing how to use <code>bmco</code> with binary outcome data:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Install bmco if needed</span></span>
+<span id="cb4-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># install.packages("bmco")</span></span>
+<span id="cb4-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(bmco)</span>
+<span id="cb4-4"></span>
+<span id="cb4-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Create example binary outcome trial data</span></span>
+<span id="cb4-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># In practice, this would come from your actual trial</span></span>
+<span id="cb4-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set.seed</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2024</span>)</span>
+<span id="cb4-8">n_per_group <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">200</span></span>
+<span id="cb4-9"></span>
+<span id="cb4-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Generate binary outcomes consistent with the posterior parameters</span></span>
+<span id="cb4-11">trial_data <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">data.frame</span>(</span>
+<span id="cb4-12">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">treatment =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rep</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"control"</span>, n_per_group), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rep</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"new"</span>, n_per_group)),</span>
+<span id="cb4-13">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">cognitive_function =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(</span>
+<span id="cb4-14">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rbinom</span>(n_per_group, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.40</span>),      <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Control: 40% success</span></span>
+<span id="cb4-15">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rbinom</span>(n_per_group, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.65</span>)       <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># New: 65% success (IMPROVED)</span></span>
+<span id="cb4-16">  ),</span>
+<span id="cb4-17">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fatigue_reduction =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(</span>
+<span id="cb4-18">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rbinom</span>(n_per_group, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.50</span>),      <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Control: 50% success</span></span>
+<span id="cb4-19">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rbinom</span>(n_per_group, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.35</span>)       <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># New: 35% success (WORSENED)</span></span>
+<span id="cb4-20">  )</span>
+<span id="cb4-21">)</span></code></pre></div></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Success rates by group:
+
+ COGNITIVE FUNCTION:
+   Control:      0.425 
+   New treatment:  0.61 
+   Difference:   0.185 
+
+ FATIGUE REDUCTION:
+   Control:      0.575 
+   New treatment:  0.345 
+   Difference:   -0.23 </code></pre>
+</div>
+</div>
+<p><strong><em>Interpretation</em></strong> The new treatment shows a tradeoff pattern:</p>
+<ul>
+<li>Cognitive function improves by 0.185.<br>
+</li>
+<li>Fatigue worsens by -0.23.</li>
+</ul>
+<p>This is a therapeutic scenario where treatment helps but has an adverse effect as well.</p>
+</section>
+<section id="different-decision-rules" class="level2">
+<h2 class="anchored" data-anchor-id="different-decision-rules">Different decision rules</h2>
+<p>If we analyze these data with different decision rules, we see the following results:</p>
+<section id="single-rule" class="level3">
+<h3 class="anchored" data-anchor-id="single-rule">1. Single rule</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">result_single <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bmvb</span>(</span>
+<span id="cb6-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> trial_data,</span>
+<span id="cb6-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"treatment"</span>,</span>
+<span id="cb6-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_a =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"control"</span>,</span>
+<span id="cb6-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_b =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"new"</span>,</span>
+<span id="cb6-6">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_vars =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cognitive_function"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fatigue_reduction"</span>),</span>
+<span id="cb6-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rule =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Comp"</span>,</span>
+<span id="cb6-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">w =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>),  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Focus only on cognitive function</span></span>
+<span id="cb6-9">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_it =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5000</span></span>
+<span id="cb6-10">)</span>
+<span id="cb6-11"></span>
+<span id="cb6-12">p_single <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> result_single<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>delta<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>pop[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span></code></pre></div></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> RESULT:
+ P(Superiority) =  1 </code></pre>
+</div>
+</div>
+<p><strong><em>Interpretation</em></strong> The Single rule declares the new treatment superior, because cognitive function improves, and the rule ignores the fatigue worsening. This might be problematic, since adverse effects often cannot be ignored in practice.</p>
+</section>
+<section id="all-rule" class="level3">
+<h3 class="anchored" data-anchor-id="all-rule">2. All rule</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">result_all <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bmvb</span>(</span>
+<span id="cb8-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> trial_data,</span>
+<span id="cb8-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"treatment"</span>,</span>
+<span id="cb8-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_a =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"control"</span>,</span>
+<span id="cb8-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_b =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"new"</span>,</span>
+<span id="cb8-6">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_vars =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cognitive_function"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fatigue_reduction"</span>),</span>
+<span id="cb8-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rule =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"All"</span>,</span>
+<span id="cb8-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_it =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5000</span></span>
+<span id="cb8-9">)</span>
+<span id="cb8-10"></span>
+<span id="cb8-11">p_all <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> result_all<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>delta<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>pop[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span></code></pre></div></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>RESULT:
+ P(Superiority) =  0 </code></pre>
+</div>
+</div>
+<p><strong><em>Interpretation</em></strong> The All rule declares the new treatment not superior, because fatigue worsens, violating the requirement thatboth outcomes must improve. This might be too conservative: A treatment that substantially helps cognition while causing moderate fatiguemight still be valuable to patients and clinicians.</p>
+</section>
+<section id="any-rule" class="level3">
+<h3 class="anchored" data-anchor-id="any-rule">3. Any rule</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">result_any <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bmvb</span>(</span>
+<span id="cb10-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> trial_data,</span>
+<span id="cb10-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"treatment"</span>,</span>
+<span id="cb10-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_a =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"control"</span>,</span>
+<span id="cb10-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_b =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"new"</span>,</span>
+<span id="cb10-6">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_vars =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cognitive_function"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fatigue_reduction"</span>),</span>
+<span id="cb10-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rule =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Any"</span>,</span>
+<span id="cb10-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_it =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5000</span></span>
+<span id="cb10-9">)</span>
+<span id="cb10-10"></span>
+<span id="cb10-11">p_any <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> result_any<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>delta<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>pop[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span></code></pre></div></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> RESULT:
+ P(Superiority) =  1 </code></pre>
+</div>
+</div>
+<p><strong><em>Interpretation</em></strong> The Any rule declares the new treatment superior, because cognitive function improves, satisfying the rule. This can be too permissive: It accepts marginal improvements on one outcome even if other outcomes worsen dramatically. The magnitude of the fatigue increase is not considered.</p>
+</section>
+<section id="compensatory-rule" class="level3">
+<h3 class="anchored" data-anchor-id="compensatory-rule">4. Compensatory rule</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ===== Example 1: Fatigue Priority (0.25, 0.75) =====</span></span>
+<span id="cb12-2">result_fatigue_priority <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bmvb</span>(</span>
+<span id="cb12-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> trial_data,</span>
+<span id="cb12-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"treatment"</span>,</span>
+<span id="cb12-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_a =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"control"</span>,</span>
+<span id="cb12-6">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_b =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"new"</span>,</span>
+<span id="cb12-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_vars =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cognitive_function"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fatigue_reduction"</span>),</span>
+<span id="cb12-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rule =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Comp"</span>,</span>
+<span id="cb12-9">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">w =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.25</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.75</span>),       <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Cognitive 25%, fatigue 75%</span></span>
+<span id="cb12-10">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_it =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5000</span></span>
+<span id="cb12-11">)</span></code></pre></div></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> δ₁ (cognitive)  =  0.185 
+ δ₂ (fatigue)    =  -0.23 
+ Weighted delta:
+ 0.25·δ₁ + 0.75·δ₂ = 0.25· 0.185  + 0.75· -0.23  =  -0.126 
+
+ Fatigue priority (0.25, 0.75): P(superiority) = 0 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ===== Example 2: Equal Weights (0.50, 0.50) =====</span></span>
+<span id="cb14-2">result_equal <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bmvb</span>(</span>
+<span id="cb14-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> trial_data,</span>
+<span id="cb14-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"treatment"</span>,</span>
+<span id="cb14-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_a =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"control"</span>,</span>
+<span id="cb14-6">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_b =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"new"</span>,</span>
+<span id="cb14-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_vars =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cognitive_function"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fatigue_reduction"</span>),</span>
+<span id="cb14-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rule =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Comp"</span>,           <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Use Compensatory</span></span>
+<span id="cb14-9">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">w =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.50</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.50</span>),       <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Equal weights</span></span>
+<span id="cb14-10">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_it =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5000</span></span>
+<span id="cb14-11">)</span></code></pre></div></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> Weighted delta:
+ 0.50·δ₁ + 0.50·δ₂ = 0.50· 0.185  + 0.50· -0.23  =  -0.022 
+
+ Equal weights (0.50, 0.50): P(superiority) = 0.245 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ===== Example 3: Moderate Cognitive Emphasis (0.60, 0.40) =====</span></span>
+<span id="cb16-2">result_moderate <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bmvb</span>(</span>
+<span id="cb16-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> trial_data,</span>
+<span id="cb16-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"treatment"</span>,</span>
+<span id="cb16-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_a =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"control"</span>,</span>
+<span id="cb16-6">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_b =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"new"</span>,</span>
+<span id="cb16-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_vars =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cognitive_function"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fatigue_reduction"</span>),</span>
+<span id="cb16-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rule =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Comp"</span>,</span>
+<span id="cb16-9">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">w =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.60</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.40</span>),       <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Cognitive 60%, fatigue 40%</span></span>
+<span id="cb16-10">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_it =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5000</span></span>
+<span id="cb16-11">)</span></code></pre></div></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> Weighted delta:
+ 0.60·δ₁ + 0.40·δ₂ = 0.60· 0.185  + 0.40· -0.23  =  0.019 
+
+ Moderate cognitive emphasis (0.60, 0.40): P(superiority) = 0.716 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ===== Example 4: Cognitive Priority (0.75, 0.25) =====</span></span>
+<span id="cb18-2">result_cog_priority <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bmvb</span>(</span>
+<span id="cb18-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> trial_data,</span>
+<span id="cb18-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"treatment"</span>,</span>
+<span id="cb18-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_a =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"control"</span>,</span>
+<span id="cb18-6">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_b =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"new"</span>,</span>
+<span id="cb18-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_vars =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cognitive_function"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fatigue_reduction"</span>),</span>
+<span id="cb18-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rule =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Comp"</span>,</span>
+<span id="cb18-9">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">w =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.75</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.25</span>),       <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Cognitive 75%, fatigue 25%</span></span>
+<span id="cb18-10">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_it =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5000</span></span>
+<span id="cb18-11">)</span></code></pre></div></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> Weighted delta:
+ 0.75·δ₁ + 0.25·δ₂ = 0.75· 0.185  + 0.25· -0.23  =  0.081 
+
+ Cognitive priority (0.75, 0.25): P(superiority) = 0.982 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ===== Example 5: Cognitive Dominant (0.90, 0.10) =====</span></span>
+<span id="cb20-2">result_cog_dominant <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bmvb</span>(</span>
+<span id="cb20-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> trial_data,</span>
+<span id="cb20-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"treatment"</span>,</span>
+<span id="cb20-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_a =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"control"</span>,</span>
+<span id="cb20-6">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grp_b =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"new"</span>,</span>
+<span id="cb20-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_vars =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cognitive_function"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fatigue_reduction"</span>),</span>
+<span id="cb20-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rule =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Comp"</span>,</span>
+<span id="cb20-9">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">w =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.90</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.10</span>),       <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Cognitive 90%, fatigue 10%</span></span>
+<span id="cb20-10">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n_it =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5000</span></span>
+<span id="cb20-11">)</span></code></pre></div></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code> Weighted delta:
+ 0.90·δ₁ + 0.10·δ₂ = 0.90· 0.185  + 0.10· -0.23  =  0.144 
+
+ Cognitive dominant (0.90, 0.10): P(superiority) = 0.998 </code></pre>
+</div>
+</div>
+<p>Here is a summary comparison across all decision rules and weight specifications:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                                            Rule         Delta P_Superiority
+1                                         Single 0.183, -0.227         1.000
+2                                            All 0.183, -0.228         0.000
+3                                            Any 0.183, -0.227         1.000
+4   Compensatory - Fatigue priority (0.25, 0.75)        -0.126         0.000
+5              Compensatory - Equal (0.50, 0.50)        -0.023         0.245
+6 Compensatory - Moderate cognitive (0.60, 0.40)         0.019         0.716
+7 Compensatory - Cognitive priority (0.75, 0.25)          0.08         0.982
+8 Compensatory - Cognitive dominant (0.90, 0.10)         0.142         0.998</code></pre>
+</div>
+</div>
+<p>As can be seen, in this dataset, the improvement on cognition outweighs the adverse effect on fatigue if we only look at cognition (Single rule), let the effects decide which outcome is decisive (Any rule) or when cognition is given substantially more weight (Cognitive priority and Cognitive dominant scenarios). Moderate cognitive emphasis does not suffice to declare the new treatment superior in this dataset. Of course, the posterior probability of superiority does not depend on the size of the treatment difference only, but also on the uncertainty around the treatment difference. Hence, other sample sizes or different prior distributions might result in different conclusions for some of these rules.</p>
+<hr>
+</section>
+</section>
+<section id="how-to-choose-weights-for-your-study" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-choose-weights-for-your-study">How to choose weights for your study</h2>
+<p>A few suggestions to choose weights thoughtfully:</p>
+<section id="stakeholder-input" class="level3">
+<h3 class="anchored" data-anchor-id="stakeholder-input">1. <strong>Stakeholder Input</strong></h3>
+<ul>
+<li>Interview patients: Which symptom burdens them most?</li>
+<li>Interview clinicians: What outcomes drive treatment decisions?</li>
+<li>Engage with regulators: Do they have preferred weights?</li>
+</ul>
+</section>
+<section id="clinical-literature-review" class="level3">
+<h3 class="anchored" data-anchor-id="clinical-literature-review">2. <strong>Clinical Literature Review</strong></h3>
+<ul>
+<li>Do outcome severity/burden ratios support asymmetry?</li>
+<li>Are there published preference scores or visual analog scales?</li>
+<li>What do existing treatment guidelines suggest?</li>
+</ul>
+</section>
+<section id="regulatory-guidance" class="level3">
+<h3 class="anchored" data-anchor-id="regulatory-guidance">3. <strong>Regulatory Guidance</strong></h3>
+<ul>
+<li>FDA, EMA, and other agencies increasingly specify outcome priorities</li>
+<li>Check public briefing documents and meeting minutes</li>
+<li>Some diseases have established hierarchies</li>
+</ul>
+</section>
+<section id="sensitivity-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="sensitivity-analysis">4. <strong>Sensitivity Analysis</strong></h3>
+<ul>
+<li>Pre-specify multiple weight scenarios (e.g., 50:50, 60:40, 75:25)</li>
+<li>Run analyses under each scenario</li>
+<li>Assess how robust conclusions are to different weights</li>
+</ul>
+</section>
+<section id="transparency-pre-specification" class="level3">
+<h3 class="anchored" data-anchor-id="transparency-pre-specification">5. <strong>Transparency &amp; Pre-specification</strong></h3>
+<ul>
+<li>Don’t choose weights post-hoc based on study results</li>
+<li>Document your weighting rationale in the statistical analysis plan</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="takeaway" class="level1">
+<h1>Takeaway</h1>
+<p>The decision rule you choose shapes your entire trial:</p>
+<ul>
+<li><strong>Single</strong>: Use only for truly secondary outcomes</li>
+<li><strong>Any</strong>: Too liberal for most clinical contexts</li>
+<li><strong>All</strong>: Only if all outcomes are absolutely necessary</li>
+<li><strong>Compensatory</strong>: The new default choice; lets you encode clinical judgment about tradeoffs</li>
+</ul>
+<p>The beauty of a multivariate framework with a weighted combination is that you can make your decision rule match your actual clinical question.</p>
+<hr>
+<p><strong>Further reading</strong>:</p>
+<ul>
+<li>Murray, T., Thall, P. &amp; Yuan, Y. (2016). Utility-based designs for randomized comparative trials with categorical outcomes. <i>Statistics in medicine</i>.</li>
+<li>Kavelaars, X., Mulder, J. &amp; Kaptein, M. (2020). Decision-making with multiple correlated binary outcomes in clinical trials. <i>Statistical Methods in Medical Research</i>. <a href="https://doi.org/10.1177/0962280220922256" target="_blank">https://doi.org/10.1177/0962280220922256</a></li>
+<li>Sozu, T., Sugimoto, T. &amp; Hamasaki, T. (2010). Sample size determination in clinical trials with multiple co-primary binary endpoints.. <i>Statistics in medicine</i>. <a href="https://doi.org/10.1002/sim.3972" target="_blank">https://doi.org/10.1002/sim.3972</a></li>
+<li>Sozu, T., Sugimoto, T. &amp; Hamasaki, T. (2016). Reducing unnecessary measurements in clinical trials with multiple primary endpoints. <i>Journal of biopharmaceutical statistics</i>.</li>
+<li>Su, T., Glimm, E., Whitehead, J. &amp; Branson, M. (2012). An evaluation of methods for testing hypotheses relating to two endpoints in a single clinical trial. <i>Pharmaceutical statistics</i>.</li>
+</ul>
+<p><strong>Questions? Any references that should be included as well? Found this useful? I’m on social media and happy to discuss!</strong></p>
+<div style="display:flex; gap:20px;">
+<a href="https://github.com/XynthiaKavelaars/bmco" target="_blank"> Github</a><a href="https://bsky.app/profile/xynthia-kavelaars.bsky.social" target="_blank"> BlueSky</a><a href="https://mastodon.social/@xynthiakavelaars" target="_blank"> Mastodon</a><a href="https://mastodon.social/@xynthiakavelaars" target="_blank"> Blog</a>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>Bayesian analysis</category>
+  <category>multivariate analysis</category>
+  <category>decision rules</category>
+  <category>bmco</category>
+  <category>r</category>
+  <guid>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p02/</guid>
+  <pubDate>Tue, 26 May 2026 22:00:00 GMT</pubDate>
+  <media:content url="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p02/images/thumbnail_p2.png" medium="image" type="image/png" height="145" width="144"/>
+</item>
 <item>
   <title>When binary outcomes move together: A Bayesian approach to multivariate analysis</title>
   <dc:creator>Xynthia Kavelaars</dc:creator>

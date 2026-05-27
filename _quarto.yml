@@ -23,6 +23,8 @@ website:
           text: "Publications"
       
     right:
+      - text: "![](images/Logo_OU_klein.jpg)"
+        href: https://www.ou.nl     
       - icon: github
         href: https://github.com/XynthiaKavelaars  #
       - icon: bluesky  #
@@ -35,6 +37,7 @@ website:
         href: mailto:xynthia.kavelaars@ou.nl  #
       - icon: rss
         href: /posts.xml
+
         
 execute:
   freeze: false
