@@ -7,13 +7,10 @@ freeze: true
 # Enable banner style title blocks
 title-block-banner: true
 
-# Alles in deze map krijgt automatisch deze instellingen mee:
-citation:
-  type: webpage
+citation: true
 
 format:
   html:
-    include-after-body: [] # Overschrijft eventuele automatische appendices
+    include-after-body: [] 
     citations-hover: false
-    # Mocht Quarto de appendix alsnog tonen, dwingen we het hier af:
     appendix-style: none

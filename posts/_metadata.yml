@@ -7,7 +7,11 @@ freeze: true
 # Enable banner style title blocks
 title-block-banner: true
 
-# Alles in deze map krijgt automatisch deze instellingen mee:
+
 citation: true
-csl: ../../apa.csl
-author: "Xynthia Kavelaars"
+
+format:
+  html:
+    include-after-body: [] 
+    citations-hover: false
+    appendix-style: none
