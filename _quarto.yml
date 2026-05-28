@@ -23,6 +23,8 @@ website:
           text: "Publications"
       
     right:
+      - text: "<img src='images/Logo_OU_klein.jpg' class='nav-logo-right' alt='Logo'>"
+        href: http://www.ou.nl/
       - icon: github
         href: https://github.com/XynthiaKavelaars  #
       - icon: bluesky  #
@@ -38,7 +40,7 @@ website:
 
         
 execute:
-  freeze: false
+  freeze: auto
   
 format:
   html:
@@ -46,3 +48,4 @@ format:
     css: styles.scss
     toc: true
     highlight-style: github
+    include-in-header: analytics.html  #
