@@ -12,6 +12,4 @@ citation: true
 
 format:
   html:
-    include-after-body: [] 
-    citations-hover: false
-    appendix-style: none
+    css: ../hide-citation.css
