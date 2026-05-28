@@ -8,6 +8,12 @@ freeze: true
 title-block-banner: true
 
 # Alles in deze map krijgt automatisch deze instellingen mee:
-citation: true
-csl: ../../apa.csl
-author: "Xynthia Kavelaars"
+citation:
+  type: webpage
+
+format:
+  html:
+    include-after-body: [] # Overschrijft eventuele automatische appendices
+    citations-hover: false
+    # Mocht Quarto de appendix alsnog tonen, dwingen we het hier af:
+    appendix-style: none
