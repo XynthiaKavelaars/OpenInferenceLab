@@ -58,11 +58,3 @@ code {
   object-fit: contain !important;
   height: auto !important;
 }
-
-.nav-logo-right {
-  height: 22px !important;  /* !important dwingt GitHub Pages om deze hoogte te gebruiken */
-  width: auto;
-  max-height: 22px;
-  vertical-align: middle;   /* Zorgt dat het logo mooi uitlijnt met de andere icoontjes */
-  display: inline-block;
-}
