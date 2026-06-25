@@ -3,10 +3,12 @@ project:
   title: "The Open Inference Lab"
   output-dir: docs
 
+
 website:
   description: "Opening up (Bayesian) models, multivariate inference, statistical decision-making, and more"
-  site-url: https://xynthiakavelaars.github.io/openinferencelab  # you must change this appropriately for RSS feeds to work properly
-  title: "The Open Inference Lab"
+  site-url: https://xynthiakavelaars.github.io/OpenInferenceLab  # you must change this appropriately for RSS feeds to work properly
+  title: "The Open Inference Lab"  
+ 
   navbar:
     left:
       - href: index.qmd
@@ -23,6 +25,8 @@ website:
           text: "Publications"
       
     right:
+      - text: "<img src='images/Logo_OU_klein.jpg' style='height:22px !important; width:auto !important; max-height:22px !important; vertical-align:middle;' alt='Logo'>"
+        href: http://www.ou.nl  #
       - icon: github
         href: https://github.com/XynthiaKavelaars  #
       - icon: bluesky  #
@@ -33,16 +37,17 @@ website:
         href: www.linkedin.com/in/xynthia-kavelaars-7a0377129  #
       - icon: envelope  #
         href: mailto:xynthia.kavelaars@ou.nl  #
+      - icon: rss
+        href: /posts.xml
 
+        
 execute:
-  freeze: true
+  freeze: auto
   
 format:
   html:
     theme: minty
-    css: styles.css
+    css: styles.scss
     toc: true
     highlight-style: github
-
-editor: visual
-
+    include-in-header: analytics.html  #

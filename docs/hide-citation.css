@@ -1,0 +1,4 @@
+/* Verberg het automatisch gegenereerde citatieblok onderaan */
+  #quarto-citation-block, .quarto-appendix-citeas {
+  display: none !important;
+}

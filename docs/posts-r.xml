@@ -6,8 +6,8 @@
       version="2.0">
 <channel>
 <title>The Open Inference Lab</title>
-<link>https://xynthiakavelaars.github.io/OpenInferenceLab/</link>
-<atom:link href="https://xynthiakavelaars.github.io/OpenInferenceLab/index.xml" rel="self" type="application/rss+xml"/>
+<link>https://xynthiakavelaars.github.io/OpenInferenceLab/posts.html#category=r</link>
+<atom:link href="https://xynthiakavelaars.github.io/OpenInferenceLab/posts-r.xml" rel="self" type="application/rss+xml"/>
 <description>Opening up (Bayesian) models, multivariate inference, statistical decision-making, and more</description>
 <generator>quarto-1.9.37</generator>
 <lastBuildDate>Tue, 26 May 2026 22:00:00 GMT</lastBuildDate>

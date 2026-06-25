@@ -70,9 +70,10 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script defer="" src="https://cloud.umami.is/script.js" data-website-id="71a9cfd8-e761-4d57-babf-91089ce63560"></script>
 
 
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../styles.scss">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -121,6 +122,10 @@ ul.task-list li input[type="checkbox"] {
   </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="http://www.ou.nl"> 
+<span class="menu-text"><img src="images/Logo_OU_klein.jpg" style="height:22px !important; width:auto !important; max-height:22px !important; vertical-align:middle;" alt="Logo"></span></a>
+  </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/XynthiaKavelaars"> <i class="bi bi-github" role="img">
 </i> 
@@ -143,6 +148,11 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="mailto:xynthia.kavelaars@ou.nl"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../posts.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -191,7 +201,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p>To support the use of the Bayesian multivariate analysis methods for multiple binary outcome variables featured in <a href="../featured/2026_04_21_p01_multivariate_analysis/index.html">this blog post</a>, I created three open-source tools that work together nicely:</p>
+<p>To support the use of the Bayesian multivariate analysis methods for multiple binary outcome variables featured in <a href="../featured/p01/index.html">this blog post</a>, I created three open-source tools that work together nicely:</p>
 <section id="interactive-exploration-decision-making-with-multiple-binary-outcomes" class="level2">
 <h2 class="anchored" data-anchor-id="interactive-exploration-decision-making-with-multiple-binary-outcomes">Interactive exploration: <br><span style="font-size: 0.85em; font-weight: normal;"><code>Decision-making with multiple binary outcomes</code></span></h2>
 <p><a href="https://utrecht-university.shinyapps.io/multiple_binary_outcomes">An interactive online tool</a> that provides a practical introduction to Bayesian analysis of multiple binary outcomes, guiding researchers through the steps required to compare data from two groups. The app makes advanced statistical methods accessible without requiring coding, allowing users to analyze clinical trials and studies where multiple yes/no outcomes need to be evaluated simultaneously.</p>
@@ -281,7 +291,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/xynthiakavelaars\.github\.io\/openinferencelab");
+        var filterRegex = new RegExp("https:\/\/xynthiakavelaars\.github\.io\/OpenInferenceLab");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

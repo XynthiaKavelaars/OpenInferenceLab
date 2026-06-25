@@ -70,9 +70,10 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script defer="" src="https://cloud.umami.is/script.js" data-website-id="71a9cfd8-e761-4d57-babf-91089ce63560"></script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.scss">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -121,6 +122,10 @@ ul.task-list li input[type="checkbox"] {
   </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="http://www.ou.nl"> 
+<span class="menu-text"><img src="images/Logo_OU_klein.jpg" style="height:22px !important; width:auto !important; max-height:22px !important; vertical-align:middle;" alt="Logo"></span></a>
+  </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/XynthiaKavelaars"> <i class="bi bi-github" role="img">
 </i> 
@@ -143,6 +148,11 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="mailto:xynthia.kavelaars@ou.nl"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="./posts.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -191,7 +201,7 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="photo.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="border-radius: 50%;" width="200"></p>
+<p><img src="images/photo.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="border-radius: 50%;" width="200"></p>
 </figure>
 </div>
 <p>My name is Xynthia Kavelaars. Currently, I am working at the Department of Theory, Methodology, and Statistics at the Open University of the Netherlands. Next to teaching methodology and statistics to our ambitious and eager psychology students <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, I am doing research on research. Specifically, I am focusing on improving study design &amp; statistical analysis, aiming for more efficient use of information and data. While this might sound counter-intuitive in an era where data are abundant and information is everywhere, high-quality data that answer relevant research questions rigourously can be sparse. Therefore, collecting and analyzing data wisely remains important - no matter how big data have become in recent years or will become in the future.</p>
@@ -290,7 +300,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/xynthiakavelaars\.github\.io\/openinferencelab");
+        var filterRegex = new RegExp("https:\/\/xynthiakavelaars\.github\.io\/OpenInferenceLab");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
