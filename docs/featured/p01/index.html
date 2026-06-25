@@ -748,7 +748,11 @@ Bayesian Approach to Multivariate Analysis.”</span> April 29. <a href="https:/
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
+<<<<<<< HEAD:_site/posts/2026_04_21_p01_multivariate_analysis/index.html
+        var filterRegex = new RegExp("https:\/\/xynthiakavelaars\.github\.io\/openinferencelab");
+=======
         var filterRegex = new RegExp("https:\/\/xynthiakavelaars\.github\.io\/OpenInferenceLab");
+>>>>>>> f5e09fe8f2e69626a6eb85302d5ad48453c6a8e4:docs/featured/p01/index.html
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
