@@ -3,6 +3,7 @@
     "listing": "/posts.html",
     "items": [
       "/featured/p01/index.html",
+      "/posts/p03/index.html",
       "/posts/p02/index.html",
       "/posts/p01/index.html"
     ]
@@ -10,6 +11,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/p03/index.html",
       "/posts/p02/index.html",
       "/posts/p01/index.html"
     ]

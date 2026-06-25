@@ -10,7 +10,137 @@
 <atom:link href="https://xynthiakavelaars.github.io/OpenInferenceLab/posts.xml" rel="self" type="application/rss+xml"/>
 <description>Opening up (Bayesian) models, multivariate inference, statistical decision-making, and more</description>
 <generator>quarto-1.9.37</generator>
-<lastBuildDate>Tue, 26 May 2026 22:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 23 Jun 2026 22:00:00 GMT</lastBuildDate>
+<item>
+  <title>Sample size computations with two binary outcomes variables with the bmco-pwr app</title>
+  <dc:creator>Xynthia Kavelaars</dc:creator>
+  <link>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>This guide provides a practical step-by-step demonstration of the <a href="https://xynthia-kavelaars.shinyapps.io/bmco-pwr"><strong>bmco-pwr</strong></a> application. In this walkthrough, we will design a clinical trial comparing a new treatment (<strong>Group A</strong>) against the standard of care (<strong>Group B</strong>) using <strong>two binary outcomes</strong> (e.g., whether a patient experiences symptom reduction within 30 days (0 = no symptom reduction, 1 = symptom reduction) on two different symptoms).</p>
+<section id="interface-options" class="level3">
+<h3 class="anchored" data-anchor-id="interface-options">Interface Options</h3>
+<p>At the top right of the title bar, you will find several global utilities:</p>
+<ul>
+<li><strong>Theme Toggle (🌙 / ☀️):</strong> Click to instantly switch between Light Mode and Dark Mode.</li>
+<li><strong>Information &amp; Help (i and ? icons):</strong> Click these to launch modals containing the theoretical background of the calculations.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="step-by-step-scenario-configuration" class="level2">
+<h2 class="anchored" data-anchor-id="step-by-step-scenario-configuration">Step-by-Step Scenario Configuration</h2>
+<section id="step-1-define-the-outcomes" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-define-the-outcomes">Step 1: Define the Outcomes</h3>
+<p>First, expand the <strong>Outcomes</strong> accordion panel in the sidebar. Since our study evaluates two distinct complications, select the bivariate option <strong>Two binary outcomes</strong></p>
+<hr>
+</section>
+<section id="step-2-input-expected-effect-sizes" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-input-expected-effect-sizes">Step 2: Input Expected Effect Sizes</h3>
+<p>Next, expand the <strong>Effect size</strong> panel. Here, we input our anticipated complication rates using the interactive <code>Handsontable</code> inputs. Because we expect the new treatment to be superior, we will input lower complication rates for Group B.</p>
+<p>Select <strong>Success probabilities &amp; correlations</strong>. Adjust the tables to reflect the following values:</p>
+<ul>
+<li><strong>Group A (Standard):</strong>
+<ul>
+<li>Probability of Complication 1: <strong>0.25</strong> (25%)</li>
+<li>Probability of Complication 2: <strong>0.30</strong> (30%)</li>
+</ul></li>
+<li><strong>Group B (New Treatment):</strong>
+<ul>
+<li>Probability of Complication 1: <strong>0.15</strong> (15%)</li>
+<li>Probability of Complication 2: <strong>0.18</strong> (18%)</li>
+</ul></li>
+</ul>
+<p>Since patients susceptible to one complication might be more likely to develop the other, we will introduce a positive correlation of <strong>0.3</strong> in both the <code>rhoA</code> (Group A) and <code>rhoB</code> (Group B) fields.</p>
+<p><img src="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/images/demo_step2_effect_size.png" class="img-fluid"></p>
+<hr>
+</section>
+<section id="step-3-set-the-prior-distribution" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-set-the-prior-distribution">Step 3: Set the Prior Distribution</h3>
+<p>Open the <strong>Prior</strong> panel. Since we do not have robust historical data to build an informative prior, we will stick to the scientific standard:</p>
+<ul>
+<li>Select <strong>Jeffreys’ prior (default)</strong>.</li>
+</ul>
+<p>This ensures our prior remains non-informative and allows the newly simulated data to speak for itself.</p>
+<p><img src="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/images/demo_step3_prior.png" class="img-fluid"></p>
+<hr>
+</section>
+<section id="step-4-choose-decision-rule" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-choose-decision-rule">Step 4: Choose decision rule</h3>
+<p>Open the <strong>Decision rule</strong> panel. Specify as follows: * <strong>Test side:</strong> One-sided (for a right-sided test Group A &gt; Group B). * <strong>Decision rule:</strong> Compensatory (for a weighted combination). * <strong>Weights:</strong> 0.75 (<strong>Outcome 1</strong>) and 0.25 (<strong>Outcome 2</strong>).</p>
+<p>Here, we selected a weighted linear combination of outcomes where outcome one is three times as important in the final decision as outcome 2. For more information on decision rules, you might want to read <a href="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p02/">this blogpost</a>.</p>
+<p><img src="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/images/demo_step4_decision_rule.png" class="img-fluid"></p>
+<hr>
+</section>
+<section id="step-5-establish-statistical-criteria" class="level3">
+<h3 class="anchored" data-anchor-id="step-5-establish-statistical-criteria">Step 5: Establish Statistical Criteria</h3>
+<p>Expand the <strong>Criteria</strong> panel to enforce our study’s boundary conditions:</p>
+<ul>
+<li><strong>Alpha (alpha):</strong> Set to <code>0.05</code> (Type-I error rate).</li>
+<li><strong>Power (1-beta):</strong> Set to <code>0.80</code> (Aiming for an 80% chance of detecting the true effect).</li>
+<li><strong>Max N per group:</strong> Set to <code>500</code> to prevent excessive simulation times if the required sample size turns out to be unfeasibly large.</li>
+</ul>
+</section>
+</section>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section"><img src="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/images/demo_step5_criteria.png" class="img-fluid"></h2>
+<section id="step-6-execute-the-calculation" class="level3">
+<h3 class="anchored" data-anchor-id="step-6-execute-the-calculation">Step 6: Execute the Calculation</h3>
+<p>With all parameters locked in, scroll to the bottom of the sidebar and click the prominent blue <strong>Compute Sample Size</strong> button.</p>
+<p><img src="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/images/demo_step6_compute.png" class="img-fluid"></p>
+<hr>
+</section>
+</section>
+<section id="exploring-the-results" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-the-results">Exploring the Results</h2>
+<p>Once the server finishes running the Bayesian simulations, the dashboard dynamically updates with the results.</p>
+<section id="the-main-summary-sample-size-tab" class="level3">
+<h3 class="anchored" data-anchor-id="the-main-summary-sample-size-tab">1. The Main Summary (Sample Size Tab)</h3>
+<p>Under the <strong>Analysis Results</strong> card, the <strong>Sample size</strong> tab displays the primary takeaway inside a high-visibility, blue-bordered hero box.</p>
+<p><img src="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/images/demo_results_summary.png" class="img-fluid"></p>
+<p>Based on our configuration, the app determines that a sample size of approximately <strong>139 patients per group</strong> is required to meet our criteria.</p>
+</section>
+<section id="the-power-curve-visualization" class="level3">
+<h3 class="anchored" data-anchor-id="the-power-curve-visualization">2. The Power Curve Visualization</h3>
+<p>Switch over to the <strong>Visualizations</strong> card and click the <strong>Power curves</strong> tab. The application renders a line plot charting sample size (<img src="https://latex.codecogs.com/png.latex?N">) on the X-axis against statistical power on the Y-axis.</p>
+<p>A horizontal dotted line marks the 80% power threshold. You can visually track the power curve as it climbs, intersecting the threshold exactly at the recommended sample size.</p>
+<p><img src="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/images/demo_viz_power_curve.png" class="img-fluid"></p>
+</section>
+<section id="posterior-probability-distributions" class="level3">
+<h3 class="anchored" data-anchor-id="posterior-probability-distributions">3. Posterior Probability Distributions</h3>
+<p>To dig deeper into the analysis, explore the <strong>Posterior theta</strong> and <strong>Posterior delta</strong> tabs. The theta plot shows the posterior distributions of the individual groups. They are clearly separable on the diagonal, implying that - with the computed sample size - a compensatory decision rule would result in a superiority decision in favor of one of the two groups.</p>
+<p><img src="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/images/demo_viz_posterior_theta.png" class="img-fluid"></p>
+<p>This is supported by the delta plot, which visualizes the estimated distribution of the treatment effect (the difference between groups). Because Group B’s probabilities are lower, this sample of the probability distribution sits in the superiority region (the marked area).</p>
+<p><img src="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/images/demo_viz_posterior_delta.png" class="img-fluid"></p>
+<p><strong>Further reading</strong>:</p>
+<ul>
+<li>Kavelaars, X., Mulder, J. &amp; Kaptein, M. (2020). Decision-making with multiple correlated binary outcomes in clinical trials. <i>Statistical Methods in Medical Research</i>. <a href="https://doi.org/10.1177/0962280220922256" target="_blank">https://doi.org/10.1177/0962280220922256</a></li>
+<li>Kavelaars, X., Mulder, J. &amp; Kaptein, M. (2024). Bayesian Multivariate Logistic Regression for Superiority and Inferiority Decision-Making under Observable Treatment Heterogeneity. <i>Multivariate Behavioral Research</i>. <a href="https://doi.org/10.1080/00273171.2024.2337340" target="_blank">https://doi.org/10.1080/00273171.2024.2337340</a></li>
+</ul>
+<p><strong>Questions? Any references that should be included as well? Found this useful? I’m on social media and happy to discuss!</strong></p>
+<div style="display:flex; gap:20px;">
+<a href="https://github.com/XynthiaKavelaars/bmco" target="_blank"> Github</a><a href="https://bsky.app/profile/xynthia-kavelaars.bsky.social" target="_blank"> BlueSky</a><a href="https://mastodon.social/@xynthiakavelaars" target="_blank"> Mastodon</a><a href="https://mastodon.social/@xynthiakavelaars" target="_blank"> Blog</a>
+</div>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>Bayesian analysis</category>
+  <category>multivariate analysis</category>
+  <category>sample size</category>
+  <category>bmco-pwr</category>
+  <guid>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/</guid>
+  <pubDate>Tue, 23 Jun 2026 22:00:00 GMT</pubDate>
+  <media:content url="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/images/thumbnail_p3.png" medium="image" type="image/png" height="216" width="144"/>
+</item>
 <item>
   <title>Multiple outcomes, multiple choices: Understanding superiority in the multivariate context</title>
   <dc:creator>Xynthia Kavelaars</dc:creator>
