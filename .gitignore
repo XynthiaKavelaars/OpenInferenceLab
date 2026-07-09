@@ -14,6 +14,7 @@ _drafts/
 /.quarto/
 **/*.quarto_ipynb
 
+
 # Quarto source files
 *.qmd
 
@@ -26,3 +27,5 @@ _quarto/
 
 # Output die je NIET wilt pushen
 !_site/
+analytics.html
+header_tags.html
