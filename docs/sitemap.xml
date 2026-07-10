@@ -1,75 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts.html</loc>
-    <lastmod>2026-04-30T10:17:55.276Z</lastmod>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/index.html</loc>
+    <lastmod>2026-07-10T08:28:41.329Z</lastmod>
   </url>
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p02/index.html</loc>
-    <lastmod>2026-07-09T08:43:50.284Z</lastmod>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p01/index.html</loc>
+    <lastmod>2026-07-10T08:28:22.987Z</lastmod>
   </url>
   <url>
     <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/index.html</loc>
-    <lastmod>2026-07-09T12:53:22.864Z</lastmod>
-  </url>
-  <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/drafts/2026_09_08_p11_lca_tutorial/index.html</loc>
-    <lastmod>2026-04-21T14:44:33.052Z</lastmod>
-  </url>
-  <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/drafts/2026_08_11_p09_multiple_binary_outcomes_app/index.html</loc>
-    <lastmod>2026-04-21T14:43:59.723Z</lastmod>
-  </url>
-  <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/drafts/2026_07_14_p07_priors/index.html</loc>
-    <lastmod>2026-04-21T14:43:02.254Z</lastmod>
-  </url>
-  <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/drafts/2026_06_16_p05_correlated_outcomes/index.html</loc>
-    <lastmod>2026-04-21T14:40:28.016Z</lastmod>
-  </url>
-  <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/drafts/2026_05_05_p02_subgroup_analysis/index.html</loc>
-    <lastmod>2026-04-29T09:01:50.194Z</lastmod>
+    <lastmod>2026-07-10T08:27:48.549Z</lastmod>
   </url>
   <url>
     <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/about/software.html</loc>
     <lastmod>2026-04-29T10:26:56.880Z</lastmod>
   </url>
   <url>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/about.html</loc>
+    <lastmod>2026-07-10T08:27:31.665Z</lastmod>
+  </url>
+  <url>
     <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/about/publications.html</loc>
     <lastmod>2026-07-09T08:36:17.602Z</lastmod>
   </url>
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/about.html</loc>
-    <lastmod>2026-07-09T08:43:10.956Z</lastmod>
-  </url>
-  <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/drafts/2026_05_19_p03_multilevel_analsis/index.html</loc>
-    <lastmod>2026-04-30T13:34:04.004Z</lastmod>
-  </url>
-  <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/drafts/2026_06_30_p06_sequential_designs/index.html</loc>
-    <lastmod>2026-04-21T14:42:33.632Z</lastmod>
-  </url>
-  <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/drafts/2026_07_28_p08_power_analysis/index.html</loc>
-    <lastmod>2026-04-21T14:43:28.658Z</lastmod>
-  </url>
-  <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/drafts/2026_08_25_p10_lpa_tutorial/index.html</loc>
-    <lastmod>2026-04-21T14:36:47.023Z</lastmod>
-  </url>
-  <url>
     <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/featured/p01/index.html</loc>
-    <lastmod>2026-07-09T08:45:59.209Z</lastmod>
+    <lastmod>2026-07-10T08:28:06.060Z</lastmod>
   </url>
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p01/index.html</loc>
-    <lastmod>2026-07-09T08:43:38.198Z</lastmod>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts.html</loc>
+    <lastmod>2026-04-30T10:17:55.276Z</lastmod>
   </url>
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/index.html</loc>
-    <lastmod>2026-07-09T08:45:41.611Z</lastmod>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p02/index.html</loc>
+    <lastmod>2026-07-10T08:28:33.051Z</lastmod>
   </url>
 </urlset>

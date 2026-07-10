@@ -2,12 +2,15 @@ project:
   type: website
   title: "The Open Inference Lab"
   output-dir: docs
+  render:
+    - "*.qmd"
+    - "!drafts/"
 
 
 website:
   description: "Opening up (Bayesian) models, multivariate inference, statistical decision-making, and more"
   site-url: https://xynthiakavelaars.github.io/OpenInferenceLab  # you must change this appropriately for RSS feeds to work properly
-  title: "The Open Inference Lab"  
+  title: "The Open Inference Lab"
 
   navbar:
     left:
