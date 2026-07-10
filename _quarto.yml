@@ -54,6 +54,6 @@ format:
     css: styles.scss
     toc: true
     highlight-style: github
-    include-in-header: 
-     - analytics.html  #
-     - header_tags.html
+    include-in-header:
+      - analytics.html  #
+      - header_tags.html  #
