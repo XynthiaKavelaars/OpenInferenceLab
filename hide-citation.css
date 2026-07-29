@@ -1,4 +1,5 @@
-/* Verberg het automatisch gegenereerde citatieblok onderaan */
-  #quarto-citation-block, .quarto-appendix-citeas {
+/* Hele BibTeX-sectie verbergen */
+.quarto-appendix-secondary-label:has(+ .quarto-appendix-bibtex),
+.quarto-appendix-bibtex {
   display: none !important;
 }

@@ -46,15 +46,200 @@ code {
   color: #4BA59C !important;
 }
 
-/* Prevent image cropping in listings */
-.card img {
-  object-fit: contain !important;
-  width: 100% !important;
-  height: auto !important;
-  aspect-ratio: auto !important;
+/* ==========================================================
+   BLOG LISTINGS (Homepage + Posts)
+   ========================================================== */
+
+/* ---------- Card ---------- */
+
+.quarto-grid-item.card {
+  background: #F8FCFA;
+  border: 1px solid #D9EBE4;
+  border-radius: .6rem;
+  transition: transform .15s ease, box-shadow .15s ease;
 }
 
-.card-img-top {
-  object-fit: contain !important;
+.quarto-grid-item.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+
+
+/* ---------- Thumbnail ---------- */
+
+.quarto-grid-item .card-img-top {
+  height: 220px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: 0;
+  padding: 1rem 0;
+}
+
+.quarto-grid-item .thumbnail-image {
+  width: auto !important;
   height: auto !important;
+
+  max-width: 100%;
+  max-height: 190px;
+
+  object-fit: contain;
+}
+
+
+/* ---------- Card body ---------- */
+
+.quarto-grid-item .post-contents {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.2rem;
+}
+
+
+/* ---------- Title ---------- */
+
+.quarto-grid-item .listing-title {
+
+  position: relative;
+
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.35;
+
+  height: calc(6 * 1.35em);
+
+  padding-top: .8rem;
+  margin-bottom: .8rem;
+
+  overflow: hidden;
+
+  hyphens: auto;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.quarto-grid-item .listing-title::before {
+
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 3rem;
+  height: 4px;
+
+  background: #2B8A7A;
+  border-radius: 999px;
+
+}
+
+
+/* ---------- Categories ---------- */
+
+.quarto-grid-item .listing-categories {
+
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: .3rem;
+
+  height: calc(3 * 1.45em);
+
+  overflow: hidden;
+
+  margin-bottom: .8rem;
+}
+
+.quarto-grid-item .listing-category {
+
+  display: inline-block;
+
+  padding: .18rem .55rem;
+
+  border-radius: 999px;
+
+  background: rgba(43,138,122,.08);
+  color: #2B8A7A;
+
+  font-size: .74rem;
+  font-weight: 600;
+
+}
+
+
+/* ---------- Description ---------- */
+
+.quarto-grid-item .listing-description {
+
+  line-height: 1.55;
+
+  height: calc(4 * 1.55em);
+
+  overflow: hidden;
+
+  hyphens: auto;
+  overflow-wrap: break-word;
+
+  color: #555;
+
+}
+
+
+/* ---------- Attribution ---------- */
+
+.quarto-grid-item .card-attribution {
+
+  margin-top: auto;
+
+  padding-top: .8rem;
+
+  border-top: 1px solid #D9EBE4;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: .5rem;
+
+  font-size: .85rem;
+  color: #777;
+
+}
+
+.quarto-grid-item .listing-author,
+.quarto-grid-item .listing-date {
+
+  white-space: nowrap;
+
+}
+
+.quarto-grid-item .listing-author {
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+}
+
+/* =======================================
+   Featured posts
+   ======================================= */
+
+#featured .card-img-top {
+  height: 260px;
+}
+
+#featured .thumbnail-image {
+  max-height: 230px;
+}
+
+#featured .listing-title {
+  font-size: 1.3rem;
+}
+
+#featured .post-contents {
+  padding: 1.4rem;
 }

@@ -84,9 +84,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-title','listing-author','listing-date','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-title','listing-author','listing-date','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description"],
+      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -112,9 +112,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-title','listing-author','listing-date','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-title','listing-author','listing-date','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description"],
+      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -165,6 +165,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="styles.scss">
+<link rel="stylesheet" href="hide-citation.css">
 <link rel="alternate" type="application/rss+xml" title="The Open Inference Lab" href="posts.xml" data-external="1"></head>
 
 <body class="nav-fixed quarto-light">
@@ -291,7 +292,7 @@ window.Quarto = {
   <li><a href="#all-posts" id="toc-all-posts" class="nav-link" data-scroll-target="#all-posts">All posts</a></li>
   </ul>
 </nav>
-    </div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(5)</span></div><div class="category" data-category="YWRhcHRpdmUlMjBkZXNpZ25z">adaptive designs <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QmF5ZXNpYW4=">Bayesian <span class="quarto-category-count">(3)</span></div><div class="category" data-category="QmF5ZXNpYW4lMjBhbmFseXNpcw==">Bayesian analysis <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Ym1jbw==">bmco <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Ym1jby1wd3I=">bmco-pwr <span class="quarto-category-count">(1)</span></div><div class="category" data-category="ZGVjaXNpb24lMjBydWxlcw==">decision rules <span class="quarto-category-count">(3)</span></div><div class="category" data-category="bXVsdGlsZXZlbA==">multilevel <span class="quarto-category-count">(2)</span></div><div class="category" data-category="bXVsdGl2YXJpYXRl">multivariate <span class="quarto-category-count">(5)</span></div><div class="category" data-category="cg==">r <span class="quarto-category-count">(4)</span></div><div class="category" data-category="c2FtcGxlJTIwc2l6ZQ==">sample size <span class="quarto-category-count">(2)</span></div><div class="category" data-category="c2VxdWVudGlhbCUyMGRlc2lnbnM=">sequential designs <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -308,7 +309,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="featured-posts">⭐ Featured posts</h2>
 <div id="listing-featured" class="quarto-listing quarto-listing-container-grid">
 <div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="QmF5ZXNpYW4lMjBhbmFseXNpcyUyQ211bHRpdmFyaWF0ZSUyMGFuYWx5c2lzJTJDZGVjaXNpb24lMjBydWxlcyUyQ3N1Ymdyb3VwJTIwYW5hbHlzaXMlMkNtdWx0aWxldmVsJTIwYW5hbHlzaXMlMkNibWNv" data-listing-date-sort="1777413600000" data-listing-file-modified-sort="1783672086060" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3181">
+<div class="g-col-1" data-index="0" data-categories="QmF5ZXNpYW4lMkNtdWx0aXZhcmlhdGUlMkNibWNvJTJDbXVsdGlsZXZlbCUyQ2RlY2lzaW9uJTIwcnVsZXMlMkNy" data-listing-date-sort="1777413600000" data-listing-file-modified-sort="1785315826743" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3181">
 <a href="./featured/p01/index.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -318,6 +319,21 @@ window.Quarto = {
 <h5 class="no-anchor card-title listing-title">
 When binary outcomes move together: A Bayesian approach to multivariate analysis
 </h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QmF5ZXNpYW4='); return false;">Bayesian</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bXVsdGl2YXJpYXRl'); return false;">multivariate</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Ym1jbw=='); return false;">bmco</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bXVsdGlsZXZlbA=='); return false;">multilevel</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('ZGVjaXNpb24lMjBydWxlcw=='); return false;">decision rules</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('cg=='); return false;">r</div>
+
+</div>
 <div class="card-text listing-description delink">
 <p>If you want to improve pain relief <em>and</em> quality of life, how do you know if your treatment really works? Discover how to analyze multiple outcomes together.</p>
 </div>
@@ -347,7 +363,44 @@ Apr 29, 2026
     </div>
 </div>
 <div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="QmF5ZXNpYW4lMjBhbmFseXNpcyUyQ211bHRpdmFyaWF0ZSUyMGFuYWx5c2lzJTJDc2FtcGxlJTIwc2l6ZSUyQ2JtY28tcHdy" data-listing-date-sort="1782252000000" data-listing-file-modified-sort="1783672121329" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="825">
+<div class="g-col-1" data-index="0" data-categories="c2VxdWVudGlhbCUyMGRlc2lnbnMlMkNtdWx0aXZhcmlhdGUlMkNhZGFwdGl2ZSUyMGRlc2lnbnMlMkNzYW1wbGUlMjBzaXplJTJDcg==" data-listing-date-sort="1785276000000" data-listing-file-modified-sort="1785315700739" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="36" data-listing-word-count-sort="7028">
+<a href="./posts/p04/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="./posts/p04/images/thumbnail.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Effect size uncertainty is the rule, not the exception - Part 1: Sequential designs
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('c2VxdWVudGlhbCUyMGRlc2lnbnM='); return false;">sequential designs</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bXVsdGl2YXJpYXRl'); return false;">multivariate</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('YWRhcHRpdmUlMjBkZXNpZ25z'); return false;">adaptive designs</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('c2FtcGxlJTIwc2l6ZQ=='); return false;">sample size</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('cg=='); return false;">r</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>Imagine you’re designing a study. You only have a vague idea about the effect size of interest. How do you compute how many participants to recruit?</p>
+</div>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Xynthia Kavelaars
+</div>
+<div class="listing-date">
+Jul 29, 2026
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="1" data-categories="QmF5ZXNpYW4lMjBhbmFseXNpcyUyQ211bHRpdmFyaWF0ZSUyQ3NhbXBsZSUyMHNpemUlMkNibWNvLXB3cg==" data-listing-date-sort="1782252000000" data-listing-file-modified-sort="1785315588194" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="876">
 <a href="./posts/p03/index.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -357,8 +410,19 @@ Apr 29, 2026
 <h5 class="no-anchor card-title listing-title">
 Sample size computations with two binary outcomes variables with the bmco-pwr app
 </h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QmF5ZXNpYW4lMjBhbmFseXNpcw=='); return false;">Bayesian analysis</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bXVsdGl2YXJpYXRl'); return false;">multivariate</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('c2FtcGxlJTIwc2l6ZQ=='); return false;">sample size</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Ym1jby1wd3I='); return false;">bmco-pwr</div>
+
+</div>
 <div class="card-text listing-description delink">
-This guide provides a practical step-by-step demonstration of the <strong>bmco-pwr</strong> application. In this walkthrough, we will design a clinical trial comparing a new treatment (<strong>Group A</strong>…<strong></strong><strong></strong>
+<p>Imagine you’re designing a clinical trial and are interested in the reduction of two different symptoms. How do you decide how many participants to recruit?</p>
 </div>
 <div class="card-attribution card-text-small justify">
 <div class="listing-author">
@@ -371,7 +435,7 @@ Jun 24, 2026
 </div>
 </div></a>
 </div>
-<div class="g-col-1" data-index="1" data-categories="QmF5ZXNpYW4lMjBhbmFseXNpcyUyQ211bHRpdmFyaWF0ZSUyMGFuYWx5c2lzJTJDZGVjaXNpb24lMjBydWxlcyUyQ2JtY28lMkNy" data-listing-date-sort="1779832800000" data-listing-file-modified-sort="1783672113051" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="29" data-listing-word-count-sort="5733">
+<div class="g-col-1" data-index="2" data-categories="QmF5ZXNpYW4lMkNtdWx0aXZhcmlhdGUlMkNkZWNpc2lvbiUyMHJ1bGVzJTJDYm1jbyUyQ3I=" data-listing-date-sort="1779832800000" data-listing-file-modified-sort="1785311269702" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="29" data-listing-word-count-sort="5761">
 <a href="./posts/p02/index.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -381,8 +445,21 @@ Jun 24, 2026
 <h5 class="no-anchor card-title listing-title">
 Multiple outcomes, multiple choices: Understanding superiority in the multivariate context
 </h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QmF5ZXNpYW4='); return false;">Bayesian</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bXVsdGl2YXJpYXRl'); return false;">multivariate</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('ZGVjaXNpb24lMjBydWxlcw=='); return false;">decision rules</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Ym1jbw=='); return false;">bmco</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('cg=='); return false;">r</div>
+
+</div>
 <div class="card-text listing-description delink">
-Imagine you’re evaluating a new cancer treatment. It reduces tumor size in most patients, but some experience severe side effects. How do you decide if the treatment is…
+<p>Imagine you’re evaluating a new cancer treatment. It reduces tumor size in most patients, but some experience severe side effects. How do you decide if the treatment is…</p>
 </div>
 <div class="card-attribution card-text-small justify">
 <div class="listing-author">
@@ -395,7 +472,7 @@ May 27, 2026
 </div>
 </div></a>
 </div>
-<div class="g-col-1" data-index="2" data-categories="QmF5ZXNpYW4lMjBhbmFseXNpcyUyQ211bHRpdmFyaWF0ZSUyMGFuYWx5c2lzJTJDZGVjaXNpb24lMjBydWxlcyUyQ3N1Ymdyb3VwJTIwYW5hbHlzaXMlMkNtdWx0aWxldmVsJTIwYW5hbHlzaXMlMkNibWNvJTJDcg==" data-listing-date-sort="1777413600000" data-listing-file-modified-sort="1783672102987" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3181">
+<div class="g-col-1" data-index="3" data-categories="QmF5ZXNpYW4lMkNtdWx0aXZhcmlhdGUlMkNibWNvJTJDbXVsdGlsZXZlbCUyQ2RlY2lzaW9uJTIwcnVsZXMlMkNy" data-listing-date-sort="1777413600000" data-listing-file-modified-sort="1785315810588" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3181">
 <a href="./posts/p01/index.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -405,6 +482,21 @@ May 27, 2026
 <h5 class="no-anchor card-title listing-title">
 When binary outcomes move together: A Bayesian approach to multivariate analysis
 </h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QmF5ZXNpYW4='); return false;">Bayesian</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bXVsdGl2YXJpYXRl'); return false;">multivariate</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Ym1jbw=='); return false;">bmco</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bXVsdGlsZXZlbA=='); return false;">multilevel</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('ZGVjaXNpb24lMjBydWxlcw=='); return false;">decision rules</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('cg=='); return false;">r</div>
+
+</div>
 <div class="card-text listing-description delink">
 <p>If you want to improve pain relief <em>and</em> quality of life, how do you know if your treatment really works? Discover how to analyze multiple outcomes together.</p>
 </div>

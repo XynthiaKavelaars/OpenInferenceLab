@@ -1,39 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/index.html</loc>
-    <lastmod>2026-07-10T08:28:41.329Z</lastmod>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p04/index.html</loc>
+    <lastmod>2026-07-29T09:01:40.739Z</lastmod>
   </url>
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p01/index.html</loc>
-    <lastmod>2026-07-10T08:28:22.987Z</lastmod>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p02/index.html</loc>
+    <lastmod>2026-07-29T07:47:49.702Z</lastmod>
   </url>
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/index.html</loc>
-    <lastmod>2026-07-10T08:27:48.549Z</lastmod>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts.html</loc>
+    <lastmod>2026-07-29T07:28:19.835Z</lastmod>
   </url>
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/about/software.html</loc>
-    <lastmod>2026-04-29T10:26:56.880Z</lastmod>
-  </url>
-  <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/about.html</loc>
-    <lastmod>2026-07-10T08:27:31.665Z</lastmod>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/featured/p01/index.html</loc>
+    <lastmod>2026-07-29T09:03:46.743Z</lastmod>
   </url>
   <url>
     <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/about/publications.html</loc>
     <lastmod>2026-07-09T08:36:17.602Z</lastmod>
   </url>
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/featured/p01/index.html</loc>
-    <lastmod>2026-07-10T08:28:06.060Z</lastmod>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/about.html</loc>
+    <lastmod>2026-07-10T08:27:31.665Z</lastmod>
   </url>
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts.html</loc>
-    <lastmod>2026-04-30T10:17:55.276Z</lastmod>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/about/software.html</loc>
+    <lastmod>2026-04-29T10:26:56.880Z</lastmod>
   </url>
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p02/index.html</loc>
-    <lastmod>2026-07-10T08:28:33.051Z</lastmod>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/index.html</loc>
+    <lastmod>2026-07-10T08:27:48.549Z</lastmod>
+  </url>
+  <url>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p01/index.html</loc>
+    <lastmod>2026-07-29T09:03:30.588Z</lastmod>
+  </url>
+  <url>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/index.html</loc>
+    <lastmod>2026-07-29T08:59:48.194Z</lastmod>
   </url>
 </urlset>

@@ -54,7 +54,9 @@ execute:
 format:
   html:
     theme: minty
-    css: styles.scss
+    css: 
+      - styles.scss
+      - hide-citation.css
     toc: true
     highlight-style: github
     include-in-header:
