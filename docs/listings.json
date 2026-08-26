@@ -1,21 +1,23 @@
 [
   {
-    "listing": "/posts.html",
+    "listing": "/index.html",
     "items": [
-      "/featured/p01/index.html",
-      "/posts/p04/index.html",
-      "/posts/p03/index.html",
-      "/posts/p02/index.html",
-      "/posts/p01/index.html"
+      "/posts/2026-08-sample-size-re-estimation/index.html",
+      "/posts/2026-07-group-sequential-designs/index.html",
+      "/posts/2026-06-bmco-pwr/index.html",
+      "/posts/2026-05-multivariate-decision-rules/index.html",
+      "/posts/2026-04-multivariate-analysis/index.html"
     ]
   },
   {
-    "listing": "/index.html",
+    "listing": "/posts.html",
     "items": [
-      "/posts/p04/index.html",
-      "/posts/p03/index.html",
-      "/posts/p02/index.html",
-      "/posts/p01/index.html"
+      "/featured/2026-04-multivariate-analysis/index.html",
+      "/posts/2026-08-sample-size-re-estimation/index.html",
+      "/posts/2026-07-group-sequential-designs/index.html",
+      "/posts/2026-06-bmco-pwr/index.html",
+      "/posts/2026-05-multivariate-decision-rules/index.html",
+      "/posts/2026-04-multivariate-analysis/index.html"
     ]
   }
 ]

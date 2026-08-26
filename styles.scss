@@ -1,6 +1,7 @@
 /*-- scss:defaults --*/
 $code-bg: #F5F5F5;
 $code-color: #2B8A7A;
+$callout-color-note: #1D9E75;
 
 /*-- scss:rules --*/
 pre {
@@ -14,6 +15,28 @@ code {
   background-color: #F5F5F5 !important;
 }
 
+div.callout-note {
+  background-color: #F8FCFA !important;
+  border-top-color: #D9EBE4 !important;
+  border-right-color: #D9EBE4 !important;
+  border-bottom-color: #D9EBE4 !important;
+  border-left-color: #1D9E75 !important;
+}
+
+i.callout-icon {
+  filter: brightness(0) saturate(100%) invert(38%) sepia(94%) saturate(1084%) hue-rotate(126deg) brightness(94%) contrast(93%);
+}
+
+div.callout-note .callout-icon-container svg {
+  fill: #1D9E75 !important;
+  color: #1D9E75 !important;
+}
+div.callout-note .callout-header {
+  background-color: #E1F5EE !important;
+}
+div.callout-note .callout-title-container {
+  color: #1D9E75 !important;
+}
 /* Voor {r, echo=TRUE} blokken */
 .sourceCode.r {
   background-color: #F5F5F5 !important;
@@ -65,26 +88,21 @@ code {
 }
 
 
-/* ---------- Thumbnail ---------- */
 
+/* ---------- Thumbnail ---------- */
 .quarto-grid-item .card-img-top {
   height: 220px;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   margin: 0;
   padding: 1rem 0;
 }
-
 .quarto-grid-item .thumbnail-image {
   width: auto !important;
   height: auto !important;
-
   max-width: 100%;
   max-height: 190px;
-
   object-fit: contain;
 }
 

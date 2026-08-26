@@ -1,43 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p04/index.html</loc>
-    <lastmod>2026-07-29T09:01:40.739Z</lastmod>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/2026-08-sample-size-re-estimation/index.html</loc>
+    <lastmod>2026-08-21T07:18:50.898Z</lastmod>
   </url>
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p02/index.html</loc>
-    <lastmod>2026-07-29T07:47:49.702Z</lastmod>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/2026-06-bmco-pwr/index.html</loc>
+    <lastmod>2026-08-20T12:20:14.671Z</lastmod>
   </url>
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts.html</loc>
-    <lastmod>2026-07-29T07:28:19.835Z</lastmod>
-  </url>
-  <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/featured/p01/index.html</loc>
-    <lastmod>2026-07-29T09:03:46.743Z</lastmod>
-  </url>
-  <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/about/publications.html</loc>
-    <lastmod>2026-07-09T08:36:17.602Z</lastmod>
-  </url>
-  <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/about.html</loc>
-    <lastmod>2026-07-10T08:27:31.665Z</lastmod>
-  </url>
-  <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/about/software.html</loc>
-    <lastmod>2026-04-29T10:26:56.880Z</lastmod>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/2026-04-multivariate-analysis/index.html</loc>
+    <lastmod>2026-08-20T11:25:59.996Z</lastmod>
   </url>
   <url>
     <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/index.html</loc>
     <lastmod>2026-07-10T08:27:48.549Z</lastmod>
   </url>
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p01/index.html</loc>
-    <lastmod>2026-07-29T09:03:30.588Z</lastmod>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/about/software.html</loc>
+    <lastmod>2026-08-20T13:36:02.057Z</lastmod>
   </url>
   <url>
-    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/p03/index.html</loc>
-    <lastmod>2026-07-29T08:59:48.194Z</lastmod>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/about.html</loc>
+    <lastmod>2026-07-10T08:27:31.665Z</lastmod>
+  </url>
+  <url>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/about/publications.html</loc>
+    <lastmod>2026-07-09T08:36:17.602Z</lastmod>
+  </url>
+  <url>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/featured/2026-04-multivariate-analysis/index.html</loc>
+    <lastmod>2026-08-20T11:58:38.551Z</lastmod>
+  </url>
+  <url>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts.html</loc>
+    <lastmod>2026-07-29T07:28:19.835Z</lastmod>
+  </url>
+  <url>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/2026-05-multivariate-decision-rules/index.html</loc>
+    <lastmod>2026-08-20T11:26:10.258Z</lastmod>
+  </url>
+  <url>
+    <loc>https://xynthiakavelaars.github.io/OpenInferenceLab/posts/2026-07-group-sequential-designs/index.html</loc>
+    <lastmod>2026-08-20T13:38:13.607Z</lastmod>
   </url>
 </urlset>
