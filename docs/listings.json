@@ -3,6 +3,7 @@
     "listing": "/posts.html",
     "items": [
       "/featured/2026-04-multivariate-analysis/index.html",
+      "/posts/2026-10-multilevel-cluster-size/index.html",
       "/posts/2026-09-multilevel-sample-size-computation/index.html",
       "/posts/2026-08-sample-size-re-estimation/index.html",
       "/posts/2026-07-group-sequential-designs/index.html",
@@ -14,6 +15,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/2026-10-multilevel-cluster-size/index.html",
       "/posts/2026-09-multilevel-sample-size-computation/index.html",
       "/posts/2026-08-sample-size-re-estimation/index.html",
       "/posts/2026-07-group-sequential-designs/index.html",

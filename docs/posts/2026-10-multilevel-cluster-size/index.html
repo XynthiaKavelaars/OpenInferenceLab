@@ -1,0 +1,2174 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Xynthia Kavelaars">
+<meta name="dcterms.date" content="2026-10-28">
+<meta name="description" content="Your power analysis assumed 15 clients per practice. What happens to the power when some practices recruit 5 clients and others 30?">
+
+<title>Sample size planning for clustered data – Part 2: When practices don’t recruit as planned – The Open Inference Lab</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bb62276ab45c84d9efd712f51ff97b5a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-37f0b768e41222b5fac9867eac66a373.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/quarto-contrib/academicons-1.9.4/all.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/academicons-1.9.4/size.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script defer="" src="https://cloud.umami.is/script.js" data-website-id="71a9cfd8-e761-4d57-babf-91089ce63560"></script>
+<meta name="google-site-verification" content="PprGBav35N-CCX_NWDylEj48nnkKU_dGJgeH2yvu25w">
+
+
+<link rel="stylesheet" href="../../styles.scss">
+<link rel="stylesheet" href="../../hide-citation.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">The Open Inference Lab</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../posts.html"> 
+<span class="menu-text">Blog posts</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-about" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">About</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-about">    
+        <li>
+    <a class="dropdown-item" href="../../about.html">
+ <span class="dropdown-text">About me</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../about/software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../about/publications.html">
+ <span class="dropdown-text">Publications</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://research.ou.nl/en/persons/xynthia-kavelaars/"> 
+<span class="menu-text"><img src="images/Logo_OU_klein.jpg" style="height:22px !important; width:auto !important; max-height:22px !important; vertical-align:middle;" alt="Logo"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/XynthiaKavelaars"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://xynthia-kavelaars.bsky.social"> <i class="bi bi-bluesky" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://mastodon.social/@xynthiakavelaars"> <i class="bi bi-mastodon" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="http://www.linkedin.com/in/xynthia-kavelaars-7a0377129"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://orcid.org/0000-0003-1600-3153"> 
+<span class="menu-text"><i class="ai  ai-orcid" aria-label="orcid"></i></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.researchgate.net/profile/Xynthia-Kavelaars"> 
+<span class="menu-text"><i class="ai  ai-researchgate" aria-label="researchgate"></i></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:xynthia.kavelaars@ou.nl"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../posts.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Sample size planning for clustered data – Part 2: When practices don’t recruit as planned</h1>
+                  <div>
+        <div class="description">
+          Your power analysis assumed 15 clients per practice. What happens to the power when some practices recruit 5 clients and others 30?
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">R</div>
+                <div class="quarto-category">sample size</div>
+                <div class="quarto-category">power analysis</div>
+                <div class="quarto-category">multilevel</div>
+                <div class="quarto-category">cluster size</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Xynthia Kavelaars </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 28, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#equal-clusters-the-most-favourable-assumption" id="toc-equal-clusters-the-most-favourable-assumption" class="nav-link active" data-scroll-target="#equal-clusters-the-most-favourable-assumption">Equal clusters: the most favourable assumption</a></li>
+  <li><a href="#the-running-example" id="toc-the-running-example" class="nav-link" data-scroll-target="#the-running-example">The running example</a></li>
+  <li><a href="#why-practice-sizes-are-often-hard-to-predict" id="toc-why-practice-sizes-are-often-hard-to-predict" class="nav-link" data-scroll-target="#why-practice-sizes-are-often-hard-to-predict">Why practice sizes are often hard to predict</a></li>
+  <li><a href="#unequal-practices" id="toc-unequal-practices" class="nav-link" data-scroll-target="#unequal-practices">Unequal practices</a></li>
+  <li><a href="#when-the-arms-differ" id="toc-when-the-arms-differ" class="nav-link" data-scroll-target="#when-the-arms-differ">When the arms differ</a></li>
+  <li><a href="#when-the-total-differs" id="toc-when-the-total-differs" class="nav-link" data-scroll-target="#when-the-total-differs">When the total differs</a></li>
+  <li><a href="#taken-together" id="toc-taken-together" class="nav-link" data-scroll-target="#taken-together">Taken together</a></li>
+  <li><a href="#one-assumption-among-several" id="toc-one-assumption-among-several" class="nav-link" data-scroll-target="#one-assumption-among-several">One assumption among several</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<style>
+.description { display: none; }
+</style>
+<style>
+/* Move these rules to styles.scss if you like them */
+.figure-caption, figcaption { color: #1a5d54; font-weight: 600; }
+
+/* readability: more air between lines and paragraphs, shorter lines */
+#quarto-document-content > p, #quarto-document-content section > p {
+  line-height: 1.75; margin-bottom: 1.2rem; max-width: 42rem; }
+#quarto-document-content h2 { margin-top: 2.6rem; }
+
+/* one-sentence summary at the end of a section */
+.takeaway { border-left: 4px solid #2B8A7A; background: #F4FAF8; color: #1a5d54;
+            padding: 0.7rem 1rem; margin: 1.4rem 0 1.8rem 0; font-size: 1.05rem;
+            line-height: 1.6; max-width: 42rem; }
+.takeaway p { margin: 0; }
+
+/* the power analysis of the running example */
+.example-cards { display: grid; grid-template-columns: repeat(3, 1fr);
+                 gap: 0.8rem; margin: 1.2rem 0 1.6rem 0; max-width: 42rem; }
+@media (max-width: 600px) { .example-cards { grid-template-columns: 1fr; } }
+.example-card  { background: #F4FAF8; border-top: 4px solid #2B8A7A; border-radius: 4px;
+                 padding: 0.7rem 0.9rem; }
+.example-card p { margin: 0 0 0.3rem 0; }
+.example-card .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em;
+                       color: #4a4a4a; }
+.example-card .value { font-size: 1.15rem; font-weight: 600; color: #1a5d54; line-height: 1.3; }
+.example-card .note  { font-size: 0.82rem; color: #4a4a4a; line-height: 1.45; }
+
+.sim-table { border-collapse: collapse; font-size: 0.85rem; margin: 0.5rem 0 1rem 0; }
+.sim-table th, .sim-table td { padding: 0.25rem 0.6rem; text-align: center; white-space: nowrap; }
+.sim-table .gs { padding-left: 2rem; }
+.sim-table thead th { border-bottom: 1px solid #8FD3C1; color: #1a5d54; }
+.sim-table td.group { text-align: left; font-weight: 600; color: #1a5d54;
+                      background: #F4FAF8; padding-top: 0.45rem; padding-left: 0.6rem; }
+</style>
+<div class="alert alert-info border-0 rounded-3" style="background: #F5F5F5; color: #1a5d54; padding: 2rem; border-left: 5px solid #2B8A7A;">
+<h3 style="margin-top: 0; color: #2B8A7A;" class="anchored">
+⚖️ What if recruitment didn’t go as planned?
+</h3>
+<p><strong>Your power analysis assumed 15 clients per practice. What happens to the power when some practices recruit 5 clients and others 30?</strong></p>
+</div>
+<p>Before a study starts, the researcher has to decide how many participants to include, aiming to give the study a sufficiently high probability of detecting an effect, if that effect really exists. The researcher sets this probability - the statistical power - in advance, often at 0.80. In practice, power analysis is used for this: a calculation based on a series of educated guesses or assumptions about what the data will look like, such as the expected size of the effect. The researcher has to make these assumptions before any data are collected. When those assumptions turn out to be wrong, the study can end up with less power than the researcher intended, and therefore with a larger risk of missing an effect that does exist.</p>
+<p>In many studies, the researcher does not recruit participants one by one but through groups. A clinical psychologist recruits clients through psychology practices, an educational researcher recruits pupils through schools, and a medical researcher recruits patients through hospitals. The data from such studies are clustered (or multilevel or nested) data, with the groups being clusters. Clustered data occur in many kinds of studies. This post focuses on trials in which the researcher randomizes whole clusters instead of individual participants. All participants within a cluster are then assigned to the same condition and receive the same intervention or treatment. Such trials are called cluster-randomized trials. Whether the researcher randomizes clusters or individual participants, the clustering has consequences for the power analysis. The researcher then has to make additional assumptions, and one of these assumptions is the subject of this post.</p>
+<section id="equal-clusters-the-most-favourable-assumption" class="level2">
+<h2 class="anchored" data-anchor-id="equal-clusters-the-most-favourable-assumption">Equal clusters: the most favourable assumption</h2>
+<p>When a researcher plans the sample size for a study with clustered data, the plan always contains an assumption about the number of participants in each cluster, whether the researcher makes that assumption consciously or not. To see why this assumption plays a role, consider what clustering means for a power analysis. Participants within the same cluster tend to resemble each other. As a result, each additional participant from a cluster that is already in the study contributes less than a participant from a new cluster would. A power analysis for such a trial takes this into account. The calculation thus depends on how the participants are spread across the clusters, even when the researcher does not choose that spread explicitly.</p>
+<p>The simplest choice is to assume that every cluster contributes the same number of participants, usually the number that the researcher expects on average. This choice is both convenient and understandable. It is convenient, because the power analysis then needs only one number. It is understandable, because the researcher often does not know in advance which clusters will recruit more and which fewer. But it has a consequence that is easy to overlook. As <a href="../../posts/2026-09-multilevel-sample-size-computation/index.html">Part 1</a> of this series showed, equal clusters give the highest power that can be reached with a given number of clusters and a given number of participants. A power analysis that assumes equal clusters therefore describes the most favourable way in which the participants could be spread, and the power that it reports holds only for that situation. This post examines how far the actual power can end up from the planned power when the clusters turn out to differ in size. <a href="#fig-teaser" class="quarto-xref">Figure&nbsp;1</a> shows what is at stake in the running example of this series, which the next section introduces.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>draw_teaser <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  rows <span class="ot">&lt;-</span> <span class="fu">list</span>(scen[[ref]][[<span class="dv">1</span>]], scen[[sc_mid]][[<span class="dv">1</span>]])</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  labs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Planned: all practices equal"</span>, <span class="st">"Realized: unequal practices"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  pw   <span class="ot">&lt;-</span> <span class="fu">c</span>(p_plan, p_mid)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  maxn <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">unlist</span>(rows))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  ys   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">2.0</span>, <span class="fl">0.85</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  bx   <span class="ot">&lt;-</span> <span class="dv">26</span>; bw <span class="ot">&lt;-</span> <span class="dv">8</span>                      <span class="co"># power bar: x start and width of 1.0</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">family =</span> <span class="st">"sans"</span>, <span class="at">xpd =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="cn">NA</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">36</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">3.2</span>), <span class="at">axes =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">xaxs =</span> <span class="st">"i"</span>, <span class="at">yaxs =</span> <span class="st">"i"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">text</span>(<span class="fl">0.5</span>, <span class="fl">2.95</span>, <span class="fu">sprintf</span>(<span class="st">"%d practices per arm, %d clients per arm"</span>, J_arm, total_arm),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">adj =</span> <span class="dv">0</span>, <span class="at">cex =</span> <span class="fl">0.8</span>, <span class="at">col =</span> col_dark, <span class="at">font =</span> <span class="dv">2</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">text</span>(bx, <span class="fl">2.95</span>, <span class="st">"Power"</span>, <span class="at">adj =</span> <span class="dv">0</span>, <span class="at">cex =</span> <span class="fl">0.8</span>, <span class="at">col =</span> col_dark, <span class="at">font =</span> <span class="dv">2</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">3</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>) {</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    s <span class="ot">&lt;-</span> rows[[i]][<span class="fu">sample</span>(<span class="fu">length</span>(rows[[i]]))]</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">text</span>(<span class="fl">0.5</span>, ys[i] <span class="sc">+</span> <span class="fl">0.5</span>, labs[i], <span class="at">adj =</span> <span class="dv">0</span>, <span class="at">cex =</span> <span class="fl">0.75</span>, <span class="at">col =</span> col_text)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">symbols</span>(<span class="fu">seq_along</span>(s), <span class="fu">rep</span>(ys[i], <span class="fu">length</span>(s)),</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">circles =</span> <span class="fl">0.48</span> <span class="sc">*</span> <span class="fu">sqrt</span>(s <span class="sc">/</span> maxn), <span class="at">inches =</span> <span class="cn">FALSE</span>, <span class="at">add =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>            <span class="at">bg =</span> col_light, <span class="at">fg =</span> col_dark, <span class="at">lwd =</span> <span class="fl">0.8</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rect</span>(bx, ys[i] <span class="sc">-</span> <span class="fl">0.2</span>, bx <span class="sc">+</span> bw <span class="sc">*</span> pw[i], ys[i] <span class="sc">+</span> <span class="fl">0.2</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">col =</span> <span class="fu">c</span>(col_dark, col_acc)[i], <span class="at">border =</span> <span class="cn">NA</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">text</span>(bx <span class="sc">+</span> bw <span class="sc">*</span> pw[i] <span class="sc">-</span> <span class="fl">0.2</span>, ys[i], <span class="fu">sprintf</span>(<span class="st">"%.2f"</span>, pw[i]), <span class="at">adj =</span> <span class="dv">1</span>,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>         <span class="at">col =</span> <span class="st">"white"</span>, <span class="at">font =</span> <span class="dv">2</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">segments</span>(bx <span class="sc">+</span> bw <span class="sc">*</span> pow, <span class="fl">0.35</span>, bx <span class="sc">+</span> bw <span class="sc">*</span> pow, <span class="fl">2.6</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> col_dark)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">text</span>(bx <span class="sc">+</span> bw <span class="sc">*</span> pow, <span class="fl">0.15</span>, <span class="st">"target 0.80"</span>, <span class="at">cex =</span> <span class="fl">0.65</span>, <span class="at">col =</span> col_dark)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_teaser</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-teaser" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-teaser-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-teaser-1.png" class="img-fluid figure-img" width="864">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-teaser-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: With the same number of practices and clients, the power is lower when the clients are spread unequally across the practices.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="the-running-example" class="level2">
+<h2 class="anchored" data-anchor-id="the-running-example">The running example</h2>
+<p>This post illustrates the problem with the running example of the series. A trial compares intuitive eating with structured dietary rules in adults with subclinical eating and body image concerns. Psychology practices are randomized, so all clients within a practice receive the same intervention. The outcome is body image, and the researcher aims for a power of 0.80 to detect a standardized effect of 0.25 with a one-sided α of 0.05. Clients within the same practice tend to resemble each other. The intraclass correlation (ICC) expresses how strongly they resemble each other, as the share of the variation in body image that is due to differences between practices. The running example assumes an ICC of 0.05. The cards below summarize what a standard power analysis assumes for this trial and what it arrives at.</p>
+<div class="example-cards">
+<div class="example-card">
+<p><span class="label">Assumed per practice</span></p>
+<p><span class="value">15 clients</span></p>
+<p><span class="note">The same number for every practice. This is the assumption that this post examines.</span></p>
+</div>
+<div class="example-card">
+<p><span class="label">Without clustering, per arm</span></p>
+<p><span class="value">198 clients</span></p>
+<p><span class="note">The number of clients that would be needed if clients were independent of each other.</span></p>
+</div>
+<div class="example-card">
+<p><span class="label">Planned, per arm</span></p>
+<p><span class="value">23 practices</span></p>
+<p><span class="note">With a design effect of 1 + (15 − 1) × 0.05 = 1.70, which corrects for the similarity of clients within a practice, the trial needs 337 clients per arm. Rounded up to whole practices, that is 345 clients.</span></p>
+</div>
+</div>
+<p>The rest of this post calls the clusters practices and the participants clients.</p>
+</section>
+<section id="why-practice-sizes-are-often-hard-to-predict" class="level2">
+<h2 class="anchored" data-anchor-id="why-practice-sizes-are-often-hard-to-predict">Why practice sizes are often hard to predict</h2>
+<p>A researcher who wants to plan in more detail than with one number for all practices can try to estimate for each practice how many clients it will recruit, but even a careful estimate remains uncertain. For example, the researcher can ask each practice how many eligible clients it sees, how much time its psychologists can spend on the trial, and how many referrals it expects. The researcher can also look at earlier trials in similar settings to see how recruitment was spread across sites.</p>
+<p>These estimates are made before the trial starts, however, and the circumstances on which they are based can change once the trial is running. A practice may lose a psychologist, its waiting list may become longer, eligible clients may decline to take part, psychologists may find the trial procedures too demanding next to their regular work, a referral route may disappear, or the practice may withdraw after randomization. Other practices may recruit more easily than expected. When the researcher aims for a total number of clients, recruitment may then continue in those practices until the total is reached. The sizes that result can therefore differ from the sizes that were planned, and it is hard to know in advance how the clients will be spread across the practices.</p>
+</section>
+<section id="unequal-practices" class="level2">
+<h2 class="anchored" data-anchor-id="unequal-practices">Unequal practices</h2>
+<p>Differences in practice size matter because clients do not all receive the same weight in the analysis. A large practice contributes more than a small one, but a practice with twice as many clients does not contribute twice as much. Because clients from the same practice resemble each other, an additional client in a large practice contributes less than an additional client in a small practice. When some practices end up larger and others smaller than planned, the extra clients in the large practices do not fully make up for the clients missing from the small practices. The total number of clients can then be exactly on target, while the power is lower than planned.</p>
+<p>Part 1 described this as the contribution of a practice: all clients of a practice together contribute as much as a smaller number of clients from different practices would, and each additional client in the same practice adds a little less than the previous one. <a href="#fig-contribution" class="quarto-xref">Figure&nbsp;2</a> shows what this means when five clients are recruited in one practice instead of another.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ctr  <span class="ot">&lt;-</span> <span class="cf">function</span>(n) <span class="fu">ifelse</span>(n <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, n <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> (n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> icc))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>marg <span class="ot">&lt;-</span> <span class="fu">diff</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">ctr</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>)))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ramp <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">"#E8F6F2"</span>, col_light, col_main, col_dark))(<span class="dv">100</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>shade <span class="ot">&lt;-</span> <span class="cf">function</span>(k) ramp[<span class="fu">pmax</span>(<span class="dv">1</span>, <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> (marg[k] <span class="sc">-</span> <span class="fu">min</span>(marg)) <span class="sc">/</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                                          (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">min</span>(marg))))]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>draw_col <span class="ot">&lt;-</span> <span class="cf">function</span>(x, n, <span class="at">moved =</span> <span class="fu">integer</span>(<span class="dv">0</span>), <span class="at">w =</span> <span class="fl">0.36</span>) {</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="fu">seq_len</span>(n))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rect</span>(x <span class="sc">-</span> w, <span class="fu">ctr</span>(k <span class="sc">-</span> <span class="dv">1</span>), x <span class="sc">+</span> w, <span class="fu">ctr</span>(k), <span class="at">col =</span> <span class="fu">shade</span>(k),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">border =</span> <span class="st">"white"</span>, <span class="at">lwd =</span> <span class="fl">1.2</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(moved))</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rect</span>(x <span class="sc">-</span> w, <span class="fu">ctr</span>(<span class="fu">min</span>(moved) <span class="sc">-</span> <span class="dv">1</span>), x <span class="sc">+</span> w, <span class="fu">ctr</span>(<span class="fu">max</span>(moved)),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">border =</span> col_acc, <span class="at">lwd =</span> <span class="dv">3</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>draw_fig_contribution <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="fl">4.5</span>, <span class="dv">3</span>, <span class="dv">1</span>), <span class="at">family =</span> <span class="st">"sans"</span>, <span class="at">las =</span> <span class="dv">1</span>, <span class="at">xpd =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="cn">NA</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="fl">0.4</span>, <span class="fl">5.6</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">12.5</span>), <span class="at">axes =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">axis</span>(<span class="dv">2</span>, <span class="at">at =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">2</span>), <span class="at">col =</span> <span class="st">"grey70"</span>, <span class="at">col.axis =</span> col_text,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">cex.axis =</span> <span class="fl">0.8</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mtext</span>(<span class="st">"Contribution (in independent clients)"</span>, <span class="at">side =</span> <span class="dv">2</span>, <span class="at">line =</span> <span class="dv">3</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">las =</span> <span class="dv">0</span>, <span class="at">cex =</span> <span class="fl">0.85</span>, <span class="at">col =</span> col_text)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_col</span>(<span class="dv">1</span>, <span class="dv">15</span>, <span class="at">moved =</span> <span class="dv">11</span><span class="sc">:</span><span class="dv">15</span>); <span class="fu">draw_col</span>(<span class="dv">2</span>, <span class="dv">15</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_col</span>(<span class="dv">4</span>, <span class="dv">10</span>);                <span class="fu">draw_col</span>(<span class="dv">5</span>, <span class="dv">20</span>, <span class="at">moved =</span> <span class="dv">16</span><span class="sc">:</span><span class="dv">20</span>)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">text</span>(<span class="fl">1.5</span>, <span class="fl">12.3</span>, <span class="st">"Planned"</span>,  <span class="at">font =</span> <span class="dv">2</span>, <span class="at">col =</span> col_dark)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">text</span>(<span class="fl">4.5</span>, <span class="fl">12.3</span>, <span class="st">"Realized"</span>, <span class="at">font =</span> <span class="dv">2</span>, <span class="at">col =</span> col_dark)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">segments</span>(<span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">12</span>, <span class="at">col =</span> <span class="st">"grey85"</span>, <span class="at">lty =</span> <span class="dv">3</span>)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (x <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">5</span>))</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mtext</span>(<span class="fu">sprintf</span>(<span class="st">"Practice</span><span class="sc">\n</span><span class="st">%d clients"</span>, <span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">15</span>, <span class="cn">NA</span>, <span class="dv">10</span>, <span class="dv">20</span>)[x]),</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>          <span class="at">side =</span> <span class="dv">1</span>, <span class="at">at =</span> x, <span class="at">line =</span> <span class="fl">1.6</span>, <span class="at">cex =</span> <span class="fl">0.75</span>, <span class="at">col =</span> col_text)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="do">## curved arrow: five clients recruited in the other practice instead</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  xs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1.25</span>, <span class="fl">2.4</span>, <span class="fl">3.6</span>, <span class="fl">4.62</span>)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  ys <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">ctr</span>(<span class="dv">15</span>) <span class="sc">-</span> <span class="fl">0.3</span>, <span class="fl">11.3</span>, <span class="fl">11.3</span>, <span class="fu">ctr</span>(<span class="dv">20</span>) <span class="sc">+</span> <span class="fl">0.25</span>)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  pts <span class="ot">&lt;-</span> <span class="fu">xspline</span>(xs, ys, <span class="at">shape =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">length</span>(pts<span class="sc">$</span>x)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(pts<span class="sc">$</span>x[<span class="sc">-</span>n], pts<span class="sc">$</span>y[<span class="sc">-</span>n], <span class="at">col =</span> col_acc, <span class="at">lwd =</span> <span class="fl">2.5</span>)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrows</span>(pts<span class="sc">$</span>x[n <span class="sc">-</span> <span class="dv">6</span>], pts<span class="sc">$</span>y[n <span class="sc">-</span> <span class="dv">6</span>], pts<span class="sc">$</span>x[n], pts<span class="sc">$</span>y[n], <span class="at">length =</span> <span class="fl">0.12</span>,</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>         <span class="at">col =</span> col_acc, <span class="at">lwd =</span> <span class="fl">2.5</span>)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">text</span>(<span class="dv">3</span>, <span class="fl">11.9</span>, <span class="st">"5 clients recruited</span><span class="sc">\n</span><span class="st">in the other practice"</span>, <span class="at">col =</span> col_acc, <span class="at">font =</span> <span class="dv">2</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">text</span>(<span class="fl">0.55</span>, (<span class="fu">ctr</span>(<span class="dv">10</span>) <span class="sc">+</span> <span class="fu">ctr</span>(<span class="dv">15</span>)) <span class="sc">/</span> <span class="dv">2</span>, <span class="fu">sprintf</span>(<span class="st">"%.1f"</span>, <span class="fu">ctr</span>(<span class="dv">15</span>) <span class="sc">-</span> <span class="fu">ctr</span>(<span class="dv">10</span>)),</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> col_acc, <span class="at">font =</span> <span class="dv">2</span>, <span class="at">cex =</span> <span class="fl">0.85</span>, <span class="at">adj =</span> <span class="dv">1</span>)</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">text</span>(<span class="fl">5.45</span>, (<span class="fu">ctr</span>(<span class="dv">15</span>) <span class="sc">+</span> <span class="fu">ctr</span>(<span class="dv">20</span>)) <span class="sc">/</span> <span class="dv">2</span>, <span class="fu">sprintf</span>(<span class="st">"%.1f"</span>, <span class="fu">ctr</span>(<span class="dv">20</span>) <span class="sc">-</span> <span class="fu">ctr</span>(<span class="dv">15</span>)),</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> col_acc, <span class="at">font =</span> <span class="dv">2</span>, <span class="at">cex =</span> <span class="fl">0.85</span>, <span class="at">adj =</span> <span class="dv">0</span>)</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mtext</span>(<span class="fu">sprintf</span>(<span class="st">"Total: %.1f"</span>, <span class="dv">2</span> <span class="sc">*</span> <span class="fu">ctr</span>(<span class="dv">15</span>)), <span class="at">side =</span> <span class="dv">1</span>, <span class="at">at =</span> <span class="fl">1.5</span>,</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">line =</span> <span class="fl">3.6</span>, <span class="at">cex =</span> <span class="fl">0.85</span>, <span class="at">col =</span> col_dark, <span class="at">font =</span> <span class="dv">2</span>)</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mtext</span>(<span class="fu">sprintf</span>(<span class="st">"Total: %.1f"</span>, <span class="fu">ctr</span>(<span class="dv">10</span>) <span class="sc">+</span> <span class="fu">ctr</span>(<span class="dv">20</span>)), <span class="at">side =</span> <span class="dv">1</span>, <span class="at">at =</span> <span class="fl">4.5</span>,</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>        <span class="at">line =</span> <span class="fl">3.6</span>, <span class="at">cex =</span> <span class="fl">0.85</span>, <span class="at">col =</span> col_dark, <span class="at">font =</span> <span class="dv">2</span>)</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_fig_contribution</span>()</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="do">## thumbnail for the listing page</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="st">"fig-contribution.png"</span>, <span class="at">width =</span> <span class="dv">1800</span>, <span class="at">height =</span> <span class="dv">1200</span>, <span class="at">res =</span> <span class="dv">200</span>)</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_fig_contribution</span>()</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">dev.off</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-contribution" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-contribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-contribution-1.png" class="img-fluid figure-img" width="864">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-contribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: When five clients are recruited in another practice than planned, the number of clients stays the same, but the practices together contribute less.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In the planned situation, both practices have 15 clients. Suppose that five clients who were planned for the first practice are recruited in the second practice instead. The first practice then has 10 clients and contributes as much as 1.9 independent clients less. The second practice has 20 clients, but contributes as much as only 1.4 independent clients more, because the five additional clients belong to a practice that already has many clients.</p>
+<p>How much power does this cost in the running example? To find out, we looked at five scenarios. In each scenario, the number of practices and the number of clients are as planned, but the practices differ in size. The differences are smallest in scenario 1 and largest in scenario 5. In these five scenarios, both arms have the same set of practice sizes, so that the arms differ only in the condition to which they are assigned. We express the inequality as the coefficient of variation (CV) of the practice sizes, which the box below explains.</p>
+<p><a href="#fig-sizes" class="quarto-xref">Figure&nbsp;3</a> shows the practice sizes in the planned trial and in the five scenarios. Each row is a separate trial, so the scenarios are not stages of one trial. In scenario 1, with a CV of 0.24, the practices recruit between 8 and 23 clients. In scenario 5, with a CV of 1.15, they recruit between 1 and 68 clients, so that a few practices provide a large share of the clients. Each of these scenarios can arise from the same recruitment problems, depending on how large these problems are and on how many practices they affect.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The coefficient of variation (CV)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The coefficient of variation (CV) describes how much the practice sizes differ from each other, relative to the average practice size. Because the spread is expressed relative to the average, the same CV describes the same degree of inequality, whether the practices recruit 15 or 150 clients on average. A CV of 0 means that all practices recruit the same number of clients, and the higher the CV, the more the practice sizes differ. With an average of 15 clients per practice, a CV of 0.50 means that the practice sizes typically deviate about 7.5 clients from the average, and a CV of 1.00 means that they typically deviate about as much as the average itself. The CV is also a measure that sample size methods for unequal clusters can use (Eldridge, Ashby and Kerry, 2006).</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>draw_sizes <span class="ot">&lt;-</span> <span class="cf">function</span>(keys, row_labs,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">arm_labs =</span> <span class="fu">c</span>(<span class="st">"Intuitive eating"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">"Structured dietary rules"</span>)) {</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  ncol_g <span class="ot">&lt;-</span> <span class="dv">8</span>; nrow_g <span class="ot">&lt;-</span> <span class="dv">3</span>; gap <span class="ot">&lt;-</span> <span class="fl">1.5</span>; row_h <span class="ot">&lt;-</span> nrow_g <span class="sc">+</span> <span class="fl">1.4</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  nt   <span class="ot">&lt;-</span> <span class="fu">length</span>(keys)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  maxn <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">unlist</span>(scen[keys]))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">3.5</span>, <span class="fl">0.5</span>), <span class="at">family =</span> <span class="st">"sans"</span>, <span class="at">xpd =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="cn">NA</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">8</span>, <span class="dv">2</span> <span class="sc">*</span> ncol_g <span class="sc">+</span> gap), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, nt <span class="sc">*</span> row_h),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">axes =</span> <span class="cn">FALSE</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">asp =</span> <span class="dv">1</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (a <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>) {</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    x0 <span class="ot">&lt;-</span> (a <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (ncol_g <span class="sc">+</span> gap)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">text</span>(x0 <span class="sc">+</span> ncol_g <span class="sc">/</span> <span class="dv">2</span>, nt <span class="sc">*</span> row_h <span class="sc">+</span> <span class="fl">0.9</span>, arm_labs[a], <span class="at">cex =</span> <span class="fl">0.9</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">font =</span> <span class="dv">2</span>, <span class="at">col =</span> col_dark)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">text</span>((<span class="dv">2</span> <span class="sc">*</span> ncol_g <span class="sc">+</span> gap) <span class="sc">/</span> <span class="dv">2</span>, nt <span class="sc">*</span> row_h <span class="sc">+</span> <span class="fl">0.25</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>       <span class="fu">sprintf</span>(<span class="st">"Each row is a separate trial with %d practices and %d clients per arm. Circle area = clients per practice."</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>               J_arm, total_arm), <span class="at">cex =</span> <span class="fl">0.72</span>, <span class="at">col =</span> col_text)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">7</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(nt)) {</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    y0 <span class="ot">&lt;-</span> (nt <span class="sc">-</span> i) <span class="sc">*</span> row_h <span class="sc">+</span> <span class="fl">0.7</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="do">## alternating background per trial, across the label and both arms</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rect</span>(<span class="sc">-</span><span class="fl">8.3</span>, y0 <span class="sc">-</span> <span class="fl">0.6</span>, <span class="dv">2</span> <span class="sc">*</span> ncol_g <span class="sc">+</span> gap <span class="sc">+</span> <span class="fl">0.3</span>, y0 <span class="sc">+</span> nrow_g <span class="sc">+</span> <span class="fl">0.6</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">col =</span> <span class="cf">if</span> (i <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">1</span>) <span class="st">"#E6F3EF"</span> <span class="cf">else</span> <span class="st">"#FFFFFF"</span>, <span class="at">border =</span> <span class="cn">NA</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (a <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>) {</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>      sizes <span class="ot">&lt;-</span> scen[[keys[i]]][[a]]</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>      sizes <span class="ot">&lt;-</span> sizes[<span class="fu">sample</span>(<span class="fu">length</span>(sizes))]</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>      x0 <span class="ot">&lt;-</span> (a <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (ncol_g <span class="sc">+</span> gap)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>      k  <span class="ot">&lt;-</span> <span class="fu">seq_along</span>(sizes) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">symbols</span>(x0 <span class="sc">+</span> (k <span class="sc">%%</span> ncol_g) <span class="sc">+</span> <span class="fl">0.5</span>, y0 <span class="sc">+</span> (nrow_g <span class="sc">-</span> <span class="dv">1</span> <span class="sc">-</span> k <span class="sc">%/%</span> ncol_g) <span class="sc">+</span> <span class="fl">0.5</span>,</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>              <span class="at">circles =</span> <span class="fl">0.5</span> <span class="sc">*</span> <span class="fu">sqrt</span>(sizes <span class="sc">/</span> maxn), <span class="at">inches =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>              <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">bg =</span> col_light, <span class="at">fg =</span> col_dark, <span class="at">lwd =</span> <span class="fl">0.6</span>)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">text</span>(<span class="sc">-</span><span class="dv">8</span>, y0 <span class="sc">+</span> nrow_g <span class="sc">/</span> <span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.55</span>, row_labs[[i]][<span class="dv">1</span>], <span class="at">adj =</span> <span class="dv">0</span>, <span class="at">cex =</span> <span class="fl">0.85</span>,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>         <span class="at">font =</span> <span class="dv">2</span>, <span class="at">col =</span> col_dark)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">text</span>(<span class="sc">-</span><span class="dv">8</span>, y0 <span class="sc">+</span> nrow_g <span class="sc">/</span> <span class="dv">2</span> <span class="sc">-</span> <span class="fl">0.35</span>, row_labs[[i]][<span class="dv">2</span>], <span class="at">adj =</span> <span class="dv">0</span>, <span class="at">cex =</span> <span class="fl">0.75</span>,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>         <span class="at">col =</span> col_text)</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>scen_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Planned trial"</span>, <span class="fu">paste</span>(<span class="st">"Scenario"</span>, <span class="fu">seq_along</span>(cvs[<span class="sc">-</span><span class="dv">1</span>])))</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="fu">draw_sizes</span>(<span class="fu">sprintf</span>(<span class="st">"same_%.2f"</span>, cvs),</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>           <span class="fu">Map</span>(c, scen_names,</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>(<span class="fu">sprintf</span>(<span class="st">"CV %s</span><span class="sc">\n</span><span class="st">all %d clients"</span>, <span class="fu">cv2</span>(<span class="dv">0</span>), n_plan),</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">sprintf</span>(<span class="st">"CV %s</span><span class="sc">\n</span><span class="st">%s clients"</span>, <span class="fu">sapply</span>(lvl_cv[<span class="sc">-</span><span class="dv">1</span>], cv2),</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>                         lvl_range[<span class="sc">-</span><span class="dv">1</span>]))))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-sizes" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sizes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-sizes-1.png" class="img-fluid figure-img" width="864">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sizes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: The planned trial and five separate scenarios: the more unequal the practices, the more clients end up in a few large practices.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>For each scenario, we simulated 100,000 trials and estimated the power as the share of trials in which the analysis detected the effect. A box near the end of this post describes the simulation and contains the code. <a href="#fig-power-same" class="quarto-xref">Figure&nbsp;4</a> shows what the practice sizes of the five scenarios mean for the power in the running example. The more unequal the practices, the lower the power.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_power</span>(<span class="st">"same"</span>, <span class="at">main =</span> <span class="st">"Both arms unequal, with identical practice sizes"</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">xlab_cv =</span> <span class="fu">paste0</span>(scen_names, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, <span class="fu">sapply</span>(lvl_cv, cv2)),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">xlab =</span> <span class="st">"Trial and inequality between practices (CV)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-power-same" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-power-same-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-power-same-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-power-same-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: In the running example, the power is lower in every scenario than in the planned trial, and lowest in the scenario with the most unequal practices.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The planned trial in <a href="#fig-power-same" class="quarto-xref">Figure&nbsp;4</a>, with all practices equal, reaches a power of 0.80, close to the target power of 0.80 that the power analysis aimed for. In scenario 1, with a CV of 0.24, the power is 0.79 instead of 0.80. In scenario 3, with a CV of 0.73, the power is 0.76, and in scenario 5, with a CV of 1.15, it is 0.70. In theory, every difference in practice size costs power, as the reasoning behind <a href="#fig-contribution" class="quarto-xref">Figure&nbsp;2</a> shows. When the differences are small, however, the loss is small as well. Such a loss can then be hard to distinguish from the random variation in a simulation. On its own, it may seem negligible, but it adds to the uncertainty in the other assumptions behind the power analysis.</p>
+<p>In all these scenarios, the number of practices and the number of clients are exactly as planned. The power is lower because many clients end up in a few large practices, where an additional client contributes less than in a small practice. These numbers apply to the running example, with its ICC of 0.05 and 23 practices per arm, and they assume that the size of a practice is unrelated to the body image of its clients. In other trials, the loss can be smaller or larger.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Simulation results: both arms unequal, with identical practice sizes
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">results_table</span>(<span class="fu">list</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Planned trial"</span> <span class="ot">=</span> ref,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Both arms unequal, with identical practice sizes"</span> <span class="ot">=</span> <span class="fu">sprintf</span>(<span class="st">"same_%.2f"</span>, cvs[<span class="sc">-</span><span class="dv">1</span>])))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-results-same" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-results-same-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1
+</figcaption>
+<div aria-describedby="tbl-results-same-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="sim-table">
+<thead>
+<tr>
+<th rowspan="2">
+Trial
+</th>
+<th class="gs" colspan="2">
+CV
+</th>
+<th class="gs" colspan="2">
+Clients per practice
+</th>
+<th class="gs" colspan="2">
+Clients per arm
+</th>
+<th class="gs" rowspan="2">
+Power
+</th>
+</tr>
+<tr>
+<th class="gs">
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+<th class="gs">
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+<th class="gs">
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="group" colspan="8">
+Planned trial
+</td>
+</tr>
+<tr>
+<td>
+Planned
+</td>
+<td class="gs">
+0.00
+</td>
+<td>
+0.00
+</td>
+<td class="gs">
+all 15
+</td>
+<td>
+all 15
+</td>
+<td class="gs">
+345
+</td>
+<td>
+345
+</td>
+<td class="gs">
+0.797
+</td>
+</tr>
+<tr>
+<td class="group" colspan="8">
+Both arms unequal, with identical practice sizes
+</td>
+</tr>
+<tr>
+<td>
+Scenario 1
+</td>
+<td class="gs">
+0.24
+</td>
+<td>
+0.24
+</td>
+<td class="gs">
+8 to 23
+</td>
+<td>
+8 to 23
+</td>
+<td class="gs">
+345
+</td>
+<td>
+345
+</td>
+<td class="gs">
+0.792
+</td>
+</tr>
+<tr>
+<td>
+Scenario 2
+</td>
+<td class="gs">
+0.48
+</td>
+<td>
+0.48
+</td>
+<td class="gs">
+4 to 32
+</td>
+<td>
+4 to 32
+</td>
+<td class="gs">
+345
+</td>
+<td>
+345
+</td>
+<td class="gs">
+0.778
+</td>
+</tr>
+<tr>
+<td>
+Scenario 3
+</td>
+<td class="gs">
+0.73
+</td>
+<td>
+0.73
+</td>
+<td class="gs">
+2 to 45
+</td>
+<td>
+2 to 45
+</td>
+<td class="gs">
+345
+</td>
+<td>
+345
+</td>
+<td class="gs">
+0.757
+</td>
+</tr>
+<tr>
+<td>
+Scenario 4
+</td>
+<td class="gs">
+0.96
+</td>
+<td>
+0.96
+</td>
+<td class="gs">
+1 to 57
+</td>
+<td>
+1 to 57
+</td>
+<td class="gs">
+345
+</td>
+<td>
+345
+</td>
+<td class="gs">
+0.728
+</td>
+</tr>
+<tr>
+<td>
+Scenario 5
+</td>
+<td class="gs">
+1.15
+</td>
+<td>
+1.15
+</td>
+<td class="gs">
+1 to 68
+</td>
+<td>
+1 to 68
+</td>
+<td class="gs">
+345
+</td>
+<td>
+345
+</td>
+<td class="gs">
+0.701
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="takeaway">
+<p>In the running example, unequal practices lowered the power, even though the number of practices and the number of clients were as planned. The power was lowest in the scenario with the most unequal practices.</p>
+</div>
+</section>
+<section id="when-the-arms-differ" class="level2">
+<h2 class="anchored" data-anchor-id="when-the-arms-differ">When the arms differ</h2>
+<p>So far, both arms had the same set of practice sizes, which is unlikely in a real trial. The practices are randomized before anyone knows how many clients each practice will recruit, and sometimes even before it is clear how many clients the trial will include in total. The next section returns to that total.</p>
+<p>With a modest number of practices per arm, chance alone can place several of the larger practices in the same arm. We therefore also looked at two other patterns, each with the same five levels of inequality as in <a href="#fig-sizes" class="quarto-xref">Figure&nbsp;3</a>. In the first pattern, one arm recruits exactly as planned, while the practices in the other arm differ in size. In the second pattern, the practices of both arms together differ in size, and the larger practices all end up in the same arm. The arms then differ not only in the sizes of their practices, but also in their number of clients. In scenario 5, for example, one arm has 73 clients and the other arm 617. This second pattern is the least favourable result that randomization can produce. Such a division can happen, because randomization only ensures that each arm gets the same number of practices, whatever their size. It is not a realistic result, however, and this pattern mainly shows how low the power can be in the worst case.</p>
+<p><a href="#fig-power-arms" class="quarto-xref">Figure&nbsp;5</a> compares both patterns with the scenarios from <a href="#fig-power-same" class="quarto-xref">Figure&nbsp;4</a>, which appear as grey bars in both panels. When only one arm deviates from the plan (left), the loss of power is smaller than when both arms deviate. When the larger practices end up in the same arm (right), the power is much lower.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>grey_lab <span class="ot">&lt;-</span> <span class="st">"Both arms unequal, identical sizes"</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>short_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Planned"</span>, <span class="fu">paste</span>(<span class="st">"Scen."</span>, <span class="fu">seq_along</span>(cvs[<span class="sc">-</span><span class="dv">1</span>])))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_power</span>(<span class="st">"onearm"</span>, <span class="at">main =</span> <span class="st">"One arm unequal, the other arm as planned"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">compare =</span> <span class="st">"same"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">xlab_cv =</span> <span class="fu">paste0</span>(short_names, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, <span class="fu">sapply</span>(<span class="fu">c</span>(<span class="dv">0</span>, lvl_cv[<span class="sc">-</span><span class="dv">1</span>]), cv2)),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">xlab =</span> <span class="st">"Trial and inequality in the unequal arm (CV)"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">legend_labs =</span> <span class="fu">c</span>(grey_lab, <span class="st">"One arm unequal"</span>))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_power</span>(<span class="st">"split"</span>, <span class="at">main =</span> <span class="st">"Larger practices in one arm"</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">compare =</span> <span class="st">"same"</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">xlab_cv =</span> <span class="fu">paste0</span>(short_names, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">sapply</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">sapply</span>(<span class="fu">sprintf</span>(<span class="st">"split_%.2f"</span>, cvs[<span class="sc">-</span><span class="dv">1</span>]), scen_cv)), cv2)),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">xlab =</span> <span class="st">"Trial and inequality across both arms (CV)"</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">legend_labs =</span> <span class="fu">c</span>(grey_lab, <span class="st">"Larger practices in one arm"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-power-arms" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-power-arms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-power-arms-1.png" class="img-fluid figure-img" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-power-arms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: One unequal arm costs less power than two, but when the larger practices end up in one arm, the power is much lower.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In scenario 5, the power is 0.75 when only one arm is unequal, compared with 0.70 when both arms are unequal and 0.53 when the larger practices end up in the same arm.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Simulation results when the arms differ
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In the scenarios with the larger practices in one arm, <a href="#fig-power-arms" class="quarto-xref">Figure&nbsp;5</a> shows the CV of all practices together, whereas the table shows the CV within each arm.</p>
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">results_table</span>(<span class="fu">list</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Planned trial"</span> <span class="ot">=</span> ref,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"One arm unequal, the other arm as planned"</span> <span class="ot">=</span> <span class="fu">sprintf</span>(<span class="st">"onearm_%.2f"</span>, cvs[<span class="sc">-</span><span class="dv">1</span>]),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Larger practices in one arm"</span> <span class="ot">=</span> <span class="fu">sprintf</span>(<span class="st">"split_%.2f"</span>, cvs[<span class="sc">-</span><span class="dv">1</span>])))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-results-arms" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-results-arms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2
+</figcaption>
+<div aria-describedby="tbl-results-arms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="sim-table">
+<thead>
+<tr>
+<th rowspan="2">
+Trial
+</th>
+<th class="gs" colspan="2">
+CV
+</th>
+<th class="gs" colspan="2">
+Clients per practice
+</th>
+<th class="gs" colspan="2">
+Clients per arm
+</th>
+<th class="gs" rowspan="2">
+Power
+</th>
+</tr>
+<tr>
+<th class="gs">
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+<th class="gs">
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+<th class="gs">
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="group" colspan="8">
+Planned trial
+</td>
+</tr>
+<tr>
+<td>
+Planned
+</td>
+<td class="gs">
+0.00
+</td>
+<td>
+0.00
+</td>
+<td class="gs">
+all 15
+</td>
+<td>
+all 15
+</td>
+<td class="gs">
+345
+</td>
+<td>
+345
+</td>
+<td class="gs">
+0.797
+</td>
+</tr>
+<tr>
+<td class="group" colspan="8">
+One arm unequal, the other arm as planned
+</td>
+</tr>
+<tr>
+<td>
+Scenario 1
+</td>
+<td class="gs">
+0.00
+</td>
+<td>
+0.24
+</td>
+<td class="gs">
+all 15
+</td>
+<td>
+8 to 23
+</td>
+<td class="gs">
+345
+</td>
+<td>
+345
+</td>
+<td class="gs">
+0.794
+</td>
+</tr>
+<tr>
+<td>
+Scenario 2
+</td>
+<td class="gs">
+0.00
+</td>
+<td>
+0.48
+</td>
+<td class="gs">
+all 15
+</td>
+<td>
+4 to 32
+</td>
+<td class="gs">
+345
+</td>
+<td>
+345
+</td>
+<td class="gs">
+0.786
+</td>
+</tr>
+<tr>
+<td>
+Scenario 3
+</td>
+<td class="gs">
+0.00
+</td>
+<td>
+0.73
+</td>
+<td class="gs">
+all 15
+</td>
+<td>
+2 to 45
+</td>
+<td class="gs">
+345
+</td>
+<td>
+345
+</td>
+<td class="gs">
+0.776
+</td>
+</tr>
+<tr>
+<td>
+Scenario 4
+</td>
+<td class="gs">
+0.00
+</td>
+<td>
+0.96
+</td>
+<td class="gs">
+all 15
+</td>
+<td>
+1 to 57
+</td>
+<td class="gs">
+345
+</td>
+<td>
+345
+</td>
+<td class="gs">
+0.761
+</td>
+</tr>
+<tr>
+<td>
+Scenario 5
+</td>
+<td class="gs">
+0.00
+</td>
+<td>
+1.15
+</td>
+<td class="gs">
+all 15
+</td>
+<td>
+1 to 68
+</td>
+<td class="gs">
+345
+</td>
+<td>
+345
+</td>
+<td class="gs">
+0.746
+</td>
+</tr>
+<tr>
+<td class="group" colspan="8">
+Larger practices in one arm
+</td>
+</tr>
+<tr>
+<td>
+Scenario 1
+</td>
+<td class="gs">
+0.15
+</td>
+<td>
+0.14
+</td>
+<td class="gs">
+8 to 15
+</td>
+<td>
+15 to 23
+</td>
+<td class="gs">
+278
+</td>
+<td>
+412
+</td>
+<td class="gs">
+0.787
+</td>
+</tr>
+<tr>
+<td>
+Scenario 2
+</td>
+<td class="gs">
+0.33
+</td>
+<td>
+0.28
+</td>
+<td class="gs">
+3 to 14
+</td>
+<td>
+14 to 36
+</td>
+<td class="gs">
+212
+</td>
+<td>
+478
+</td>
+<td class="gs">
+0.755
+</td>
+</tr>
+<tr>
+<td>
+Scenario 3
+</td>
+<td class="gs">
+0.49
+</td>
+<td>
+0.42
+</td>
+<td class="gs">
+1 to 12
+</td>
+<td>
+13 to 51
+</td>
+<td class="gs">
+156
+</td>
+<td>
+534
+</td>
+<td class="gs">
+0.702
+</td>
+</tr>
+<tr>
+<td>
+Scenario 4
+</td>
+<td class="gs">
+0.64
+</td>
+<td>
+0.56
+</td>
+<td class="gs">
+1 to 10
+</td>
+<td>
+11 to 67
+</td>
+<td class="gs">
+108
+</td>
+<td>
+582
+</td>
+<td class="gs">
+0.623
+</td>
+</tr>
+<tr>
+<td>
+Scenario 5
+</td>
+<td class="gs">
+0.75
+</td>
+<td>
+0.70
+</td>
+<td class="gs">
+1 to 8
+</td>
+<td>
+9 to 83
+</td>
+<td class="gs">
+73
+</td>
+<td>
+617
+</td>
+<td class="gs">
+0.531
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="takeaway">
+<p>In the running example, one unequal arm cost less power than two unequal arms with identical practice sizes. The power was lowest when the larger practices all ended up in the same arm.</p>
+</div>
+</section>
+<section id="when-the-total-differs" class="level2">
+<h2 class="anchored" data-anchor-id="when-the-total-differs">When the total differs</h2>
+<p>That a trial with fewer clients than planned has less power, and a trial with more clients than planned has more power, will surprise no one, as long as the number of practices stays the same. The same goes for the expected effect size. When the actual effect is larger than the researcher assumed, the power is higher than planned, and when it is smaller, the power is lower. What is less obvious is what happens when such a deviation meets unequal practices.</p>
+<p>In practice, the final number of clients can easily differ from the plan. A practice may withdraw, or it may turn out to have too few eligible clients, and such a practice cannot always be replaced. Recruitment may also stop at a fixed date before the target is reached, or continue for some time after it. <a href="#fig-total" class="quarto-xref">Figure&nbsp;6</a> shows what happens in the running example when the trial ends up with fewer clients than planned (on average 12 per practice) or with more (on average 18 per practice). For each total, we compared equal practices with the inequality of scenario 3 (CV 0.73).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(res[<span class="fu">c</span>(<span class="st">"mean12_0.00"</span>, <span class="fu">paste0</span>(<span class="st">"mean12_"</span>, ct),</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"mean18_0.00"</span>, <span class="fu">paste0</span>(<span class="st">"mean18_"</span>, ct)), <span class="st">"power"</span>], <span class="dv">2</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="fl">4.5</span>, <span class="dv">3</span>, <span class="dv">1</span>), <span class="at">family =</span> <span class="st">"sans"</span>, <span class="at">las =</span> <span class="dv">1</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>bp <span class="ot">&lt;-</span> <span class="fu">barplot</span>(m, <span class="at">beside =</span> <span class="cn">TRUE</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">col =</span> <span class="fu">c</span>(col_main, col_acc),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">border =</span> <span class="cn">NA</span>, <span class="at">axes =</span> <span class="cn">FALSE</span>, <span class="at">names.arg =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">""</span>),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">space =</span> <span class="fu">c</span>(<span class="fl">0.15</span>, <span class="dv">1</span>))</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">mtext</span>(<span class="st">"When the number of clients differs from the plan"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">side =</span> <span class="dv">3</span>, <span class="at">line =</span> <span class="fl">1.2</span>, <span class="at">font =</span> <span class="dv">2</span>, <span class="at">col =</span> col_dark, <span class="at">cex =</span> <span class="fl">0.95</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">target_line</span>(); <span class="fu">ylab_pw</span>()</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(bp, m <span class="sc">-</span> <span class="fl">0.05</span>, <span class="fu">sprintf</span>(<span class="st">"%.2f"</span>, m), <span class="at">cex =</span> <span class="fl">0.8</span>, <span class="at">col =</span> <span class="st">"white"</span>, <span class="at">font =</span> <span class="dv">2</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">mtext</span>(<span class="fu">c</span>(<span class="st">"Fewer clients than planned</span><span class="sc">\n</span><span class="st">(on average 12 per practice)"</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"More clients than planned</span><span class="sc">\n</span><span class="st">(on average 18 per practice)"</span>),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">side =</span> <span class="dv">1</span>, <span class="at">at =</span> <span class="fu">colMeans</span>(bp), <span class="at">line =</span> <span class="dv">2</span>, <span class="at">cex =</span> <span class="fl">0.8</span>, <span class="at">col =</span> col_text)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"top"</span>, <span class="at">horiz =</span> <span class="cn">TRUE</span>, <span class="at">inset =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="sc">-</span><span class="fl">0.07</span>), <span class="at">xpd =</span> <span class="cn">TRUE</span>, <span class="at">bty =</span> <span class="st">"n"</span>,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="fu">c</span>(col_main, col_acc), <span class="at">border =</span> <span class="cn">NA</span>, <span class="at">cex =</span> <span class="fl">0.8</span>, <span class="at">text.col =</span> col_text,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="fu">sprintf</span>(<span class="st">"Equal practices (CV %s)"</span>, <span class="fu">cv2</span>(<span class="dv">0</span>)),</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">sprintf</span>(<span class="st">"Unequal practices as in scenario %d (CV %s)"</span>,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">match</span>(cv_total, cvs) <span class="sc">-</span> <span class="dv">1</span>, <span class="fu">cv2</span>(<span class="fu">scen_cv</span>(<span class="fu">paste0</span>(<span class="st">"mean12_"</span>, ct))))))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-total" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-total-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-total-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-total-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Fewer clients and unequal practices add up, while more clients can only partly make up for unequal practices.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>With fewer clients than planned, the two deviations add up. With equal practices, the power is 0.75 because the trial is smaller, and with unequal practices it is lower still, at 0.71. Both deviations point in the same direction, so together they cost more power than each of them on its own. With more clients than planned, the deviations point in opposite directions. With equal practices, the additional clients raise the power to 0.83. With unequal practices, part of that gain is lost, and the power ends up at 0.79, which is below the target power of 0.80.</p>
+<p>Additional clients can thus partly make up for unequal practices, but only when the researcher happens to recruit more clients than needed. A shortfall in clients, on the other hand, adds to the loss due to unequal practices. The same reasoning applies to the effect size. An effect that is larger than expected can hide part of the loss due to unequal practices, and an effect that is smaller than expected adds to it.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Simulation results when the total differs
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">results_table</span>(<span class="fu">list</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Planned trial"</span> <span class="ot">=</span> ref,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Fewer clients than planned"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"mean12_0.00"</span>, <span class="fu">paste0</span>(<span class="st">"mean12_"</span>, ct)),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"More clients than planned"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"mean18_0.00"</span>, <span class="fu">paste0</span>(<span class="st">"mean18_"</span>, ct))))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-results-total" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-results-total-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3
+</figcaption>
+<div aria-describedby="tbl-results-total-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="sim-table">
+<thead>
+<tr>
+<th rowspan="2">
+Trial
+</th>
+<th class="gs" colspan="2">
+CV
+</th>
+<th class="gs" colspan="2">
+Clients per practice
+</th>
+<th class="gs" colspan="2">
+Clients per arm
+</th>
+<th class="gs" rowspan="2">
+Power
+</th>
+</tr>
+<tr>
+<th class="gs">
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+<th class="gs">
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+<th class="gs">
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="group" colspan="8">
+Planned trial
+</td>
+</tr>
+<tr>
+<td>
+Planned
+</td>
+<td class="gs">
+0.00
+</td>
+<td>
+0.00
+</td>
+<td class="gs">
+all 15
+</td>
+<td>
+all 15
+</td>
+<td class="gs">
+345
+</td>
+<td>
+345
+</td>
+<td class="gs">
+0.797
+</td>
+</tr>
+<tr>
+<td class="group" colspan="8">
+Fewer clients than planned
+</td>
+</tr>
+<tr>
+<td>
+Equal practices
+</td>
+<td class="gs">
+0.00
+</td>
+<td>
+0.00
+</td>
+<td class="gs">
+all 12
+</td>
+<td>
+all 12
+</td>
+<td class="gs">
+276
+</td>
+<td>
+276
+</td>
+<td class="gs">
+0.750
+</td>
+</tr>
+<tr>
+<td>
+As in scenario 3
+</td>
+<td class="gs">
+0.73
+</td>
+<td>
+0.73
+</td>
+<td class="gs">
+1 to 35
+</td>
+<td>
+1 to 35
+</td>
+<td class="gs">
+276
+</td>
+<td>
+276
+</td>
+<td class="gs">
+0.709
+</td>
+</tr>
+<tr>
+<td class="group" colspan="8">
+More clients than planned
+</td>
+</tr>
+<tr>
+<td>
+Equal practices
+</td>
+<td class="gs">
+0.00
+</td>
+<td>
+0.00
+</td>
+<td class="gs">
+all 18
+</td>
+<td>
+all 18
+</td>
+<td class="gs">
+414
+</td>
+<td>
+414
+</td>
+<td class="gs">
+0.831
+</td>
+</tr>
+<tr>
+<td>
+As in scenario 3
+</td>
+<td class="gs">
+0.73
+</td>
+<td>
+0.73
+</td>
+<td class="gs">
+2 to 54
+</td>
+<td>
+2 to 54
+</td>
+<td class="gs">
+414
+</td>
+<td>
+414
+</td>
+<td class="gs">
+0.790
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="takeaway">
+<p>In the running example, fewer clients and unequal practices together lowered the power more than each did on its own. More clients raised the power, but with unequal practices the trial kept only part of that gain.</p>
+</div>
+</section>
+<section id="taken-together" class="level2">
+<h2 class="anchored" data-anchor-id="taken-together">Taken together</h2>
+<p>A power analysis that assumes equal practices describes the most favourable situation. We looked at three patterns of unequal practices in the running example: both arms with identical unequal practice sizes, one arm as planned and the other arm unequal, and the larger practices all in one arm. We also looked at trials that ended up with fewer or more clients than planned. In all these scenarios, unequal practices cost power, so the planned power overestimated the actual power of the trial. Smaller differences between practices cost less power than larger differences, and the loss was largest when the larger practices ended up in the same arm. A trial could only end up above the planned power by recruiting more clients than planned, and even then unequal practices reduced the gain. A small loss may seem acceptable on its own. But what is a planned power of 0.80 worth, if it is known in advance that the actual power may well be 0.77 or 0.78, for example?</p>
+<p>The literature offers several corrections for this loss, and two examples show how they work. Eldridge, Ashby and Kerry (2006) consider an adjustment unnecessary when the CV of the cluster sizes is below 0.23. Van Breukelen, Candel and Berger (2007) find that unequal clusters rarely cost more than what about 10 percent of the clusters contribute, and propose recruiting about 11 percent more clusters to make up for it. In the scenarios of this post with smaller differences between practices, the loss was limited as well. Such corrections are practical, but they rest on assumptions of their own. They need an estimate of how unequal the practices will be, and that estimate is made before the trial starts, just like the planned practice sizes.</p>
+</section>
+<section id="one-assumption-among-several" class="level2">
+<h2 class="anchored" data-anchor-id="one-assumption-among-several">One assumption among several</h2>
+<p>With such a correction, the researcher replaces one uncertain assumption with another. Moreover, the spread of the clients across the practices is only one of the assumptions behind a power analysis. The ICC and the expected effect size are usually taken from earlier studies, and both are uncertain. A wrong assumption about the ICC or the effect size can make the planned power too high or too low, whereas unequal practices always make it too high. These uncertainties also interact. In their simulations, Guittet, Ravaud and Giraudeau (2006) found that trials in which 80 percent of the participants belong to 20 percent of the clusters are more sensitive to a wrongly assumed ICC than trials with equal clusters. When several uncertainties come together in the same trial, the planned power becomes a less reliable indication of the actual power.</p>
+<p>This accumulation of uncertainties is an argument for treating the sample size from the power analysis as a starting point, which the researcher can update during the study. Designs that allow such updates are called adaptive designs. In an adaptive design, the researcher decides in advance at which moments to look at the data collected so far, and which changes to the design are allowed at those moments, such as recruiting additional participants. Sample size re-estimation is one form of this approach (see the SSR series on the <a href="../../posts.html">posts page</a>). For cluster-randomized trials, Rutterford, Copas and Eldridge (2015) describe how the sample size can be re-estimated once information on the ICC and other unknown quantities becomes available during the trial, while noting that it is not yet clear at which stage these interim estimates are stable enough to rely on. For the spread of the clients, re-estimation means checking during the trial whether the planned spread holds, and correcting the course when it does not. The researcher can recruit additional practices or clients, but can also support practices that fall behind, for example with a different recruitment strategy.</p>
+<p>Would you like to check the power for your own planned or realized practice sizes? The first box below contains a short R function that does exactly that.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>R code: power for your own practice sizes
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The function below estimates the power of a cluster-randomized trial for any set of practice sizes per arm. Enter the planned sizes to check a design, or the sizes that were realized so far to see where a running trial stands.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nlme)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>power_clusters <span class="ot">&lt;-</span> <span class="cf">function</span>(sizes1, sizes2, icc, delta, <span class="at">alpha =</span> <span class="fl">0.05</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">nsim =</span> <span class="dv">2000</span>, <span class="at">seed =</span> <span class="dv">1</span>) {</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(seed)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  n    <span class="ot">&lt;-</span> <span class="fu">c</span>(sizes1, sizes2)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  prac <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">seq_along</span>(n), n))</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  arm  <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">c</span>(<span class="fu">sum</span>(sizes1), <span class="fu">sum</span>(sizes2)))</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  reject <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, nsim)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">seq_len</span>(nsim)) {</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> delta <span class="sc">*</span> arm <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(n), <span class="dv">0</span>, <span class="fu">sqrt</span>(icc))[prac] <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>         <span class="fu">rnorm</span>(<span class="fu">length</span>(arm), <span class="dv">0</span>, <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> icc))</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">&lt;-</span> <span class="fu">try</span>(<span class="fu">lme</span>(y <span class="sc">~</span> arm, <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">|</span> prac), <span class="at">silent =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">inherits</span>(fit, <span class="st">"try-error"</span>)) <span class="cf">next</span>          <span class="co"># fit failed: skip</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    tt  <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit)<span class="sc">$</span>tTable[<span class="st">"arm"</span>, ]</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    reject[s] <span class="ot">&lt;-</span> tt[<span class="st">"t-value"</span>] <span class="sc">&gt;</span> <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alpha, tt[<span class="st">"DF"</span>])   <span class="co"># one-sided</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  n_ok <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(reject))</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">mean</span>(reject, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="at">power =</span> p, <span class="at">mcse =</span> <span class="fu">sqrt</span>(p <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> p) <span class="sc">/</span> n_ok), <span class="at">failed =</span> nsim <span class="sc">-</span> n_ok)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="do">## planned: 23 practices of 15 clients per arm</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="fu">power_clusters</span>(<span class="fu">rep</span>(<span class="dv">15</span>, <span class="dv">23</span>), <span class="fu">rep</span>(<span class="dv">15</span>, <span class="dv">23</span>), <span class="at">icc =</span> <span class="fl">0.05</span>, <span class="at">delta =</span> <span class="fl">0.25</span>)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="do">## realized: the same number of clients, but unequal practices (CV 0.48)</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>sizes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">14</span>, <span class="dv">15</span>, <span class="dv">15</span>,</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>           <span class="dv">16</span>, <span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">20</span>, <span class="dv">21</span>, <span class="dv">23</span>, <span class="dv">25</span>, <span class="dv">28</span>, <span class="dv">32</span>)</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="fu">power_clusters</span>(sizes, sizes, <span class="at">icc =</span> <span class="fl">0.05</span>, <span class="at">delta =</span> <span class="fl">0.25</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</div>
+</div>
+</div>
+<p>The second box contains the code that produced the scenarios in this post.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>R code: simulation of the scenarios in this post
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>For each scenario, the simulation generates data from a multilevel model with a random intercept for each practice, an ICC of 0.05 and a standardized effect of 0.25. Each data set is analysed with the same multilevel model (<code>nlme::lme</code>) and a one-sided test of the effect of the condition. The power is the share of data sets in which this test detects the effect. All scenarios use the same random numbers, so that differences between the scenarios reflect the practice sizes and not chance.</p>
+<div class="callout callout-style-simple callout-warning">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>This simulation takes a long time. With 100,000 simulated trials for each of the 20 scenarios, it took about an hour on 15 processor cores. Set <code>nsim</code> to 1,000 for a quick check, and expect less stable results.</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nlme)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parallel)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="do">## ---- running example -------------------------------------------------</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>delta  <span class="ot">&lt;-</span> <span class="fl">0.25</span>        <span class="co"># standardized effect</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>alpha  <span class="ot">&lt;-</span> <span class="fl">0.05</span>        <span class="co"># one-sided</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>pow    <span class="ot">&lt;-</span> <span class="fl">0.80</span>        <span class="co"># target power</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>icc    <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>n_plan <span class="ot">&lt;-</span> <span class="dv">15</span>          <span class="co"># planned clients per practice</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>n_ind  <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="dv">2</span> <span class="sc">*</span> (<span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha) <span class="sc">+</span> <span class="fu">qnorm</span>(pow))<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> delta<span class="sc">^</span><span class="dv">2</span>)  <span class="co"># 198</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>deff   <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> (n_plan <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> icc                                    <span class="co"># 1.70</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>J_arm  <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(n_ind <span class="sc">*</span> deff <span class="sc">/</span> n_plan)                            <span class="co"># 23</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>total_arm <span class="ot">&lt;-</span> J_arm <span class="sc">*</span> n_plan                                         <span class="co"># 345</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>nsim  <span class="ot">&lt;-</span> <span class="fl">1e5</span>                                  <span class="co"># simulated trials per scenario</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>cores <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="dv">1</span>, <span class="fu">detectCores</span>() <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>seed  <span class="ot">&lt;-</span> <span class="dv">2026</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="do">## ---- practice sizes --------------------------------------------------</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Evenly spaced quantiles of a gamma distribution with the planned mean and</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="do">## coefficient of variation `cv`, rounded to whole clients (at least 1) so</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="do">## that they sum exactly to `total`.</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>make_sizes <span class="ot">&lt;-</span> <span class="cf">function</span>(J, total, cv) {</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (cv <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>    s <span class="ot">&lt;-</span> <span class="fu">rep</span>(total <span class="sc">%/%</span> J, J)</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    q <span class="ot">&lt;-</span> <span class="fu">qgamma</span>((<span class="fu">seq_len</span>(J) <span class="sc">-</span> <span class="fl">0.5</span>) <span class="sc">/</span> J, <span class="at">shape =</span> <span class="dv">1</span> <span class="sc">/</span> cv<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>                <span class="at">scale =</span> (total <span class="sc">/</span> J) <span class="sc">*</span> cv<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>    s <span class="ot">&lt;-</span> <span class="fu">pmax</span>(<span class="dv">1</span>, <span class="fu">round</span>(q <span class="sc">*</span> total <span class="sc">/</span> <span class="fu">sum</span>(q)))</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> total <span class="sc">-</span> <span class="fu">sum</span>(s)</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (d <span class="sc">!=</span> <span class="dv">0</span>) {</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>    i <span class="ot">&lt;-</span> <span class="cf">if</span> (d <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="fu">which.min</span>(s) <span class="cf">else</span> <span class="fu">which.max</span>(s)</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>    s[i] <span class="ot">&lt;-</span> s[i] <span class="sc">+</span> <span class="fu">sign</span>(d)</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>    d <span class="ot">&lt;-</span> total <span class="sc">-</span> <span class="fu">sum</span>(s)</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sort</span>(s)</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="do">## ---- scenarios: list(sizes in arm 1, sizes in arm 2) ------------------</span></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>cvs  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="dv">1</span>, <span class="fl">1.25</span>)</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>scen <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (cv <span class="cf">in</span> cvs) {                     <span class="co"># both arms unequal, identical sizes</span></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">make_sizes</span>(J_arm, total_arm, cv)</span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>  scen[[<span class="fu">sprintf</span>(<span class="st">"same_%.2f"</span>, cv)]] <span class="ot">&lt;-</span> <span class="fu">list</span>(s, s)</span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (cv <span class="cf">in</span> cvs[<span class="sc">-</span><span class="dv">1</span>]) {                 <span class="co"># one arm unequal, other arm as planned</span></span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>  scen[[<span class="fu">sprintf</span>(<span class="st">"onearm_%.2f"</span>, cv)]] <span class="ot">&lt;-</span></span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="fu">rep</span>(n_plan, J_arm), <span class="fu">make_sizes</span>(J_arm, total_arm, cv))</span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (cv <span class="cf">in</span> cvs[<span class="sc">-</span><span class="dv">1</span>]) {                 <span class="co"># larger practices in one arm</span></span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">make_sizes</span>(<span class="dv">2</span> <span class="sc">*</span> J_arm, <span class="dv">2</span> <span class="sc">*</span> total_arm, cv)</span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>  scen[[<span class="fu">sprintf</span>(<span class="st">"split_%.2f"</span>, cv)]] <span class="ot">&lt;-</span> <span class="fu">list</span>(s[<span class="dv">1</span><span class="sc">:</span>J_arm], s[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span>J_arm)])</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (m <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">18</span>)) <span class="cf">for</span> (cv <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.75</span>)) {   <span class="co"># fewer or more clients</span></span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">make_sizes</span>(J_arm, J_arm <span class="sc">*</span> m, cv)</span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>  scen[[<span class="fu">sprintf</span>(<span class="st">"mean%d_%.2f"</span>, m, cv)]] <span class="ot">&lt;-</span> <span class="fu">list</span>(s, s)</span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a><span class="do">## ---- one simulated trial for every scenario --------------------------</span></span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a><span class="do">## All scenarios use the same random numbers, so that differences between</span></span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a><span class="do">## the scenarios reflect the practice sizes and not chance.</span></span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a>Jmax <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">sapply</span>(scen, <span class="cf">function</span>(s) <span class="fu">length</span>(s[[<span class="dv">1</span>]]) <span class="sc">+</span> <span class="fu">length</span>(s[[<span class="dv">2</span>]])))</span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a>nmax <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">unlist</span>(scen))</span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a>one_rep <span class="ot">&lt;-</span> <span class="cf">function</span>(r) {</span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(seed <span class="sc">+</span> r)</span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a>  u <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(Jmax)                                 <span class="co"># practice effects</span></span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a>  e <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(Jmax <span class="sc">*</span> nmax), Jmax, nmax)      <span class="co"># client residuals</span></span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sapply</span>(scen, <span class="cf">function</span>(s) {</span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a>    n    <span class="ot">&lt;-</span> <span class="fu">c</span>(s[[<span class="dv">1</span>]], s[[<span class="dv">2</span>]])</span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a>    prac <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">seq_along</span>(n), n)</span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a>    arm  <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">c</span>(<span class="fu">sum</span>(s[[<span class="dv">1</span>]]), <span class="fu">sum</span>(s[[<span class="dv">2</span>]])))</span>
+<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> delta <span class="sc">*</span> arm <span class="sc">+</span> <span class="fu">sqrt</span>(icc) <span class="sc">*</span> u[prac] <span class="sc">+</span></span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a>         <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> icc) <span class="sc">*</span> e[<span class="fu">cbind</span>(prac, <span class="fu">sequence</span>(n))]</span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">&lt;-</span> <span class="fu">try</span>(<span class="fu">lme</span>(y <span class="sc">~</span> arm, <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">|</span> <span class="fu">factor</span>(prac)), <span class="at">silent =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">inherits</span>(fit, <span class="st">"try-error"</span>)) <span class="fu">return</span>(<span class="cn">NA</span>)</span>
+<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a>    tt <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit)<span class="sc">$</span>tTable[<span class="st">"arm"</span>, ]</span>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.numeric</span>(tt[<span class="st">"t-value"</span>] <span class="sc">&gt;</span> <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alpha, tt[<span class="st">"DF"</span>]))   <span class="co"># one-sided test</span></span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a><span class="do">## ---- run in parallel (works on Windows, macOS and Linux) -------------</span></span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(cores)</span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a><span class="fu">clusterEvalQ</span>(cl, <span class="fu">library</span>(nlme))</span>
+<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a><span class="fu">clusterExport</span>(cl, <span class="fu">c</span>(<span class="st">"scen"</span>, <span class="st">"seed"</span>, <span class="st">"delta"</span>, <span class="st">"alpha"</span>, <span class="st">"icc"</span>,</span>
+<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Jmax"</span>, <span class="st">"nmax"</span>, <span class="st">"one_rep"</span>))</span>
+<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a>rej <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">parLapply</span>(cl, <span class="fu">seq_len</span>(nsim), one_rep))</span>
+<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a><span class="fu">stopCluster</span>(cl)</span>
+<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a><span class="do">## ---- power per scenario ----------------------------------------------</span></span>
+<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a>power <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(rej, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a>mcse  <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(power <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> power) <span class="sc">/</span> nsim)        <span class="co"># Monte Carlo standard error</span></span>
+<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cbind</span>(power, mcse), <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+<ul>
+<li>Eldridge, S. M., Ashby, D., &amp; Kerry, S. (2006). Sample size for cluster randomized trials: effect of coefficient of variation of cluster size and analysis method. <em>International Journal of Epidemiology</em>, 35(5), 1292–1300. <a href="https://doi.org/10.1093/ije/dyl129" class="uri">https://doi.org/10.1093/ije/dyl129</a></li>
+<li>Guittet, L., Ravaud, P., &amp; Giraudeau, B. (2006). Planning a cluster randomized trial with unequal cluster sizes: practical issues involving continuous outcomes. <em>BMC Medical Research Methodology</em>, 6, 17. <a href="https://doi.org/10.1186/1471-2288-6-17" class="uri">https://doi.org/10.1186/1471-2288-6-17</a></li>
+<li>Rutterford, C., Copas, A., &amp; Eldridge, S. (2015). Methods for sample size determination in cluster randomized trials. <em>International Journal of Epidemiology</em>, 44(3), 1051–1067. <a href="https://doi.org/10.1093/ije/dyv113" class="uri">https://doi.org/10.1093/ije/dyv113</a></li>
+<li>Van Breukelen, G. J. P., Candel, M. J. J. M., &amp; Berger, M. P. F. (2007). Relative efficiency of unequal versus equal cluster sizes in cluster randomized and multicentre trials. <em>Statistics in Medicine</em>, 26(13), 2589–2603. <a href="https://doi.org/10.1002/sim.2740" class="uri">https://doi.org/10.1002/sim.2740</a></li>
+</ul>
+<p><strong>Questions? Any references that should be included as well? Found this useful? I’m on social media and happy to discuss!</strong></p>
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fontawesome)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">'&lt;div style="display:flex; gap:20px;"&gt;'</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">'&lt;a href="https://github.com/XynthiaKavelaars/bmco" target="_blank"&gt;'</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fa</span>(<span class="st">"github"</span>), <span class="st">' Github&lt;/a&gt;'</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">'&lt;a href="https://bsky.app/profile/xynthia-kavelaars.bsky.social" target="_blank"&gt;'</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fa</span>(<span class="st">"bluesky"</span>), <span class="st">' BlueSky&lt;/a&gt;'</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">'&lt;a href="https://mastodon.social/@xynthiakavelaars" target="_blank"&gt;'</span>,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fa</span>(<span class="st">"mastodon"</span>), <span class="st">' Mastodon&lt;/a&gt;'</span>,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">'&lt;a href="http://www.linkedin.com/in/xynthia-kavelaars-7a0377129" target="_blank"&gt;'</span>,</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fa</span>(<span class="st">"linkedin"</span>), <span class="st">' LinkedIn&lt;/a&gt;'</span>, </span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">'&lt;a href="https://orcid.org/0000-0003-1600-3153" target="_blank"&gt;'</span>,</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fa</span>(<span class="st">"orcid"</span>), <span class="st">' ORCID&lt;/a&gt;'</span>, </span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">'&lt;a href="https://www.researchgate.net/profile/Xynthia-Kavelaars" target="_blank"&gt;'</span>,</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>   <span class="fu">fa</span>(<span class="st">"researchgate"</span>), <span class="st">' ResearchGate&lt;/a&gt;'</span>,</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">'&lt;/div&gt;'</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div style="display:flex; gap:20px;">
+<a href="https://github.com/XynthiaKavelaars/bmco" target="_blank"><svg aria-hidden="true" role="img" viewbox="0 0 496 512" style="height:1em;width:0.97em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg> Github</a><a href="https://bsky.app/profile/xynthia-kavelaars.bsky.social" target="_blank"><svg aria-hidden="true" role="img" viewbox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M407.8 294.7c-3.3-.4-6.7-.8-10-1.3c3.4 .4 6.7 .9 10 1.3zM288 227.1C261.9 176.4 190.9 81.9 124.9 35.3C61.6-9.4 37.5-1.7 21.6 5.5C3.3 13.8 0 41.9 0 58.4S9.1 194 15 213.9c19.5 65.7 89.1 87.9 153.2 80.7c3.3-.5 6.6-.9 10-1.4c-3.3 .5-6.6 1-10 1.4C74.3 308.6-9.1 342.8 100.3 464.5C220.6 589.1 265.1 437.8 288 361.1c22.9 76.7 49.2 222.5 185.6 103.4c102.4-103.4 28.1-156-65.8-169.9c-3.3-.4-6.7-.8-10-1.3c3.4 .4 6.7 .9 10 1.3c64.1 7.1 133.6-15.1 153.2-80.7C566.9 194 576 75 576 58.4s-3.3-44.7-21.6-52.9c-15.8-7.1-40-14.9-103.2 29.8C385.1 81.9 314.1 176.4 288 227.1z"></path></svg> BlueSky</a><a href="https://mastodon.social/@xynthiakavelaars" target="_blank"><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.54 102.54 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5zm-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"></path></svg> Mastodon</a><a href="http://www.linkedin.com/in/xynthia-kavelaars-7a0377129" target="_blank"><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg> LinkedIn</a><a href="https://orcid.org/0000-0003-1600-3153" target="_blank"><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M294.75 188.19h-45.92V342h47.47c67.62 0 83.12-51.34 83.12-76.91 0-41.64-26.54-76.9-84.67-76.9zM256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm-80.79 360.76h-29.84v-207.5h29.84zm-14.92-231.14a19.57 19.57 0 1 1 19.57-19.57 19.64 19.64 0 0 1-19.57 19.57zM300 369h-81V161.26h80.6c76.73 0 110.44 54.83 110.44 103.85C410 318.39 368.38 369 300 369z"></path></svg> ORCID</a><a href="https://www.researchgate.net/profile/Xynthia-Kavelaars" target="_blank"><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M0 32v448h448V32H0zm262.2 334.4c-6.6 3-33.2 6-50-14.2-9.2-10.6-25.3-33.3-42.2-63.6-8.9 0-14.7 0-21.4-.6v46.4c0 23.5 6 21.2 25.8 23.9v8.1c-6.9-.3-23.1-.8-35.6-.8-13.1 0-26.1.6-33.6.8v-8.1c15.5-2.9 22-1.3 22-23.9V225c0-22.6-6.4-21-22-23.9V193c25.8 1 53.1-.6 70.9-.6 31.7 0 55.9 14.4 55.9 45.6 0 21.1-16.7 42.2-39.2 47.5 13.6 24.2 30 45.6 42.2 58.9 7.2 7.8 17.2 14.7 27.2 14.7v7.3zm22.9-135c-23.3 0-32.2-15.7-32.2-32.2V167c0-12.2 8.8-30.4 34-30.4s30.4 17.9 30.4 17.9l-10.7 7.2s-5.5-12.5-19.7-12.5c-7.9 0-19.7 7.3-19.7 19.7v26.8c0 13.4 6.6 23.3 17.9 23.3 14.1 0 21.5-10.9 21.5-26.8h-17.9v-10.7h30.4c0 20.5 4.7 49.9-34 49.9zm-116.5 44.7c-9.4 0-13.6-.3-20-.8v-69.7c6.4-.6 15-.6 22.5-.6 23.3 0 37.2 12.2 37.2 34.5 0 21.9-15 36.6-39.7 36.6z"></path></svg> ResearchGate</a>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="A note on AI assistance">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>A note on AI assistance
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This post was developed in collaboration with Claude (Anthropic). Claude contributed to drafting and revising the text, and generated the R code used to produce the figures, based on an iterative exchange about content, framing, and design. The running example, the technical content, and all final editorial decisions are my own.</p>
+</div>
+</div>
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{kavelaars2026,
+  author = {Kavelaars, Xynthia},
+  title = {Sample Size Planning for Clustered Data – {Part} 2: {When}
+    Practices Don’t Recruit as Planned},
+  date = {2026-10-28},
+  url = {https://xynthiakavelaars.github.io/OpenInferenceLab/posts/2026-10-multilevel-cluster-size/},
+  langid = {en}
+}
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-kavelaars2026" class="csl-entry quarto-appendix-citeas" role="listitem">
+Kavelaars, Xynthia. 2026. <span>“Sample Size Planning for Clustered Data
+– Part 2: When Practices Don’t Recruit as Planned.”</span> October 28.
+<a href="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/2026-10-multilevel-cluster-size/">https://xynthiakavelaars.github.io/OpenInferenceLab/posts/2026-10-multilevel-cluster-size/</a>.
+</div></div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/xynthiakavelaars\.github\.io\/OpenInferenceLab");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

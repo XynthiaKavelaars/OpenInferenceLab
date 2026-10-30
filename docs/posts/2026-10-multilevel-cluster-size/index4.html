@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-11-01">
+<meta name="description" content="Your power analysis assumed 15 clients per practice. What happens to the power when some practices recruit 5 clients and others 30?">
+
+<title>Sample size planning for clustered data – Part 2: When practices don’t recruit as planned – The Open Inference Lab</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bb62276ab45c84d9efd712f51ff97b5a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-37f0b768e41222b5fac9867eac66a373.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/quarto-contrib/academicons-1.9.4/all.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/academicons-1.9.4/size.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script defer="" src="https://cloud.umami.is/script.js" data-website-id="71a9cfd8-e761-4d57-babf-91089ce63560"></script>
+<meta name="google-site-verification" content="PprGBav35N-CCX_NWDylEj48nnkKU_dGJgeH2yvu25w">
+
+
+<link rel="stylesheet" href="../../styles.scss">
+<link rel="stylesheet" href="../../hide-citation.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">The Open Inference Lab</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../posts.html"> 
+<span class="menu-text">Blog posts</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-about" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">About</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-about">    
+        <li>
+    <a class="dropdown-item" href="../../about.html">
+ <span class="dropdown-text">About me</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../about/software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../about/publications.html">
+ <span class="dropdown-text">Publications</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://research.ou.nl/en/persons/xynthia-kavelaars/"> 
+<span class="menu-text"><img src="images/Logo_OU_klein.jpg" style="height:22px !important; width:auto !important; max-height:22px !important; vertical-align:middle;" alt="Logo"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/XynthiaKavelaars"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://xynthia-kavelaars.bsky.social"> <i class="bi bi-bluesky" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://mastodon.social/@xynthiakavelaars"> <i class="bi bi-mastodon" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="http://www.linkedin.com/in/xynthia-kavelaars-7a0377129"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://orcid.org/0000-0003-1600-3153"> 
+<span class="menu-text"><i class="ai  ai-orcid" aria-label="orcid"></i></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.researchgate.net/profile/Xynthia-Kavelaars"> 
+<span class="menu-text"><i class="ai  ai-researchgate" aria-label="researchgate"></i></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:xynthia.kavelaars@ou.nl"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../posts.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Sample size planning for clustered data – Part 2: When practices don’t recruit as planned</h1>
+                  <div>
+        <div class="description">
+          Your power analysis assumed 15 clients per practice. What happens to the power when some practices recruit 5 clients and others 30?
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">R</div>
+                <div class="quarto-category">sample size</div>
+                <div class="quarto-category">power analysis</div>
+                <div class="quarto-category">multilevel</div>
+                <div class="quarto-category">cluster randomized trials</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 1, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#why-practice-sizes-are-often-hard-to-predict" id="toc-why-practice-sizes-are-often-hard-to-predict" class="nav-link active" data-scroll-target="#why-practice-sizes-are-often-hard-to-predict">Why practice sizes are often hard to predict</a></li>
+  <li><a href="#unequal-practices" id="toc-unequal-practices" class="nav-link" data-scroll-target="#unequal-practices">Unequal practices</a></li>
+  <li><a href="#when-the-arms-differ" id="toc-when-the-arms-differ" class="nav-link" data-scroll-target="#when-the-arms-differ">When the arms differ</a></li>
+  <li><a href="#when-the-total-differs" id="toc-when-the-total-differs" class="nav-link" data-scroll-target="#when-the-total-differs">When the total differs</a></li>
+  <li><a href="#taken-together" id="toc-taken-together" class="nav-link" data-scroll-target="#taken-together">Taken together</a></li>
+  <li><a href="#one-assumption-among-several" id="toc-one-assumption-among-several" class="nav-link" data-scroll-target="#one-assumption-among-several">One assumption among several</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<style>
+/* Move these rules to styles.scss if you like them */
+.figure-caption, figcaption { color: #1a5d54; font-weight: 600; }
+.example-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+                 gap: 0.7rem; margin: 1.2rem 0; }
+.example-card  { background: #F4FAF8; border-left: 4px solid #2B8A7A; border-radius: 4px;
+                 padding: 0.6rem 0.8rem; }
+.example-card.result { border-left-color: #D9963B; background: #FBF4EA; }
+.example-card .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em;
+                       color: #4a4a4a; }
+.example-card .value { font-size: 1.1rem; font-weight: 600; color: #1a5d54; line-height: 1.3; }
+.example-card .note  { font-size: 0.8rem; color: #4a4a4a; }
+.sim-table { border-collapse: collapse; font-size: 0.85rem; margin: 0.5rem 0 1rem 0; }
+.sim-table th, .sim-table td { padding: 0.25rem 0.6rem; text-align: center; white-space: nowrap; }
+.sim-table thead th { border-bottom: 1px solid #8FD3C1; color: #1a5d54; }
+.sim-table td.group { text-align: left; font-weight: 600; color: #1a5d54;
+                      background: #F4FAF8; padding-top: 0.45rem; }
+</style>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>⚖️ <strong>Your power analysis assumed 15 clients per practice. What happens to the power when some practices recruit 5 clients and others 30?</strong></p>
+</div>
+</div>
+</div>
+<p>Before a study starts, the researcher has to decide how many participants to include, aiming to give the study a sufficiently high probability of detecting an effect, if that effect really exists. The researcher sets this probability - the statistical power - in advance, often at 80%. In practice, power analysis is used for this: a calculation based on a series of educated guesses or assumptions about what the data will look like, such as the expected size of the effect. The researcher has to make these assumptions before any data are collected. When those assumptions turn out to be wrong, the study can end up with less power than the researcher intended, and therefore with a larger risk of missing an effect that does exist.</p>
+<p>In many studies, the researcher does not recruit participants one by one but through groups. A clinical psychologist recruits clients through psychology practices, an educational researcher recruits pupils through schools, and a medical researcher recruits patients through hospitals. The data from such studies are clustered (or multilevel or nested) data, with the groups being clusters. Clustered data occur in many kinds of studies. This post focuses on trials in which the researcher randomizes whole clusters instead of individual participants. All participants within a cluster then are assigned to the same condition and receive the same intervention or treatment. Such trials are called cluster-randomized trials. Whether the researcher randomizes clusters or individual participants, the clustering has consequences for the power analysis. The researcher then has to make additional assumptions, and one of these assumptions is the subject of this post.</p>
+<p>When a researcher plans the sample size for a study with clustered data, the plan always contains an assumption about the number of participants in each cluster, whether the researcher makes that assumption consciously or not. To see why this assumption plays a role, consider what clustering means for a power analysis. Participants within the same cluster tend to resemble each other. Each additional participant from a cluster that is already in the study therefore contributes less than a participant from a new cluster would. A power analysis for such a trial takes this into account. The calculation therefore always assumes how the participants are spread across the clusters, even when the researcher does not choose that spread explicitly.</p>
+<p>The simplest choice is to assume that every cluster contributes the same number of participants, usually the number the researcher expects on average. This choice is both convenient and understandable. It is convenient, because the power analysis then needs only one number. It is understandable, because the researcher often does not know in advance which clusters will recruit more and which fewer. But it has a consequence that is easy to overlook. As Part 1 of this series showed, equal clusters give the highest power that can be reached with a given number of participants. A power analysis that assumes equal clusters therefore describes the most favourable way in which the participants could be spread, and the power it reports holds only for that situation. This post examines how far the actual power can end up from the planned power when the clusters turn out to differ in size. <a href="#fig-teaser" class="quarto-xref">Figure&nbsp;1</a> shows what is at stake in the running example of this series, which the next paragraph introduces.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-teaser" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-teaser-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index4_files/figure-html/fig-teaser-1.png" class="img-fluid figure-img" width="864">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-teaser-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: The same practices and the same number of clients reach less power when the clients are spread unequally across the practices.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>This post illustrates the problem with the running example of the series. A trial compares intuitive eating with structured dietary rules in adults with subclinical eating and body image concerns. Psychology practices are randomized, so all clients within a practice receive the same intervention. If clients were independent, 198 clients per arm would give 80% power to detect a standardized effect of 0.25 with a one-sided α of 0.05. Clients within the same practice tend to resemble each other. The intraclass correlation (ICC) expresses how strongly they resemble each other, as the share of the variation in body image that is due to differences between practices. With an ICC of 0.05, the trial needs more clients than that. A standard power analysis that assumes 15 clients per practice arrives at 23 practices per arm. The rest of this post calls the clusters practices and the participants clients.</p>
+<div class="example-cards">
+<div class="example-card">
+<p><span class="label">Trial</span></p>
+<p><span class="value">Intuitive eating versus structured dietary rules</span></p>
+<p><span class="note">Adults with subclinical eating and body image concerns</span></p>
+</div>
+<div class="example-card">
+<p><span class="label">Clusters</span></p>
+<p><span class="value">Psychology practices</span></p>
+<p><span class="note">Randomized as a whole</span></p>
+</div>
+<div class="example-card">
+<p><span class="label">Outcome</span></p>
+<p><span class="value">Body image</span></p>
+<p><span class="note">Expected standardized effect of 0.25</span></p>
+</div>
+<div class="example-card">
+<p><span class="label">Similarity within practices</span></p>
+<p><span class="value">ICC = 0.05</span></p>
+<p><span class="note">Share of the variation due to differences between practices</span></p>
+</div>
+<div class="example-card">
+<p><span class="label">Target</span></p>
+<p><span class="value">Power of 80%</span></p>
+<p><span class="note">One-sided α = 0.05</span></p>
+</div>
+<div class="example-card result">
+<p><span class="label">Power analysis</span></p>
+<p><span class="value">23 practices of 15 clients per arm</span></p>
+<p><span class="note">198 independent clients per arm × design effect 1.7, rounded up to whole practices: 345 clients per arm</span></p>
+</div>
+</div>
+<section id="why-practice-sizes-are-often-hard-to-predict" class="level2">
+<h2 class="anchored" data-anchor-id="why-practice-sizes-are-often-hard-to-predict">Why practice sizes are often hard to predict</h2>
+<p>A researcher who wants to plan in more detail than with one number for all practices can try to estimate for each practice how many clients it will recruit, but even a careful estimate remains uncertain. For example, the researcher can ask each practice how many eligible clients it sees, how much time its psychologists can spend on the trial, and how many referrals it expects. The researcher can also look at earlier trials in similar settings to see how recruitment was spread across sites. These estimates are made before the trial starts, however, and the circumstances on which they are based change once the trial is running. A practice loses a psychologist, its waiting list becomes longer, eligible clients decline to take part, psychologists find the trial procedures too demanding next to their regular work, a referral route disappears, or the practice withdraws after randomization. Other practices recruit more easily than expected. When the target is a total number of clients, recruitment then tends to continue in those practices until the total is reached. The sizes that result rarely match the sizes that were planned, and it is hard to know in advance how the clients will be spread across the practices.</p>
+</section>
+<section id="unequal-practices" class="level2">
+<h2 class="anchored" data-anchor-id="unequal-practices">Unequal practices</h2>
+<p>Differences in practice size matter because clients do not all receive the same weight in the analysis. A large practice contributes more than a small one, but a practice with twice as many clients does not contribute twice as much. Because clients from the same practice resemble each other, an additional client in a large practice contributes less than an additional client in a small practice. When some practices end up larger and others smaller than planned, the extra clients in the large practices do not fully make up for the clients missing from the small practices. The total number of clients can then be exactly on target, while the power is lower than planned. Part 1 described this as the contribution of a practice: all clients of a practice together contribute as much as a smaller number of clients from different practices would, and each additional client in the same practice adds a little less than the previous one. <a href="#fig-contribution" class="quarto-xref">Figure&nbsp;2</a> shows what this means when five clients move from one practice to another.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-contribution" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-contribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index4_files/figure-html/fig-contribution-1.png" class="img-fluid figure-img" width="864">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-contribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: When five clients move from one practice to another, the number of clients stays the same, but the practices together contribute less.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In the planned situation, the five clients who later move contribute 1.9 independent clients. After the move, they contribute only 1.4, because they now join a practice that already has many clients.</p>
+<p>How much power does this cost in the running example? To find out, we kept the number of practices and the number of clients as planned, but made the practices increasingly unequal in size. Both arms got the same set of practice sizes, so that the arms differ only in the condition to which they are assigned. We express the inequality as the coefficient of variation (CV) of the practice sizes, which the box below explains. <a href="#fig-sizes" class="quarto-xref">Figure&nbsp;3</a> shows the practice sizes that result for the running example. At a CV of 0.24, the practices recruit between 8 and 23 clients. At a CV of 1.15, they recruit between 1 and 68 clients, so that a few practices provide a large share of the clients. Such patterns can all arise from the same recruitment problems, depending on how large these problems are and on how many practices they affect.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The coefficient of variation (CV)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The coefficient of variation (CV) describes how much the practice sizes differ from each other, relative to the average practice size. Because the spread is expressed relative to the average, the same CV describes the same degree of inequality, whether the practices recruit 15 or 150 clients on average. A CV of 0 means that all practices recruit the same number of clients, and the higher the CV, the more the practice sizes differ. With an average of 15 clients per practice, a CV of 0.50 means that the practice sizes typically deviate about 7.5 clients from the average, and a CV of 1.00 means that they typically deviate about as much as the average itself. The CV is also the measure that sample size methods for unequal clusters use (Eldridge, Ashby and Kerry, 2006).</p>
+<p><em>A technical detail for the interested reader:</em> the practice sizes follow a skewed spread, with many smaller practices and a few larger ones. They were derived from skewed (gamma) distributions with a CV of 0.25, 0.50, 0.75, 1.00 and 1.25, and then rounded to whole clients with at least one client per practice. This rounding makes the CV of the practice sizes that were actually used somewhat lower. The post reports these actual values.</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-sizes" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sizes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index4_files/figure-html/fig-sizes-1.png" class="img-fluid figure-img" width="864">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sizes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: The more unequal the practices, the more clients end up in a few large practices, while the number of practices and clients stays the same.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-power-same" class="quarto-xref">Figure&nbsp;4</a> shows what these practice sizes mean for the power in the running example. Every level of inequality costs power, and the loss grows as the practices differ more in size.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-power-same" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-power-same-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index4_files/figure-html/fig-power-same-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-power-same-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: In the running example, every level of inequality lowers the power below the target of 0.80, and more unequal practices lower it further.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The planned trial in <a href="#fig-power-same" class="quarto-xref">Figure&nbsp;4</a>, with all practices equal, reaches a power of 0.80, close to the target of 0.80 that the power analysis aimed for. At a CV of 0.24, the power is 0.79 instead of 0.80. At a CV of 0.73, the power drops to 0.76, and at a CV of 1.15 to 0.70. In all these trials, the number of practices and the number of clients are exactly as planned. The power drops because many clients end up in a few large practices, where an additional client contributes less than in a small practice. These numbers apply to the running example, with its ICC of 0.05 and 23 practices per arm. In other trials, the loss can be smaller or larger, but the direction is the same: the more unequal the practices, the lower the power.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>How the power was estimated
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>For each trial, we generated 100,000 data sets from a random-intercept model with an ICC of 0.05 and a standardized effect of 0.25. Each data set was analysed with a random-intercept model (<code>nlme::lme</code>) and a one-sided <em>t</em>-test on the effect of the condition. The power is the share of data sets in which this test detected the effect. All trials used the same random numbers, so that differences between the trials reflect the practice sizes and not chance.</p>
+<div id="tbl-results-same" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-results-same-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1
+</figcaption>
+<div aria-describedby="tbl-results-same-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="sim-table">
+<thead>
+<tr>
+<th colspan="2">
+CV
+</th>
+<th colspan="2">
+Clients per practice
+</th>
+<th colspan="2">
+Clients per arm
+</th>
+<th rowspan="2">
+Power
+</th>
+</tr>
+<tr>
+<th>
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+<th>
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+<th>
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="group" colspan="7">
+Planned trial
+</td>
+</tr>
+<tr>
+<td>
+0.00
+</td>
+<td>
+0.00
+</td>
+<td>
+all 15
+</td>
+<td>
+all 15
+</td>
+<td>
+345
+</td>
+<td>
+345
+</td>
+<td>
+0.797
+</td>
+</tr>
+<tr>
+<td class="group" colspan="7">
+Same unequal practice sizes in both arms
+</td>
+</tr>
+<tr>
+<td>
+0.24
+</td>
+<td>
+0.24
+</td>
+<td>
+8 to 23
+</td>
+<td>
+8 to 23
+</td>
+<td>
+345
+</td>
+<td>
+345
+</td>
+<td>
+0.792
+</td>
+</tr>
+<tr>
+<td>
+0.48
+</td>
+<td>
+0.48
+</td>
+<td>
+4 to 32
+</td>
+<td>
+4 to 32
+</td>
+<td>
+345
+</td>
+<td>
+345
+</td>
+<td>
+0.778
+</td>
+</tr>
+<tr>
+<td>
+0.73
+</td>
+<td>
+0.73
+</td>
+<td>
+2 to 45
+</td>
+<td>
+2 to 45
+</td>
+<td>
+345
+</td>
+<td>
+345
+</td>
+<td>
+0.757
+</td>
+</tr>
+<tr>
+<td>
+0.96
+</td>
+<td>
+0.96
+</td>
+<td>
+1 to 57
+</td>
+<td>
+1 to 57
+</td>
+<td>
+345
+</td>
+<td>
+345
+</td>
+<td>
+0.728
+</td>
+</tr>
+<tr>
+<td>
+1.15
+</td>
+<td>
+1.15
+</td>
+<td>
+1 to 68
+</td>
+<td>
+1 to 68
+</td>
+<td>
+345
+</td>
+<td>
+345
+</td>
+<td>
+0.701
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="when-the-arms-differ" class="level2">
+<h2 class="anchored" data-anchor-id="when-the-arms-differ">When the arms differ</h2>
+<p>So far, both arms had the same set of practice sizes, which is unlikely in a real trial. The practices are randomized before anyone knows how many clients each practice will recruit, and sometimes even before it is clear whether the planned number of practices will be reached. The second issue returns in the next section. With a modest number of practices per arm, chance alone can place several of the larger practices in the same arm. We therefore also looked at two other patterns. In the first pattern, one arm recruits exactly as planned, while the practices in the other arm differ in size. In the second pattern, the practices of both arms together differ in size, and the larger practices all end up in the same arm. The arms then differ not only in the sizes of their practices, but also in their number of clients. This second pattern is the least favourable result that randomization can produce.</p>
+<p><a href="#fig-power-arms" class="quarto-xref">Figure&nbsp;5</a> compares both patterns with the trials from <a href="#fig-power-same" class="quarto-xref">Figure&nbsp;4</a>. When only one arm deviates from the plan, the loss of power is smaller than when both arms deviate, but it is present at every level of inequality. When the larger practices end up in the same arm, the power drops much further.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-power-arms" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-power-arms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index4_files/figure-html/fig-power-arms-1.png" class="img-fluid figure-img" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-power-arms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: One unequal arm costs less power than two, but when the larger practices end up in one arm, the power drops much further.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>At the highest level of inequality, the power is 0.75 when only one arm is unequal, compared with 0.70 when both arms are unequal and 0.53 when the larger practices end up in the same arm. The comparison between the arms depends on what the clients in each arm contribute together, and the arm with the smallest contribution determines most of the uncertainty about the effect. An arm that recruits as planned can therefore offset only part of a shortfall in the other arm. In the least favourable pattern, one arm consists mainly of small practices with few clients, and that arm limits the comparison.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Simulation results when the arms differ
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In the trials with the larger practices in one arm, <a href="#fig-power-arms" class="quarto-xref">Figure&nbsp;5</a> shows the CV of all practices together, whereas the table shows the CV within each arm.</p>
+<div id="tbl-results-arms" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-results-arms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2
+</figcaption>
+<div aria-describedby="tbl-results-arms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="sim-table">
+<thead>
+<tr>
+<th colspan="2">
+CV
+</th>
+<th colspan="2">
+Clients per practice
+</th>
+<th colspan="2">
+Clients per arm
+</th>
+<th rowspan="2">
+Power
+</th>
+</tr>
+<tr>
+<th>
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+<th>
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+<th>
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="group" colspan="7">
+Planned trial
+</td>
+</tr>
+<tr>
+<td>
+0.00
+</td>
+<td>
+0.00
+</td>
+<td>
+all 15
+</td>
+<td>
+all 15
+</td>
+<td>
+345
+</td>
+<td>
+345
+</td>
+<td>
+0.797
+</td>
+</tr>
+<tr>
+<td class="group" colspan="7">
+One arm unequal, the other arm as planned
+</td>
+</tr>
+<tr>
+<td>
+0.00
+</td>
+<td>
+0.24
+</td>
+<td>
+all 15
+</td>
+<td>
+8 to 23
+</td>
+<td>
+345
+</td>
+<td>
+345
+</td>
+<td>
+0.794
+</td>
+</tr>
+<tr>
+<td>
+0.00
+</td>
+<td>
+0.48
+</td>
+<td>
+all 15
+</td>
+<td>
+4 to 32
+</td>
+<td>
+345
+</td>
+<td>
+345
+</td>
+<td>
+0.786
+</td>
+</tr>
+<tr>
+<td>
+0.00
+</td>
+<td>
+0.73
+</td>
+<td>
+all 15
+</td>
+<td>
+2 to 45
+</td>
+<td>
+345
+</td>
+<td>
+345
+</td>
+<td>
+0.776
+</td>
+</tr>
+<tr>
+<td>
+0.00
+</td>
+<td>
+0.96
+</td>
+<td>
+all 15
+</td>
+<td>
+1 to 57
+</td>
+<td>
+345
+</td>
+<td>
+345
+</td>
+<td>
+0.761
+</td>
+</tr>
+<tr>
+<td>
+0.00
+</td>
+<td>
+1.15
+</td>
+<td>
+all 15
+</td>
+<td>
+1 to 68
+</td>
+<td>
+345
+</td>
+<td>
+345
+</td>
+<td>
+0.746
+</td>
+</tr>
+<tr>
+<td class="group" colspan="7">
+Larger practices in one arm
+</td>
+</tr>
+<tr>
+<td>
+0.15
+</td>
+<td>
+0.14
+</td>
+<td>
+8 to 15
+</td>
+<td>
+15 to 23
+</td>
+<td>
+278
+</td>
+<td>
+412
+</td>
+<td>
+0.787
+</td>
+</tr>
+<tr>
+<td>
+0.33
+</td>
+<td>
+0.28
+</td>
+<td>
+3 to 14
+</td>
+<td>
+14 to 36
+</td>
+<td>
+212
+</td>
+<td>
+478
+</td>
+<td>
+0.755
+</td>
+</tr>
+<tr>
+<td>
+0.49
+</td>
+<td>
+0.42
+</td>
+<td>
+1 to 12
+</td>
+<td>
+13 to 51
+</td>
+<td>
+156
+</td>
+<td>
+534
+</td>
+<td>
+0.702
+</td>
+</tr>
+<tr>
+<td>
+0.64
+</td>
+<td>
+0.56
+</td>
+<td>
+1 to 10
+</td>
+<td>
+11 to 67
+</td>
+<td>
+108
+</td>
+<td>
+582
+</td>
+<td>
+0.623
+</td>
+</tr>
+<tr>
+<td>
+0.75
+</td>
+<td>
+0.70
+</td>
+<td>
+1 to 8
+</td>
+<td>
+9 to 83
+</td>
+<td>
+73
+</td>
+<td>
+617
+</td>
+<td>
+0.531
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="when-the-total-differs" class="level2">
+<h2 class="anchored" data-anchor-id="when-the-total-differs">When the total differs</h2>
+<p>That a trial with fewer clients than planned has less power, and a trial with more clients than planned has more power, will surprise no one. The same goes for the expected effect size. When the actual effect is larger than the researcher assumed, the power is higher than planned, and when it is smaller, the power is lower. What is less obvious is what happens when such a deviation meets unequal practices. In practice, the final number of clients can easily differ from the plan. A practice may withdraw, or it may turn out to have too few eligible clients, and such a practice cannot always be replaced. Recruitment may also stop at a fixed date before the target is reached, or continue for some time after it. <a href="#fig-total" class="quarto-xref">Figure&nbsp;6</a> shows what happens in the running example when the trial ends up with fewer clients than planned (on average 12 per practice) or with more (on average 18 per practice), with equal practices or with unequal practices (CV 0.73).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-total" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-total-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index4_files/figure-html/fig-total-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-total-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Fewer clients and unequal practices add up, while more clients can only partly make up for unequal practices.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>With fewer clients than planned, the two deviations add up. With equal practices, the power drops to 0.75 because the trial is smaller, and unequal practices lower it further, to 0.71. Both deviations point in the same direction, so the shortfall in power grows. With more clients than planned, the deviations point in opposite directions. With equal practices, the additional clients raise the power to 0.83. Unequal practices take back part of that gain, so that the power ends up at 0.79, which is below the target of 0.80. Additional clients can thus partly make up for unequal practices, but only when the researcher happens to recruit more clients than needed. A shortfall in clients, on the other hand, always adds to the loss due to unequal practices. The same reasoning applies to the effect size. An effect that is larger than expected can hide part of the loss due to unequal practices, and an effect that is smaller than expected adds to it.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Simulation results when the total differs
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="tbl-results-total" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-results-total-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3
+</figcaption>
+<div aria-describedby="tbl-results-total-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="sim-table">
+<thead>
+<tr>
+<th colspan="2">
+CV
+</th>
+<th colspan="2">
+Clients per practice
+</th>
+<th colspan="2">
+Clients per arm
+</th>
+<th rowspan="2">
+Power
+</th>
+</tr>
+<tr>
+<th>
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+<th>
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+<th>
+Arm 1
+</th>
+<th>
+Arm 2
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="group" colspan="7">
+Planned trial
+</td>
+</tr>
+<tr>
+<td>
+0.00
+</td>
+<td>
+0.00
+</td>
+<td>
+all 15
+</td>
+<td>
+all 15
+</td>
+<td>
+345
+</td>
+<td>
+345
+</td>
+<td>
+0.797
+</td>
+</tr>
+<tr>
+<td class="group" colspan="7">
+Fewer clients than planned
+</td>
+</tr>
+<tr>
+<td>
+0.00
+</td>
+<td>
+0.00
+</td>
+<td>
+all 12
+</td>
+<td>
+all 12
+</td>
+<td>
+276
+</td>
+<td>
+276
+</td>
+<td>
+0.750
+</td>
+</tr>
+<tr>
+<td>
+0.73
+</td>
+<td>
+0.73
+</td>
+<td>
+1 to 35
+</td>
+<td>
+1 to 35
+</td>
+<td>
+276
+</td>
+<td>
+276
+</td>
+<td>
+0.709
+</td>
+</tr>
+<tr>
+<td class="group" colspan="7">
+More clients than planned
+</td>
+</tr>
+<tr>
+<td>
+0.00
+</td>
+<td>
+0.00
+</td>
+<td>
+all 18
+</td>
+<td>
+all 18
+</td>
+<td>
+414
+</td>
+<td>
+414
+</td>
+<td>
+0.831
+</td>
+</tr>
+<tr>
+<td>
+0.73
+</td>
+<td>
+0.73
+</td>
+<td>
+2 to 54
+</td>
+<td>
+2 to 54
+</td>
+<td>
+414
+</td>
+<td>
+414
+</td>
+<td>
+0.790
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="taken-together" class="level2">
+<h2 class="anchored" data-anchor-id="taken-together">Taken together</h2>
+<p>A power analysis that assumes equal practices describes the most favourable situation. In the running example, every deviation from equal practices cost power, so the planned power overestimated the power that the trial actually had. Small differences between practices cost little, but large differences cost considerably more, and the loss was largest when the larger practices ended up in the same arm. A trial could only end up above the planned power by recruiting more clients than planned, and even then unequal practices reduced the gain. A small loss may seem acceptable on its own. But what is a planned power of 0.80 worth, if it is known in advance that the actual power may well be 0.78?</p>
+<p>The literature offers corrections for this loss. Eldridge, Ashby and Kerry (2006) consider an adjustment unnecessary when the CV of the cluster sizes is below 0.23. Van Breukelen, Candel and Berger (2007) find that unequal clusters rarely cost more than what about 10 percent of the clusters contribute, and propose recruiting about 11 percent more clusters to make up for it. Such corrections are practical, but they remain approximations. They need an estimate of how unequal the practices will be, which is uncertain in itself, and they assume that both arms have the same spread of practice sizes.</p>
+</section>
+<section id="one-assumption-among-several" class="level2">
+<h2 class="anchored" data-anchor-id="one-assumption-among-several">One assumption among several</h2>
+<p>The spread of the clients across the practices is only one of the assumptions behind a power analysis. The ICC and the expected effect size are usually taken from earlier studies, and both are uncertain. A wrong assumption about the ICC or the effect size can make the planned power too high or too low, whereas unequal practices always make it too high. These uncertainties also interact. Guittet, Ravaud and Giraudeau (2006) showed that trials in which 80 percent of the participants belong to 20 percent of the clusters are more sensitive to a wrongly assumed ICC than trials with equal clusters. When several uncertainties come together in the same trial, the researcher no longer knows where the actual power ends up.</p>
+<p>This accumulation of uncertainties is an argument for treating the sample size from the power analysis as a starting point, which the researcher can update during the study. Designs that allow such updates are called adaptive designs. In an adaptive design, the researcher decides in advance at which moments to look at the data collected so far, and which changes to the design are allowed at those moments, such as recruiting additional participants. Sample size re-estimation is one form of this approach (see the SSR series on the <a href="../../posts.html">posts page</a>). For cluster-randomized trials, Rutterford, Copas and Eldridge (2015) describe how the sample size can be re-estimated once information on the ICC and other unknown quantities becomes available during the trial, while noting that it is not yet clear at which stage these interim estimates are stable enough to rely on. For the spread of the clients, re-estimation means checking during the trial whether the planned spread holds, and correcting the course when it does not. The researcher can recruit additional practices or clients, but can also support practices that fall behind, for example with a different recruitment strategy.</p>
+<p>Would you like to check the power for your own planned or realized practice sizes? The box below contains a short R function that does exactly that.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>R code: power for your own practice sizes
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The function below estimates the power of a cluster-randomized trial for any set of practice sizes per arm. Enter the planned sizes to check a design, or the sizes that were realized so far to see where a running trial stands.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nlme)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>power_clusters <span class="ot">&lt;-</span> <span class="cf">function</span>(sizes0, sizes1, icc, delta, <span class="at">alpha =</span> <span class="fl">0.05</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">nsim =</span> <span class="dv">2000</span>, <span class="at">seed =</span> <span class="dv">1</span>) {</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(seed)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  n    <span class="ot">&lt;-</span> <span class="fu">c</span>(sizes0, sizes1)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  prac <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">seq_along</span>(n), n))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  arm  <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">c</span>(<span class="fu">sum</span>(sizes0), <span class="fu">sum</span>(sizes1)))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  reject <span class="ot">&lt;-</span> <span class="fu">logical</span>(nsim)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">seq_len</span>(nsim)) {</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> delta <span class="sc">*</span> arm <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(n), <span class="dv">0</span>, <span class="fu">sqrt</span>(icc))[prac] <span class="sc">+</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>         <span class="fu">rnorm</span>(<span class="fu">length</span>(arm), <span class="dv">0</span>, <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> icc))</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">&lt;-</span> <span class="fu">lme</span>(y <span class="sc">~</span> arm, <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">|</span> prac)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    tt  <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit)<span class="sc">$</span>tTable[<span class="st">"arm"</span>, ]</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    reject[s] <span class="ot">&lt;-</span> tt[<span class="st">"t-value"</span>] <span class="sc">&gt;</span> <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alpha, tt[<span class="st">"DF"</span>])   <span class="co"># one-sided</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">mean</span>(reject)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="at">power =</span> p, <span class="at">mcse =</span> <span class="fu">sqrt</span>(p <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> p) <span class="sc">/</span> nsim))</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="do">## planned: 23 practices of 15 clients per arm</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">power_clusters</span>(<span class="fu">rep</span>(<span class="dv">15</span>, <span class="dv">23</span>), <span class="fu">rep</span>(<span class="dv">15</span>, <span class="dv">23</span>), <span class="at">icc =</span> <span class="fl">0.05</span>, <span class="at">delta =</span> <span class="fl">0.25</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="do">## realized: the same number of clients, but unequal practices</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>sizes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">14</span>, <span class="dv">15</span>, <span class="dv">15</span>,</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>           <span class="dv">16</span>, <span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">20</span>, <span class="dv">21</span>, <span class="dv">23</span>, <span class="dv">25</span>, <span class="dv">28</span>, <span class="dv">32</span>)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">power_clusters</span>(sizes, sizes, <span class="at">icc =</span> <span class="fl">0.05</span>, <span class="at">delta =</span> <span class="fl">0.25</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+<ul>
+<li>Eldridge, S. M., Ashby, D., &amp; Kerry, S. (2006). Sample size for cluster randomized trials: effect of coefficient of variation of cluster size and analysis method. <em>International Journal of Epidemiology</em>, 35(5), 1292–1300. <a href="https://doi.org/10.1093/ije/dyl129" class="uri">https://doi.org/10.1093/ije/dyl129</a></li>
+<li>Guittet, L., Ravaud, P., &amp; Giraudeau, B. (2006). Planning a cluster randomized trial with unequal cluster sizes: practical issues involving continuous outcomes. <em>BMC Medical Research Methodology</em>, 6, 17. <a href="https://doi.org/10.1186/1471-2288-6-17" class="uri">https://doi.org/10.1186/1471-2288-6-17</a></li>
+<li>Rutterford, C., Copas, A., &amp; Eldridge, S. (2015). Methods for sample size determination in cluster randomized trials. <em>International Journal of Epidemiology</em>, 44(3), 1051–1067. <a href="https://doi.org/10.1093/ije/dyv113" class="uri">https://doi.org/10.1093/ije/dyv113</a></li>
+<li>Van Breukelen, G. J. P., Candel, M. J. J. M., &amp; Berger, M. P. F. (2007). Relative efficiency of unequal versus equal cluster sizes in cluster randomized and multicentre trials. <em>Statistics in Medicine</em>, 26(13), 2589–2603. <a href="https://doi.org/10.1002/sim.2740" class="uri">https://doi.org/10.1002/sim.2740</a></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled" title="A note on AI assistance">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>A note on AI assistance
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This post was developed in collaboration with Claude (Anthropic). Claude contributed to drafting and revising the text, and generated the R code used to produce the figures, based on an iterative exchange about content, framing, and design. The running example, the technical content, and all final editorial decisions are my own.</p>
+</div>
+</div>
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{2026,
+  author = {},
+  title = {Sample Size Planning for Clustered Data – {Part} 2: {When}
+    Practices Don’t Recruit as Planned},
+  date = {2026-11-01},
+  url = {https://xynthiakavelaars.github.io/OpenInferenceLab/posts/2026-10-multilevel-cluster-size/index4.html},
+  langid = {en}
+}
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-2026" class="csl-entry quarto-appendix-citeas" role="listitem">
+<span>“Sample Size Planning for Clustered Data – Part 2: When Practices
+Don’t Recruit as Planned.”</span> 2026. November 1. <a href="https://xynthiakavelaars.github.io/OpenInferenceLab/posts/2026-10-multilevel-cluster-size/index4.html">https://xynthiakavelaars.github.io/OpenInferenceLab/posts/2026-10-multilevel-cluster-size/index4.html</a>.
+</div></div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/xynthiakavelaars\.github\.io\/OpenInferenceLab");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
